@@ -27,10 +27,10 @@
                 <form class="row g-3 needs-validation" id="login_form" action="api" method="post" novalidate>
                     <input type="hidden" name="command" value="login">
                     <div class="col-auto">
-                        <input type="email" class="form-control" placeholder="Email" name="email" required>
+                        <input type="email" class="form-control" placeholder="<fmt:message key="placeholder.email"/>" name="email" required>
                     </div>
                     <div class="col-auto">
-                        <input type="password" class="form-control" placeholder="Password" name="password" required>
+                        <input type="password" class="form-control" placeholder="<fmt:message key="placeholder.password"/>" name="password" required>
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-outline-primary me-2">

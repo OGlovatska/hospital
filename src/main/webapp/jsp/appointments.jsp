@@ -55,12 +55,14 @@
                     <button type="submit" class="btn btn-outline-primary me-2 btn-sm">Show</button>
                 </div>
             </form>
-            <div class="col-auto">
-                <form action="api" method="get">
-                    <input type="hidden" name="command" value="create-appointment"/>
-                    <button type="submit" class="btn btn-outline-primary me-2 btn-sm">Add appointment</button>
-                </form>
-            </div>
+            <c:if test="${sessionScope.user.role eq 'DOCTOR' or 'NURSE'}">
+                <div class="col-auto">
+                    <form action="api" method="get">
+                        <input type="hidden" name="command" value="create-appointment"/>
+                        <button type="submit" class="btn btn-outline-primary me-2 btn-sm">Add appointment</button>
+                    </form>
+                </div>
+            </c:if>
         </div>
         <table class="table table-striped table-hover">
             <thead>

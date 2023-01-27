@@ -56,6 +56,10 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
         return getAll(String.format(GET_ALL_APPOINTMENTS_FOR_HOSPITALISATION, hospitalisationId));
     }
 
+    public List<Appointment> getAllAppointmentsOfPatient(int patientId, Pageable pageable) throws DBException {
+        return getAll(String.format(GET_ALL_APPOINTMENTS_FOR_PATIENT, patientId, pageable.query()));
+    }
+
     private List<Appointment> getAll(String query) throws DBException {
         List<Appointment> appointments = new ArrayList<>();
         try (Connection connection = dbManager.getConnection();
@@ -126,8 +130,12 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
         return getCount(GET_APPOINTMENTS_COUNT);
     }
 
-    public int appointmentsCount(int staffId) throws DBException {
+    public int appointmentsCountForStaff(int staffId) throws DBException {
         return getCount(String.format(GET_APPOINTMENTS_OF_STAFF_COUNT, staffId));
+    }
+
+    public int appointmentsCountForPatient(int patientId) throws DBException {
+        return getCount(String.format(GET_APPOINTMENTS_OF_PATIENT_COUNT, patientId));
     }
 
     public int appointmentsForDateCount(String date) throws DBException{

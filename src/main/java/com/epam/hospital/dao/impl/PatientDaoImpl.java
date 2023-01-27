@@ -29,7 +29,7 @@ public class PatientDaoImpl implements Dao<Patient> {
         return get(String.format(GET_PATIENT_BY_ID, id));
     }
 
-    public Optional<Patient> getPatientByUserId(long userId) throws DBException {
+    public Optional<Patient> getByUserId(long userId) throws DBException {
         return get(String.format(GET_PATIENT_BY_USER_ID, userId));
     }
 

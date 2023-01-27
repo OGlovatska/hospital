@@ -37,7 +37,7 @@ public class HospitalisationService {
         checkUserNotNull(user);
         if (user.getRole().equals(Role.PATIENT.name())) {
             try {
-                Patient patient = patientDao.getPatientByUserId(user.getId()).orElse(null);
+                Patient patient = patientDao.getByUserId(user.getId()).orElse(null);
                 if (patient != null){
                     List<HospitalisationTo> hospitalisationTos = new ArrayList<>();
                     List<Hospitalisation> hospitalisations = hospitalisationDao.getAllHospitalisationsOfPatient(patient.getId(),

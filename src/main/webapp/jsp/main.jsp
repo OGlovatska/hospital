@@ -38,9 +38,9 @@
                             <use xlink:href="#collection"/>
                         </svg>
                     </div>
-                    <h3 class="fs-2">Hospitalisations</h3>
-                    <p>List of all hospitalisations</p>
-                    <a href="api?command=hospitalisations-list" class="icon-link d-inline-flex align-items-center">
+                    <h3 class="fs-2">Hospital card</h3>
+                    <p>Patient's hospital card</p>
+                    <a href="api?command=appointments-list" class="icon-link d-inline-flex align-items-center">
                         See
                         <svg class="bi" width="1em" height="1em">
                             <use xlink:href="#chevron-right"/>

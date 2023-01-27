@@ -42,8 +42,7 @@ public class AppointmentService {
         } else if (user.getRole().equals(Role.DOCTOR.name()) || user.getRole().equals(Role.NURSE.name())){
             return getAppointmentsForStaff(user, offset, limit, orderBy, direction);
         } else {
-            LOG.error("Only ADMIN, DOCTOR and NURSE can get list of appointments, current user role is {}", user.getRole());
-            throw new IllegalRequestDataException(WRONG_REQUEST);
+            return getAppointmentsForPatient(user, offset, limit, orderBy, direction);
         }
     }
 
@@ -65,12 +64,32 @@ public class AppointmentService {
             Staff staff = staffDao.getByUserId(user.getId()).orElse(null);
             if (staff != null){
                 Map<Integer, List<AppointmentTo>> appointments = new HashMap<>();
-                int appointmentsCount = appointmentDao.appointmentsCount(staff.getId());
+                int appointmentsCount = appointmentDao.appointmentsCountForStaff(staff.getId());
                 List<AppointmentTo> appointmentTos = getAllAppointmentsOfStaff(staff.getId(), offset, limit, orderBy,direction);
                 appointments.put(appointmentsCount, appointmentTos);
                 return appointments;
             } else {
                 LOG.error("If user role is DOCTOR or NURSE staff object must not be null, current user role is {}", user.getRole());
+                throw new IllegalRequestDataException(WRONG_REQUEST);
+            }
+        } catch (DBException e) {
+            LOG.error("Exception has occurred during executing getAllAppointments() method", e);
+            throw new IllegalRequestDataException(APP_ERROR);
+        }
+    }
+
+    private Map<Integer, List<AppointmentTo>> getAppointmentsForPatient(UserTo user, String offset, String limit, String orderBy, String direction) {
+        try {
+            Patient patient = patientDao.getByUserId(user.getId()).orElse(null);
+            if (patient != null){
+                Map<Integer, List<AppointmentTo>> appointments = new HashMap<>();
+                int appointmentsCount = appointmentDao.appointmentsCountForPatient(patient.getId());
+                List<AppointmentTo> appointmentTos = getAppointmentTos(appointmentDao.getAllAppointmentsOfPatient(patient.getId(),
+                        new Pageable(offset, limit, new Sort(orderBy, direction))));
+                appointments.put(appointmentsCount, appointmentTos);
+                return appointments;
+            } else {
+                LOG.error("If user role is Patient patient object must not be null, current user role is {}", user.getRole());
                 throw new IllegalRequestDataException(WRONG_REQUEST);
             }
         } catch (DBException e) {
@@ -90,7 +109,7 @@ public class AppointmentService {
 
     public int getAllAppointmentsCount(int staffId) {
         try {
-            return appointmentDao.appointmentsCount(staffId);
+            return appointmentDao.appointmentsCountForStaff(staffId);
         } catch (DBException e) {
             LOG.error("Exception has occurred during executing getAllAppointmentsCount() method", e);
             throw new IllegalRequestDataException(APP_ERROR);
