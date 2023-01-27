@@ -1,0 +1,111 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.lang}" scope="session"/>
+<fmt:setBundle basename="application"/>
+
+<html lang="${sessionScope.lang}">
+<jsp:include page="fragments/head.jsp"/>
+<body>
+<jsp:include page="fragments/header.jsp"/>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="people-circle" viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+        <path fill-rule="evenodd"
+              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+    </symbol>
+    <symbol id="collection" viewBox="0 0 16 16">
+        <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
+    </symbol>
+    <symbol id="toggles2" viewBox="0 0 16 16">
+        <path d="M9.465 10H12a2 2 0 1 1 0 4H9.465c.34-.588.535-1.271.535-2 0-.729-.195-1.412-.535-2z"/>
+        <path d="M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 1a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm.535-10a3.975 3.975 0 0 1-.409-1H4a1 1 0 0 1 0-2h2.126c.091-.355.23-.69.41-1H4a2 2 0 1 0 0 4h2.535z"/>
+        <path d="M14 4a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
+    </symbol>
+    <symbol id="chevron-right" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+    </symbol>
+</svg>
+<main>
+    <div class="container px-4 py-5" id="featured-3">
+        <h2 class="pb-2 border-bottom">Hello, ${sessionScope.user.firstName}</h2>
+        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+            <c:if test="${sessionScope.user.role eq 'PATIENT'}">
+                <div class="feature col">
+                    <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#collection"/>
+                        </svg>
+                    </div>
+                    <h3 class="fs-2">Hospitalisations</h3>
+                    <p>List of all hospitalisations</p>
+                    <a href="api?command=hospitalisations-list" class="icon-link d-inline-flex align-items-center">
+                        See
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#chevron-right"/>
+                        </svg>
+                    </a>
+                </div>
+            </c:if>
+            <c:if test="${sessionScope.user.role eq 'DOCTOR' or sessionScope.user.role eq 'NURSE'}">
+                <div class="feature col">
+                    <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#toggles2"/>
+                        </svg>
+                    </div>
+                    <h3 class="fs-2">Appointments</h3>
+                    <p>List of all appointments</p>
+                    <a href="api?command=appointments-list" class="icon-link d-inline-flex align-items-center">
+                        See
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#chevron-right"/>
+                        </svg>
+                    </a>
+                </div>
+            </c:if>
+
+            <c:if test="${sessionScope.user.role eq 'ADMIN' or sessionScope.user.role eq 'DOCTOR'
+            or sessionScope.user.role eq'NURSE'}">
+                <div class="feature col">
+                    <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#people-circle"/>
+                        </svg>
+                    </div>
+                    <h3 class="fs-2">Patients</h3>
+                    <p>List of all hospital patients</p>
+                    <a href="api?command=patients-list" class="icon-link d-inline-flex align-items-center">
+                        See
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#chevron-right"/>
+                        </svg>
+                    </a>
+                </div>
+            </c:if>
+            <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+                <div class="feature col">
+                    <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#people-circle"/>
+                        </svg>
+                    </div>
+                    <h3 class="fs-2">Staff</h3>
+                    <p>List of all hospital staff</p>
+                    <a href="api?command=staff-list"
+                       class="icon-link d-inline-flex align-items-center">
+                        See
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#chevron-right"/>
+                        </svg>
+                    </a>
+                </div>
+            </c:if>
+        </div>
+    </div>
+</main>
+<script src="../resources/js/bootstrap.bundle.min.js"></script>
+<jsp:include page="fragments/footer.jsp"/>
+</body>
+</html>

@@ -1,0 +1,14 @@
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+.bi {
+    vertical-align: -.125em;
+    fill: currentColor;
+}
+.bg-color{
+    background-color: #f9fbfd;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
