@@ -9,6 +9,7 @@
 <html lang="${sessionScope.lang}">
 <head>
     <jsp:include page="fragments/head.jsp"/>
+    <jsp:include page="fragments/header.jsp"/>
     <script>
         $(document).ready(function() {
             $('#patientModal').on('hidden.bs.modal', function () {
@@ -18,7 +19,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="fragments/header.jsp"/>
 <div class="container">
     <div class="row gutters">
         <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">

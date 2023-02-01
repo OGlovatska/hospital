@@ -8,8 +8,8 @@
 <html lang="${sessionScope.lang}">
 <head>
     <jsp:include page="fragments/head.jsp"/>
+    <jsp:include page="fragments/header.jsp"/>
 
-    <jsp:include page="fragments/head.jsp"/>
     <script>
         $(document).ready(function() {
             $('#exampleModal').on('hidden.bs.modal', function () {
@@ -19,7 +19,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="fragments/header.jsp"/>
 <div class="container">
     <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap5">
         <div class="d-flex">

@@ -10,6 +10,10 @@
           integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" >
     <link rel="shortcut icon" href="resources/images/favicon.png">
+<%--    <link href="resources/css/bootstrap.min.css" rel="stylesheet">--%>
+<%--    <link href="resources/css/style.css" rel="stylesheet">--%>
+<%--    <link href="resources/css/features.css" rel="stylesheet">--%>
+
     <link href="../resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="../resources/css/style.css" rel="stylesheet">
     <link href="../resources/css/features.css" rel="stylesheet">

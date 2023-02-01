@@ -7,6 +7,7 @@
 <html lang="${sessionScope.lang}">
 <head>
     <jsp:include page="fragments/head.jsp"/>
+    <jsp:include page="fragments/header.jsp"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
@@ -25,8 +26,6 @@
         });
     </script>
 </head>
-<body>
-<jsp:include page="fragments/header.jsp"/>
 <body class="bg-color">
 <section class="container mt-5">
     <div class="row justify-content-md-center">
@@ -91,5 +90,6 @@
         </form>
     </div>
 </section>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

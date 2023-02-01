@@ -33,9 +33,6 @@
     <div class="lead py"><br>
         <h5><fmt:message key="about.descriptionTitle"/></h5>
         <fmt:message key="about.main"/>
-<%--        The task of the final project is to develop a web application that supports the functionality according to--%>
-<%--        the task--%>
-<%--        variant.--%>
         <h5> <fmt:message key="about.variant.title"/></h5>
         <fmt:message key="about.variant.text"/><br>
         <ul>
@@ -54,14 +51,6 @@
             </li>
         </ul>
         <fmt:message key="about.rights"/>
-<%--        The administrator registers patients and doctors in the system and appoints a doctor to the--%>
-<%--        patient. <br>--%>
-<%--        The doctor determines the diagnosis, makes appointments to the patient (procedures,--%>
-<%--        medications, operations), which are recorded in the Hospital Card. <br>--%>
-<%--        The appointment can be made by a Nurse (procedures, medications) or a Doctor (any appointment). <br>--%>
-<%--        The patient can be discharged from the hospital, with a definitive diagnosis recorded. <br>--%>
-<%--        (Optional: implement the ability to save / export a document with information about the--%>
-<%--        patient&#39;s discharge).--%>
     </div>
 </div>
 <jsp:include page="fragments/footer.jsp"/>

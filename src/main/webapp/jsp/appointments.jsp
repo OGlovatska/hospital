@@ -12,7 +12,6 @@
     <jsp:include page="fragments/header.jsp"/>
 </head>
 <body>
-
 <div class="container">
     <div class="dataTables_wrapper dt-bootstrap5">
         <div class="d-flex">
@@ -55,7 +54,7 @@
                     <button type="submit" class="btn btn-outline-primary me-2 btn-sm">Show</button>
                 </div>
             </form>
-            <c:if test="${sessionScope.user.role eq 'DOCTOR' or 'NURSE'}">
+            <c:if test="${sessionScope.user.role eq 'DOCTOR' or sessionScope.user.role eq 'NURSE'}">
                 <div class="col-auto">
                     <form action="api" method="get">
                         <input type="hidden" name="command" value="create-appointment"/>
