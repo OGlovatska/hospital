@@ -1,10 +1,10 @@
-##Hospital
+## Hospital
 
 
 The task of the final project is to develop a web application that supports the functionality according to the
 task variant.
 
-###Variant
+### Variant
 
 The system administrator has access to a list of doctors by category (pediatrician, traumatologist, surgeon, ...)
 and a list of patients. Implement the ability to sort:
@@ -27,5 +27,5 @@ The patient can be discharged from the hospital, with a definitive diagnosis rec
 
 (Optional: implement the ability to save / export a document with information about the patient's discharge).
 
-####Database schema
+#### Database schema
 ![Database schema](database_schema.png)
