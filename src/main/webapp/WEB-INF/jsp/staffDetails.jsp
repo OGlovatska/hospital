@@ -66,7 +66,7 @@
     <nav style="padding-top: 15px">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link <c:if test="${requestScope.activeTab == 'nav-patients'}">active</c:if>" id="nav-patients-tab" data-bs-toggle="tab" data-bs-target="#nav-patients"
-                    type="button" role="tab" aria-controls="nav-patients" aria-selected="true">Patients
+                    type="button" role="tab" aria-controls="nav-patients" aria-selected="true">Assigned patients
             </button>
         </div>
     </nav>

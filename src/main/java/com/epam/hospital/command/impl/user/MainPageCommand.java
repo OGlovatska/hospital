@@ -5,15 +5,10 @@ import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-
-public class LogoutCommand implements Command {
-
+public class MainPageCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        session.invalidate();
-        return new CommandResult(Page.LOGIN);
+        return new CommandResult(Page.MAIN);
     }
 }

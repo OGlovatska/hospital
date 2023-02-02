@@ -11,12 +11,12 @@
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-end py-3 mb-4 border-bottom">
         <c:choose>
             <c:when test="${sessionScope.user eq null}">
-                <a href="jsp/login.jsp" class="navbar-brand d-flex me-auto">
+                <a href="api?command=about" class="navbar-brand d-flex me-auto">
                     <img src="resources/images/logo.png" alt="logo" width="142" height="32">
                 </a>
             </c:when>
             <c:otherwise>
-                <a href="jsp/main.jsp" class="navbar-brand d-flex me-auto">
+                <a href="api?command=main" class="navbar-brand d-flex me-auto">
                     <img src="resources/images/logo.png" alt="logo" width="142" height="32">
                 </a>
             </c:otherwise>
@@ -54,7 +54,7 @@
                 <button type="submit" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"
                         aria-expanded="false">
                     <c:choose>
-                        <c:when test="${sessionScope.lang eq 'en'}">EN</c:when>
+                        <c:when test="${sessionScope.lang eq 'en' or sessionScope.lang == null}">EN</c:when>
                         <c:otherwise>UA</c:otherwise>
                     </c:choose>
                 </button>

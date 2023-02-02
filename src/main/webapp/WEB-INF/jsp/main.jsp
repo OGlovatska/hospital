@@ -105,7 +105,7 @@
         </div>
     </div>
 </main>
-<script src="../resources/js/bootstrap.bundle.min.js"></script>
+<script src="webapp/resources/js/bootstrap.bundle.min.js"></script>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

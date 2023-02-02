@@ -205,7 +205,7 @@
                 <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                     <button class="nav-link <c:if test="${requestScope.activeTab == 'nav-staff'}">active</c:if>"
                             id="nav-staff-tab" data-bs-toggle="tab" data-bs-target="#nav-staff"
-                            type="button" role="tab" aria-controls="nav-staff" aria-selected="true">Staff
+                            type="button" role="tab" aria-controls="nav-staff" aria-selected="true">Assigned staff
                     </button>
                 </c:if>
                 <button class="nav-link <c:if test="${requestScope.activeTab == 'nav-hospitalisations'}">active</c:if>"

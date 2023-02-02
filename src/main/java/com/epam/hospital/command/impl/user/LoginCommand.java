@@ -24,6 +24,6 @@ public class LoginCommand implements Command {
         } catch (ApplicationException e){
             e.printStackTrace();
         }
-        return new CommandResult(Page.MAIN, true);
+        return new CommandResult(Page.MAIN);
     }
 }
