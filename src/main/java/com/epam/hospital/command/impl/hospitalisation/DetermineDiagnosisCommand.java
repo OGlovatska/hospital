@@ -1,5 +1,6 @@
 package com.epam.hospital.command.impl.hospitalisation;
 
+import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.exception.ApplicationException;
@@ -18,7 +19,11 @@ import static com.epam.hospital.util.CommandUtil.getPageToRedirect;
 
 public class DetermineDiagnosisCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(DetermineDiagnosisCommand.class);
-    private final HospitalisationService service = new HospitalisationService();
+    private final HospitalisationService service;
+
+    public DetermineDiagnosisCommand(ApplicationContext applicationContext) {
+        this.service = applicationContext.getHospitalisationService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
@@ -31,7 +36,9 @@ public class DetermineDiagnosisCommand implements Command {
         try {
             service.determinePatientDiagnosis(user, hospitalisationId, diagnosis);
         } catch (ApplicationException e){
-            e.printStackTrace();
+            LOG.error("Exception has occurred during executing determine diagnosis command, message = {}",
+                    e.getType().getErrorMessage());
+            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
         return new CommandResult(getPageToRedirect(PATIENT_DETAILS,

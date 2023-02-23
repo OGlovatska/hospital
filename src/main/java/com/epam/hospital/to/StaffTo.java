@@ -5,11 +5,19 @@ public class StaffTo extends UserTo {
     private String specialisation;
     private int patients;
 
-    public StaffTo(int id, String firstName, String lastName, String email, String role,
-                   int userId, String specialisation, int patients) {
-        super(id, firstName, lastName, email, role);
-        this.specialisation = specialisation;
-        this.patients = patients;
+    private StaffTo(Builder builder){
+        super(builder);
+        this.userId = builder.userId;
+        this.specialisation = builder.specialisation;
+        this.patients = builder.patients;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getSpecialisation() {
@@ -31,8 +39,39 @@ public class StaffTo extends UserTo {
     @Override
     public String toString() {
         return "StaffTo{" +
-                "specialisation='" + specialisation + '\'' +
+                "id=" + super.getId() +
+                ", firstName=" + super.getFirstName() +
+                ", lastName=" + super.getLastName() +
+                ", email=" + super.getEmail() +
+                ", role=" + super.getRole() +
+                ", userId=" + userId +
+                ", specialisation='" + specialisation + '\'' +
                 ", patients=" + patients +
                 '}';
+    }
+
+    public static class Builder extends UserTo.Builder<Builder> {
+        private int userId;
+        private String specialisation;
+        private int patients;
+
+        public Builder userId(int userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder specialisation(String specialisation) {
+            this.specialisation = specialisation;
+            return this;
+        }
+
+        public Builder patients(int patients) {
+            this.patients = patients;
+            return this;
+        }
+
+        public StaffTo build() {
+            return new StaffTo(this);
+        }
     }
 }

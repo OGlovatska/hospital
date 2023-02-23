@@ -2,6 +2,7 @@ package com.epam.hospital.service;
 
 import com.epam.hospital.dao.impl.StaffDaoImpl;
 import com.epam.hospital.dao.impl.StaffPatientDaoImpl;
+import com.epam.hospital.dao.impl.UserDaoImpl;
 import com.epam.hospital.exception.*;
 import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.User;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static com.epam.hospital.exception.ErrorType.*;
@@ -28,15 +30,23 @@ import static com.epam.hospital.util.ValidationUtil.*;
 
 public class StaffService {
     private static final Logger LOG = LoggerFactory.getLogger(StaffService.class);
-    private final StaffDaoImpl staffDao = new StaffDaoImpl();
-    private final StaffPatientDaoImpl staffPatientDao = new StaffPatientDaoImpl();
-    private final StaffRepository staffRepository = new StaffRepository();
+    private final StaffDaoImpl staffDao;
+    private final StaffPatientDaoImpl staffPatientDao;
+    private final StaffRepository staffRepository;
 
-    public List<StaffTo> getAllStaff(UserTo user, String offset, String limit, String orderBy, String direction) throws IllegalRequestDataException {
+    public StaffService(StaffDaoImpl staffDao, StaffPatientDaoImpl staffPatientDao,
+                        StaffRepository staffRepository) {
+        this.staffDao = staffDao;
+        this.staffPatientDao = staffPatientDao;
+        this.staffRepository = staffRepository;
+    }
+
+    public List<StaffTo> getAllStaff(UserTo user, int offset, int limit, String orderBy, String direction) throws IllegalRequestDataException {
         checkUserNotNull(user);
-        if (user.getRole().equals(Role.ADMIN.name())) {
+        if (user.getRole().equals(Role.ADMIN)) {
             try {
-                return StaffUtil.getStaffTos(staffDao.getAllStaff(new Pageable(offset, limit, new Sort(orderBy, direction))));
+                return StaffUtil.getStaffTos(staffDao.getAllStaff(new Pageable(offset,
+                        limit, new Sort(orderBy, direction))));
             } catch (DBException e) {
                 LOG.error("Exception has occurred during executing getAllStaff() method", e);
                 throw new IllegalRequestDataException(APP_ERROR);
@@ -56,7 +66,7 @@ public class StaffService {
         }
     }
 
-    public List<String> getAllSpecialisations(){
+    public List<String> getAllSpecialisations() {
         return Arrays
                 .stream(Specialisation.values())
                 .map(Specialisation::getSpecialisation)
@@ -70,24 +80,31 @@ public class StaffService {
         return roles;
     }
 
-    public void saveStaff(String password, User user, Staff staff){
-        try {
-            staffRepository.save(user, staff);
-            sendRegistrationEmail(password, user);
-            createNewStaffTo(user, staff);
-        } catch (DBException e) {
-            LOG.error("Exception has occurred during executing saveStaff() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+    public void saveStaff(UserTo user, String password, User newUser, Staff newStaff) {
+        checkUserNotNull(user);
+        validateUniqueEmail(user.getEmail());
+        if (user.getRole().equals(Role.ADMIN)) {
+            try {
+                staffRepository.save(newUser, newStaff);
+                sendRegistrationEmail(password, newUser);
+            } catch (DBException e) {
+                LOG.error("Exception has occurred during executing saveStaff() method, message = {}", e.getMessage());
+                throw new ApplicationException(e.getMessage(), APP_ERROR);
+            }
+        } else {
+            LOG.error("Only ADMIN can create new staff, current user role is {}", user.getRole());
+            throw new IllegalRequestDataException(NOT_ADMIN);
         }
     }
 
     public List<StaffTo> getAllStaffOfPatient(int patientId, String offset, String limit, String orderBy, String direction) {
         try {
             return getStaffTos(staffDao.getAllStaff(patientId,
-                    new Pageable(offset, limit, new Sort(orderBy, direction))));
+                    new Pageable(Integer.parseInt(offset), Integer.parseInt(limit),
+                            new Sort(orderBy, direction))));
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllStaffOfPatient() method", e);
-            throw new IllegalRequestDataException();
+            LOG.error("Exception has occurred during executing getAllStaffOfPatient() method ", e);
+            throw new ApplicationException(APP_ERROR);
         }
     }
 
@@ -96,7 +113,7 @@ public class StaffService {
             return staffPatientDao.staffOfPatientCount(patientId);
         } catch (DBException e) {
             LOG.error("Exception has occurred during executing getStaffOfPatientCount() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(APP_ERROR);
         }
     }
 
@@ -105,7 +122,7 @@ public class StaffService {
             return getStaffTos(staffDao.getAllStaffNotAssignedToPatient(patientId));
         } catch (DBException e) {
             LOG.error("Exception has occurred during executing getAllPatientsNotAssignedToStaff() method", e);
-            throw new IllegalRequestDataException();
+            throw new ApplicationException(APP_ERROR);
         }
     }
 
@@ -113,20 +130,25 @@ public class StaffService {
         try {
             return createStaffTo(staffDao.get(staffId).orElseThrow(), 0);
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getStaff method", e);
-            throw new IllegalRequestDataException(WRONG_REQUEST);
+            LOG.error("Exception has occurred during executing getStaff method, message = {}", e.getMessage());
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
     public StaffTo getStaff(UserTo user) {
         checkUserNotNull(user);
-        if (user.getRole().equals(Role.DOCTOR.name()) || user.getRole().equals(Role.NURSE.name())){
+        if (user.getRole().equals(Role.DOCTOR) || user.getRole().equals(Role.NURSE)) {
             try {
                 return createStaffTo(staffDao.getByUserId(user.getId()).orElseThrow(), 0);
             } catch (DBException e) {
-                e.printStackTrace();
+                LOG.error("Exception has occurred during executing getStaff method, message = {}", e.getMessage());
+                throw new ApplicationException(APP_ERROR);
+            } catch (NoSuchElementException e){
+                LOG.error("Exception has occurred during executing getStaff method, message = {}", e.getMessage());
+                throw new IllegalRequestDataException(STAFF_NOT_FOUND);
             }
+        } else {
+            throw new IllegalRequestDataException(NOT_STAFF);
         }
-        return null;
     }
 }

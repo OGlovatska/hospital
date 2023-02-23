@@ -4,6 +4,12 @@ public class ApplicationException extends RuntimeException {
     private final ErrorType type;
 
     public ApplicationException(ErrorType type) {
+        super(type.getErrorMessage());
+        this.type = type;
+    }
+
+    public ApplicationException(String message, ErrorType type) {
+        super(message);
         this.type = type;
     }
 

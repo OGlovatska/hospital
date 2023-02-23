@@ -91,7 +91,7 @@ public class UserDaoImpl implements Dao<User> {
         } catch (SQLException e) {
             LOG.error("Exception has occurred during executing SAVE USER query, error code={}, message={}",
                     e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }

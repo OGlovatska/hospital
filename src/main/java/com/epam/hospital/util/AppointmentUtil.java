@@ -9,27 +9,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.epam.hospital.command.constant.Parameter.*;
-import static com.epam.hospital.util.DateTimeUtil.parseLocalDateTime;
 
 public class AppointmentUtil {
-    private static final Logger LOG = LoggerFactory.getLogger(AppointmentUtil.class);
 
     public static AppointmentTo createAppointmentTo(Appointment appointment, Patient patient, Staff staff) {
-        return new AppointmentTo(appointment.getId(), appointment.getHospitalisationId(), appointment.getPatientId(),
-                appointment.getStaffId(), appointment.getDateTime(), appointment.getType(), appointment.getDescription(),
-                appointment.getConclusion(), appointment.getStatus(), patient.getFirstName(), patient.getLastName(),
-                staff.getFirstName(), staff.getLastName(), staff.getSpecialisation());
+        return new AppointmentTo.Builder().id(appointment.getId()).hospitalisationId(appointment.getHospitalisationId())
+                .patientId(appointment.getPatientId()).staffId(appointment.getStaffId()).dateTime(appointment.getDateTime())
+                .type(appointment.getType()).description(appointment.getDescription()).conclusion(appointment.getConclusion())
+                .status(appointment.getStatus()).patientFirstName(patient.getFirstName()).patientLastName(patient.getLastName())
+                .staffFirstName(staff.getFirstName()).staffLastName(staff.getLastName()).specialisation(staff.getSpecialisation())
+                .build();
     }
 
-    public static Appointment createAppointment(HttpServletRequest request){
-        Appointment appointment = new Appointment();
-        appointment.setPatientId(Integer.parseInt(request.getParameter(PATIENT_ID)));
-        appointment.setStaffId(Integer.parseInt(request.getParameter(STAFF_ID)));
-        appointment.setDateTime(parseLocalDateTime(request.getParameter(DATE_TIME)));
-        appointment.setType(request.getParameter(TYPE));
-        appointment.setDescription(request.getParameter(DESCRIPTION));
-        appointment.setConclusion(request.getParameter(CONCLUSION));
-        appointment.setStatus(request.getParameter(STATUS));
-        return appointment;
+    public static Appointment createAppointment(HttpServletRequest request) {
+        return new Appointment.Builder().patientId(Integer.parseInt(request.getParameter(PATIENT_ID)))
+                .staffId(Integer.parseInt(request.getParameter(STAFF_ID)))
+                .dateTime(DateTimeUtil.parseLocalDateTime(request.getParameter(DATE_TIME)))
+                .type(request.getParameter(TYPE)).description(request.getParameter(DESCRIPTION))
+                .conclusion(request.getParameter(CONCLUSION)).status(request.getParameter(STATUS))
+                .build();
     }
 }

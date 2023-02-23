@@ -13,8 +13,6 @@ public class HospitalisationQueries {
     public static final String UPDATE_HOSPITALISATION = "UPDATE hospitalisation SET start_date=?, end_date=?, status=?, " +
             "diagnosis=? WHERE id=?";
 
-    public static final String GET_HOSPITALISATIONS_COUNT = "SELECT COUNT(*) as hospitalisations FROM hospitalisation";
-
     public static final String GET_HOSPITALISATIONS_OF_PATIENT_COUNT = "SELECT COUNT(*) as hospitalisations FROM hospitalisation WHERE patient_id=%s";
 
     public static final String GET_PATIENT_CURRENT_HOSPITALISATION = "SELECT * FROM hospitalisation h WHERE h.patient_id=? AND status='HOSPITALIZED'";

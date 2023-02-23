@@ -32,7 +32,7 @@ public class Sort {
         return "ORDER BY " + order + " " + direction;
     }
 
-    private enum Direction {
+    public enum Direction {
         ASC,
         DESC;
     }

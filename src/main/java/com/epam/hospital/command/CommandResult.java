@@ -25,4 +25,12 @@ public class CommandResult {
     public boolean isRedirect() {
         return isRedirect;
     }
+
+    @Override
+    public String toString() {
+        return "CommandResult{" +
+                "page='" + page + '\'' +
+                ", isRedirect=" + isRedirect +
+                '}';
+    }
 }

@@ -6,8 +6,8 @@ DELETE FROM appointment;
 DELETE FROM staff_patient;
 
 INSERT INTO users (first_name, last_name, email, password, role)
-VALUES ('Olga', 'Glovatska', 'admin@gmail.com', '{noop}password', 'ADMIN'),
-       ('Jane', 'Dou', 'patient@gmail.com', '{noop}password', 'PATIENT'),
+VALUES ('Viola', 'Robson', 'admin@gmail.com', '{noop}password', 'ADMIN'),
+       ('Barbara', 'Henry', 'patient@gmail.com', '{noop}password', 'PATIENT'),
        ('Peter', 'Smith', 'doctor@gmail.com', '{noop}password', 'DOCTOR'),
        ('Julia', 'Stone', 'nurse@gmail.com', '{noop}password', 'NURSE');
 

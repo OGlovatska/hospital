@@ -3,6 +3,7 @@ package com.epam.hospital.command.constant;
 public class Parameter {
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
+    public static final String MESSAGE = "message";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String ROLE = "role";
@@ -34,11 +35,14 @@ public class Parameter {
     public static final String APPOINTMENTS = "appointments";
     public static final String HOSPITALISATIONS = "hospitalisations";
     public static final String DATE = "date";
-    public static final String START_DATE = "startDate";
-    public static final String END_DATE = "endDate";
+    public static final String HOSPITALISATION_START_DATE = "startDate";
+    public static final String HOSPITALISATION_END_DATE = "endDate";
     public static final String APPOINTMENT_TYPES = "appointmentTypes";
     public static final String APPOINTMENT_STATUSES = "appointmentStatuses";
     public static final String ACTIVE_TAB = "activeTab";
+    public static final String HOSPITALISATIONS_TAB = "nav-hospitalisations";
+    public static final String STAFF_TAB = "nav-staff";
+    public static final String PATIENTS_TAB = "nav-patients";
     public static final String DATE_TIME = "dateTime";
     public static final String TYPE = "type";
     public static final String DESCRIPTION = "description";

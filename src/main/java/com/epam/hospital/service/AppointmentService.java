@@ -30,27 +30,35 @@ import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
 
 public class AppointmentService {
     private static final Logger LOG = LoggerFactory.getLogger(AppointmentService.class);
-    private final AppointmentDaoImpl appointmentDao = new AppointmentDaoImpl();
-    private final PatientDaoImpl patientDao = new PatientDaoImpl();
-    private final StaffDaoImpl staffDao = new StaffDaoImpl();
-    private final HospitalisationDaoImpl hospitalisationDao = new HospitalisationDaoImpl();
+    private final AppointmentDaoImpl appointmentDao;
+    private final PatientDaoImpl patientDao;
+    private final StaffDaoImpl staffDao;
+    private final HospitalisationDaoImpl hospitalisationDao;
 
-    public Map<Integer, List<AppointmentTo>> getAllAppointments(UserTo user, String offset, String limit, String orderBy, String direction) {
+    public AppointmentService(AppointmentDaoImpl appointmentDao, PatientDaoImpl patientDao, StaffDaoImpl staffDao, HospitalisationDaoImpl hospitalisationDao) {
+        this.appointmentDao = appointmentDao;
+        this.patientDao = patientDao;
+        this.staffDao = staffDao;
+        this.hospitalisationDao = hospitalisationDao;
+    }
+
+    public Map<Integer, List<AppointmentTo>> getAllAppointments(UserTo user, int offset, int limit, String orderBy, String direction) {
         checkUserNotNull(user);
-        if (user.getRole().equals(Role.ADMIN.name())) {
+        if (user.getRole().equals(Role.ADMIN)) {
             return getAppointmentsForAdmin(offset, limit, orderBy, direction);
-        } else if (user.getRole().equals(Role.DOCTOR.name()) || user.getRole().equals(Role.NURSE.name())){
+        } else if (user.getRole().equals(Role.DOCTOR) || user.getRole().equals(Role.NURSE)) {
             return getAppointmentsForStaff(user, offset, limit, orderBy, direction);
         } else {
             return getAppointmentsForPatient(user, offset, limit, orderBy, direction);
         }
     }
 
-    private Map<Integer, List<AppointmentTo>> getAppointmentsForAdmin(String offset, String limit, String orderBy, String direction){
+    private Map<Integer, List<AppointmentTo>> getAppointmentsForAdmin(int offset, int limit, String orderBy, String direction) {
         try {
             Map<Integer, List<AppointmentTo>> appointments = new HashMap<>();
             int appointmentsCount = getAllAppointmentsCount();
-            List<AppointmentTo> appointmentTos = getAppointmentTos(appointmentDao.getAll(new Pageable(offset, limit, new Sort(orderBy, direction))));
+            List<AppointmentTo> appointmentTos = getAppointmentTos(appointmentDao.getAll(
+                    new Pageable(offset, limit, new Sort(orderBy, direction))));
             appointments.put(appointmentsCount, appointmentTos);
             return appointments;
         } catch (DBException e) {
@@ -59,13 +67,13 @@ public class AppointmentService {
         }
     }
 
-    private Map<Integer, List<AppointmentTo>> getAppointmentsForStaff(UserTo user, String offset, String limit, String orderBy, String direction){
+    private Map<Integer, List<AppointmentTo>> getAppointmentsForStaff(UserTo user, int offset, int limit, String orderBy, String direction) {
         try {
             Staff staff = staffDao.getByUserId(user.getId()).orElse(null);
-            if (staff != null){
+            if (staff != null) {
                 Map<Integer, List<AppointmentTo>> appointments = new HashMap<>();
                 int appointmentsCount = appointmentDao.appointmentsCountForStaff(staff.getId());
-                List<AppointmentTo> appointmentTos = getAllAppointmentsOfStaff(staff.getId(), offset, limit, orderBy,direction);
+                List<AppointmentTo> appointmentTos = getAllAppointmentsOfStaff(staff.getId(), offset, limit, orderBy, direction);
                 appointments.put(appointmentsCount, appointmentTos);
                 return appointments;
             } else {
@@ -78,10 +86,10 @@ public class AppointmentService {
         }
     }
 
-    private Map<Integer, List<AppointmentTo>> getAppointmentsForPatient(UserTo user, String offset, String limit, String orderBy, String direction) {
+    private Map<Integer, List<AppointmentTo>> getAppointmentsForPatient(UserTo user, int offset, int limit, String orderBy, String direction) {
         try {
             Patient patient = patientDao.getByUserId(user.getId()).orElse(null);
-            if (patient != null){
+            if (patient != null) {
                 Map<Integer, List<AppointmentTo>> appointments = new HashMap<>();
                 int appointmentsCount = appointmentDao.appointmentsCountForPatient(patient.getId());
                 List<AppointmentTo> appointmentTos = getAppointmentTos(appointmentDao.getAllAppointmentsOfPatient(patient.getId(),
@@ -125,7 +133,7 @@ public class AppointmentService {
         }
     }
 
-    public List<AppointmentTo> getAllAppointmentsOfStaff(int staffId, String offset, String limit, String orderBy, String direction) {
+    public List<AppointmentTo> getAllAppointmentsOfStaff(int staffId, int offset, int limit, String orderBy, String direction) {
         try {
             return getAppointmentTos(appointmentDao.getAllAppointmentsOfStaff(staffId,
                     new Pageable(offset, limit, new Sort(orderBy, direction))));
@@ -148,32 +156,36 @@ public class AppointmentService {
 
     public List<String> getAppointmentTypes(UserTo user) {
         checkUserNotNull(user);
-        if (user.getRole().equals(Role.ADMIN.name()) || user.getRole().equals(Role.DOCTOR.name())) {
+        if (user.getRole().equals(Role.ADMIN) || user.getRole().equals(Role.DOCTOR)) {
             return Arrays
                     .stream(AppointmentType.values())
                     .map(AppointmentType::name)
                     .collect(Collectors.toList());
-        } else if (user.getRole().equals(Role.NURSE.name())){
+        } else if (user.getRole().equals(Role.NURSE)) {
             return Arrays.asList(AppointmentType.MEDICATION.name(), AppointmentType.PROCEDURE.name());
         } else {
             throw new IllegalRequestDataException(VALIDATION_ERROR);
         }
     }
 
-    public void saveAppointment(Appointment appointment) {
-        try {
-            Hospitalisation hospitalisation = hospitalisationDao
-                    .getPatientCurrentHospitalisation(appointment.getPatientId()).orElseThrow();
-
-            if (hospitalisation != null){
+    public void saveAppointment(UserTo user, Appointment appointment) {
+        checkUserNotNull(user);
+        if (user.getRole().equals(Role.DOCTOR) || user.getRole().equals(Role.NURSE)) {
+            try {
+                Hospitalisation hospitalisation = hospitalisationDao
+                        .getPatientCurrentHospitalisation(appointment.getPatientId()).orElseThrow();
                 appointment.setHospitalisationId(hospitalisation.getId());
                 appointmentDao.save(appointment);
-            } else {
-                throw new IllegalRequestDataException(VALIDATION_ERROR);
+            } catch (DBException e) {
+                LOG.error("Exception has occurred during executing saveAppointment() method {}", e.getMessage());
+                throw new ApplicationException(APP_ERROR);
+            } catch (NoSuchElementException e) {
+                LOG.error("Can't add appointment to not hospitalised patient");
+                throw new IllegalRequestDataException(PATIENT_NOT_HOSPITALISED);
             }
-        } catch (DBException e) {
-            e.printStackTrace();
-            throw new ApplicationException(APP_ERROR);
+        } else {
+            LOG.error("Only users with role DOCTOR or NURSE can save appointment, current user role is {}", user.getRole());
+            throw new IllegalRequestDataException(NOT_STAFF);
         }
     }
 

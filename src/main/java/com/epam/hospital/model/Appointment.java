@@ -2,7 +2,7 @@ package com.epam.hospital.model;
 
 import java.time.LocalDateTime;
 
-public class Appointment extends Entity{
+public class Appointment extends Entity {
     private int hospitalisationId;
     private int patientId;
     private int staffId;
@@ -12,19 +12,16 @@ public class Appointment extends Entity{
     private String conclusion;
     private String status;
 
-    public Appointment() {
-    }
-
-    public Appointment(int id, int hospitalisationId, int patientId, int staffId, LocalDateTime dateTime, String type, String description, String conclusion, String status) {
-        super(id);
-        this.hospitalisationId = hospitalisationId;
-        this.patientId = patientId;
-        this.staffId = staffId;
-        this.dateTime = dateTime;
-        this.type = type;
-        this.description = description;
-        this.conclusion = conclusion;
-        this.status = status;
+    public Appointment(Builder builder){
+        super(builder.id);
+        this.hospitalisationId = builder.hospitalisationId;
+        this.patientId = builder.patientId;
+        this.staffId = builder.staffId;
+        this.dateTime = builder.dateTime;
+        this.type = builder.type;
+        this.description = builder.description;
+        this.conclusion = builder.conclusion;
+        this.status = builder.status;
     }
 
     public int getHospitalisationId() {
@@ -94,7 +91,8 @@ public class Appointment extends Entity{
     @Override
     public String toString() {
         return "Appointment{" +
-                "hospitalisationId=" + hospitalisationId +
+                "id=" + super.getId() +
+                ", hospitalisationId=" + hospitalisationId +
                 ", patientId=" + patientId +
                 ", staffId=" + staffId +
                 ", dateTime=" + dateTime +
@@ -103,5 +101,66 @@ public class Appointment extends Entity{
                 ", conclusion='" + conclusion + '\'' +
                 ", status='" + status + '\'' +
                 '}';
+    }
+
+    public static class Builder{
+        private int id;
+        private int hospitalisationId;
+        private int patientId;
+        private int staffId;
+        private LocalDateTime dateTime;
+        private String type;
+        private String description;
+        private String conclusion;
+        private String status;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder hospitalisationId(int hospitalisationId) {
+            this.hospitalisationId = hospitalisationId;
+            return this;
+        }
+
+        public Builder patientId(int patientId) {
+            this.patientId = patientId;
+            return this;
+        }
+
+        public Builder staffId(int staffId) {
+            this.staffId = staffId;
+            return this;
+        }
+
+        public Builder dateTime(LocalDateTime dateTime) {
+            this.dateTime = dateTime;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder conclusion(String conclusion) {
+            this.conclusion = conclusion;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Appointment build() {
+            return new Appointment(this);
+        }
     }
 }

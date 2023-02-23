@@ -37,7 +37,7 @@ public class StaffRepository {
         } catch (SQLException e) {
             LOG.error("Exception has occurred during executing SAVE USER STAFF query", e);
             dbManager.rollbackConnection(connection);
-            throw new DBException();
+            throw new DBException(e.getMessage());
         } finally {
             dbManager.closeConnection(connection);
         }

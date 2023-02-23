@@ -1,16 +1,9 @@
 package com.epam.hospital.command;
 
-import com.epam.hospital.command.impl.appointment.AppointmentsListCommand;
-import com.epam.hospital.command.impl.appointment.CreateAppointmentCommand;
-import com.epam.hospital.command.impl.appointment.SaveAppointmentCommand;
-import com.epam.hospital.command.impl.hospitalisation.DetermineDiagnosisCommand;
-import com.epam.hospital.command.impl.hospitalisation.DischargePatientCommand;
-import com.epam.hospital.command.impl.hospitalisation.HospitalisationsListCommand;
-import com.epam.hospital.command.impl.hospitalisation.SaveHospitalisationCommand;
-import com.epam.hospital.command.impl.patient.AssignStaffToPatientCommand;
-import com.epam.hospital.command.impl.patient.PatientDetailsCommand;
-import com.epam.hospital.command.impl.patient.PatientsListCommand;
-import com.epam.hospital.command.impl.patient.SavePatientCommand;
+import com.epam.hospital.appcontext.ApplicationContext;
+import com.epam.hospital.command.impl.appointment.*;
+import com.epam.hospital.command.impl.hospitalisation.*;
+import com.epam.hospital.command.impl.patient.*;
 import com.epam.hospital.command.impl.staff.*;
 import com.epam.hospital.command.impl.user.*;
 
@@ -25,27 +18,29 @@ public class CommandFactory {
     private CommandFactory() {
     }
 
+    private static final ApplicationContext APPLICATION_CONTEXT = ApplicationContext.getInstance();
+
     static {
+        COMMAND_MAP.put(APPOINTMENTS, new AppointmentsListCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(CREATE_APPOINTMENT, new CreateAppointmentCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(SAVE_APPOINTMENT, new SaveAppointmentCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(DETERMINE_DIAGNOSIS, new DetermineDiagnosisCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(DISCHARGE_PATIENT, new DischargePatientCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(HOSPITALISATIONS, new HospitalisationsListCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(SAVE_HOSPITALISATION, new SaveHospitalisationCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(ASSIGN_STAFF_TO_PATIENT, new AssignStaffToPatientCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(PATIENT_DETAILS, new PatientDetailsCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(PATIENTS_LIST, new PatientsListCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(SAVE_PATIENT, new SavePatientCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(ASSIGN_PATIENT_TO_STAFF, new AssignPatientToStaffCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(SAVE_STAFF, new SaveStaffCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(STAFF_DETAILS, new StaffDetailsCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(STAFF_LIST, new StaffListCommand(APPLICATION_CONTEXT));
+        COMMAND_MAP.put(ABOUT, new AboutCommand());
         COMMAND_MAP.put(EMPTY, new EmptyCommand());
-        COMMAND_MAP.put(LOGIN, new LoginCommand());
+        COMMAND_MAP.put(LOGIN, new LoginCommand(APPLICATION_CONTEXT));
         COMMAND_MAP.put(LOGOUT, new LogoutCommand());
         COMMAND_MAP.put(MAIN, new MainPageCommand());
-        COMMAND_MAP.put(ABOUT, new AboutCommand());
-        COMMAND_MAP.put(STAFF_LIST, new StaffListCommand());
-        COMMAND_MAP.put(SAVE_STAFF, new SaveStaffCommand());
-        COMMAND_MAP.put(STAFF_DETAILS, new StaffDetailsCommand());
-        COMMAND_MAP.put(ASSIGN_PATIENT_TO_STAFF, new AssignPatientToStaffCommand());
-        COMMAND_MAP.put(PATIENTS_LIST, new PatientsListCommand());
-        COMMAND_MAP.put(SAVE_PATIENT, new SavePatientCommand());
-        COMMAND_MAP.put(PATIENT_DETAILS, new PatientDetailsCommand());
-        COMMAND_MAP.put(ASSIGN_STAFF_TO_PATIENT, new AssignStaffToPatientCommand());
-        COMMAND_MAP.put(APPOINTMENTS, new AppointmentsListCommand());
-        COMMAND_MAP.put(HOSPITALISATIONS, new HospitalisationsListCommand());
-        COMMAND_MAP.put(CREATE_APPOINTMENT, new CreateAppointmentCommand());
-        COMMAND_MAP.put(SAVE_APPOINTMENT, new SaveAppointmentCommand());
-        COMMAND_MAP.put(SAVE_HOSPITALISATION, new SaveHospitalisationCommand());
-        COMMAND_MAP.put(DISCHARGE_PATIENT, new DischargePatientCommand());
-        COMMAND_MAP.put(DETERMINE_DIAGNOSIS, new DetermineDiagnosisCommand());
     }
 
     public static Command getCommand(String command) {

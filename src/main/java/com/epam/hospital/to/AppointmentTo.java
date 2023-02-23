@@ -19,26 +19,21 @@ public class AppointmentTo {
     private String staffLastName;
     private String specialisation;
 
-    public AppointmentTo() {
-    }
-
-    public AppointmentTo(int id, int hospitalisationId, int patientId, int staffId, LocalDateTime dateTime,
-                         String type, String description, String conclusion, String status, String patientFirstName,
-                         String patientLastName, String staffFirstName, String staffLastName, String specialisation) {
-        this.id = id;
-        this.hospitalisationId = hospitalisationId;
-        this.patientId = patientId;
-        this.staffId = staffId;
-        this.dateTime = dateTime;
-        this.type = type;
-        this.description = description;
-        this.conclusion = conclusion;
-        this.status = status;
-        this.patientFirstName = patientFirstName;
-        this.patientLastName = patientLastName;
-        this.staffFirstName = staffFirstName;
-        this.staffLastName = staffLastName;
-        this.specialisation = specialisation;
+    private AppointmentTo(Builder builder){
+        this.id = builder.id;
+        this.hospitalisationId = builder.hospitalisationId;
+        this.patientId = builder.patientId;
+        this.staffId = builder.staffId;
+        this.dateTime = builder.dateTime;
+        this.type = builder.type;
+        this.description = builder.description;
+        this.conclusion = builder.conclusion;
+        this.status = builder.status;
+        this.patientFirstName = builder.patientFirstName;
+        this.patientLastName = builder.patientLastName;
+        this.staffFirstName = builder.staffFirstName;
+        this.staffLastName = builder.staffLastName;
+        this.specialisation = builder.specialisation;
     }
 
     public int getId() {
@@ -171,5 +166,97 @@ public class AppointmentTo {
                 ", staffLastName='" + staffLastName + '\'' +
                 ", specialisation='" + specialisation + '\'' +
                 '}';
+    }
+
+    public static class Builder {
+        private int id;
+        private int hospitalisationId;
+        private int patientId;
+        private int staffId;
+        private LocalDateTime dateTime;
+        private String type;
+        private String description;
+        private String conclusion;
+        private String status;
+
+        private String patientFirstName;
+        private String patientLastName;
+        private String staffFirstName;
+        private String staffLastName;
+        private String specialisation;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder hospitalisationId(int hospitalisationId) {
+            this.hospitalisationId = hospitalisationId;
+            return this;
+        }
+
+        public Builder patientId(int patientId) {
+            this.patientId = patientId;
+            return this;
+        }
+
+        public Builder staffId(int staffId) {
+            this.staffId = staffId;
+            return this;
+        }
+
+        public Builder dateTime(LocalDateTime dateTime) {
+            this.dateTime = dateTime;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder conclusion(String conclusion) {
+            this.conclusion = conclusion;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder patientFirstName(String patientFirstName) {
+            this.patientFirstName = patientFirstName;
+            return this;
+        }
+
+        public Builder patientLastName(String patientLastName) {
+            this.patientLastName = patientLastName;
+            return this;
+        }
+
+        public Builder staffFirstName(String staffFirstName) {
+            this.staffFirstName = staffFirstName;
+            return this;
+        }
+
+        public Builder staffLastName(String staffLastName) {
+            this.staffLastName = staffLastName;
+            return this;
+        }
+
+        public Builder specialisation(String specialisation) {
+            this.specialisation = specialisation;
+            return this;
+        }
+
+        public AppointmentTo build() {
+            return new AppointmentTo(this);
+        }
     }
 }

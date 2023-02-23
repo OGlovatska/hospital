@@ -1,5 +1,6 @@
 package com.epam.hospital.command.impl.hospitalisation;
 
+import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.exception.ApplicationException;
@@ -20,7 +21,11 @@ import static com.epam.hospital.util.HospitalisationUtil.createHospitalisation;
 
 public class SaveHospitalisationCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(SaveHospitalisationCommand.class);
-    private final HospitalisationService service = new HospitalisationService();
+    private final HospitalisationService service;
+
+    public SaveHospitalisationCommand(ApplicationContext applicationContext){
+        this.service = applicationContext.getHospitalisationService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
@@ -32,11 +37,13 @@ public class SaveHospitalisationCommand implements Command {
         try {
             service.saveHospitalisation(user, hospitalisation);
         } catch (ApplicationException e){
-            e.printStackTrace();
+            LOG.error("Exception has occurred during executing save hospitalisation command, message = {}",
+                    e.getType().getErrorMessage());
+            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
         return new CommandResult(getPageToRedirect(PATIENT_DETAILS,
                 getParameter(PATIENT_ID, String.valueOf(patientId)),
-                getParameter(ACTIVE_TAB, "nav-hospitalisations")), true);
+                getParameter(ACTIVE_TAB, HOSPITALISATIONS_TAB)), true);
     }
 }

@@ -1,9 +1,9 @@
 package com.epam.hospital.util;
 
 import com.epam.hospital.model.Patient;
-import com.epam.hospital.model.User;
+import com.epam.hospital.model.enums.Gender;
+import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.to.PatientTo;
-import com.epam.hospital.to.StaffTo;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.LocalDate;
@@ -15,9 +15,10 @@ import static com.epam.hospital.command.constant.Parameter.GENDER;
 
 public class PatientUtil {
     public static PatientTo createPatientTo(Patient patient) {
-        return new PatientTo(patient.getId(), patient.getFirstName(), patient.getLastName(),
-                patient.getEmail(), patient.getRole().name(), patient.getUserId(), patient.getDateOfBirth(),
-                patient.getGender());
+        return new PatientTo.Builder().id(patient.getId()).firstName(patient.getFirstName())
+                .lastName(patient.getLastName()).email(patient.getEmail()).role(patient.getRole())
+                .userId(patient.getUserId()).dateOfBirth(patient.getDateOfBirth()).gender(patient.getGender())
+                .build();
     }
 
     public static List<PatientTo> getPatientTos(List<Patient> patients){
@@ -27,15 +28,7 @@ public class PatientUtil {
     }
 
     public static Patient createPatient(HttpServletRequest request){
-        Patient patient = new Patient();
-        patient.setDateOfBirth(LocalDate.parse(request.getParameter(DATE_OF_BIRTH)));
-        patient.setGender(request.getParameter(GENDER).toLowerCase());
-        return patient;
-    }
-
-    public static PatientTo createNewPatientTo(User user, Patient patient) {
-        return new PatientTo(patient.getId(), user.getFirstName(), user.getLastName(),
-                user.getEmail(), user.getRole().name(), patient.getUserId(),
-                patient.getDateOfBirth(), patient.getGender());
+        return new Patient.Builder().dateOfBirth(LocalDate.parse(request.getParameter(DATE_OF_BIRTH)))
+                .gender(Gender.valueOf(request.getParameter(GENDER))).build();
     }
 }

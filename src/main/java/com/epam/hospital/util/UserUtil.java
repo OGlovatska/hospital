@@ -10,17 +10,14 @@ import static com.epam.hospital.command.constant.Parameter.*;
 public class UserUtil {
 
     public static UserTo getUserTo(User user) {
-        return new UserTo(user.getId(), user.getFirstName(), user.getLastName(),
-                user.getEmail(), user.getRole().name());
+        return new UserTo.Builder<>().id(user.getId()).firstName(user.getFirstName())
+                .lastName(user.getLastName()).email(user.getEmail()).role(user.getRole()).build();
     }
 
     public static User createUser(HttpServletRequest request, String password) {
-        User user = new User();
-        user.setFirstName(request.getParameter(FIRST_NAME));
-        user.setLastName(request.getParameter(LAST_NAME));
-        user.setEmail(request.getParameter(EMAIL));
-        user.setPassword(password);
-        user.setRole(Role.valueOf(request.getParameter(ROLE)));
+        User user = new User.Builder<>().firstName(request.getParameter(FIRST_NAME))
+                .lastName(request.getParameter(LAST_NAME)).email(request.getParameter(EMAIL))
+                .password(password).role(Role.valueOf(request.getParameter(ROLE))).build();
         return prepareToSaveUser(user);
     }
 

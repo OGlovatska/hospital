@@ -14,13 +14,10 @@ import static com.epam.hospital.command.constant.Parameter.SPECIALISATION;
 public class StaffUtil {
 
     public static StaffTo createStaffTo(Staff staff, int patients) {
-        return new StaffTo(staff.getId(), staff.getFirstName(), staff.getLastName(),
-                staff.getEmail(), staff.getRole().name(), staff.getUserId(), staff.getSpecialisation(), patients);
-    }
-
-    public static StaffTo createNewStaffTo(User user, Staff staff) {
-        return new StaffTo(staff.getId(), user.getFirstName(), user.getLastName(),
-                user.getEmail(), user.getRole().name(), staff.getUserId(), staff.getSpecialisation(), 0);
+        return new StaffTo.Builder().id(staff.getId()).firstName(staff.getFirstName())
+                .lastName(staff.getLastName()).email(staff.getEmail()).role(staff.getRole())
+                .userId(staff.getUserId()).specialisation(staff.getSpecialisation())
+                .patients(patients).build();
     }
 
     public static List<StaffTo> getStaffTos(Map<Staff, Integer> staff){
@@ -39,8 +36,6 @@ public class StaffUtil {
     }
 
     public static Staff createStaff(HttpServletRequest request){
-        Staff staff = new Staff();
-        staff.setSpecialisation(request.getParameter(SPECIALISATION));
-        return staff;
+        return new Staff.Builder().specialisation(request.getParameter(SPECIALISATION)).build();
     }
 }

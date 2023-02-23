@@ -14,7 +14,11 @@ import static com.epam.hospital.util.ValidationUtil.*;
 
 public class UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-    private final UserDaoImpl userDao = new UserDaoImpl();
+    private final UserDaoImpl userDao;
+
+    public UserService(UserDaoImpl userDao) {
+        this.userDao = userDao;
+    }
 
     public UserTo getAuthorizedUser(String email, String password) throws ApplicationException {
         LOG.info("Authorization of user with email {}", email);
@@ -24,11 +28,13 @@ public class UserService {
             validatePassword(password,  user.getPassword());
             return UserUtil.getUserTo(user);
         } catch (DBException e) {
-            e.printStackTrace();
+            LOG.error("Exception has occurred during executing getAuthorizedUser() method in UserService, message = {}",
+                    e.getMessage());
             throw new ApplicationException(ErrorType.APP_ERROR);
         } catch (NoSuchElementException e) {
-            LOG.error("Exception has occurred during executing getByEmail() method in UserService", e);
-            throw new IllegalRequestDataException(ErrorType.DATA_NOT_FOUND);
+            LOG.error("Exception has occurred during executing getAuthorizedUser() method in UserService, message = {}",
+                    e.getMessage());
+            throw new IllegalRequestDataException(ErrorType.USER_NOT_FOUND);
         }
     }
 }

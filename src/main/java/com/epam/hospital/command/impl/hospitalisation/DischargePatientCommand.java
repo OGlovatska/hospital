@@ -1,5 +1,6 @@
 package com.epam.hospital.command.impl.hospitalisation;
 
+import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.exception.ApplicationException;
@@ -19,7 +20,11 @@ import static com.epam.hospital.util.CommandUtil.getPageToRedirect;
 
 public class DischargePatientCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(DischargePatientCommand.class);
-    private final HospitalisationService service = new HospitalisationService();
+    private final HospitalisationService service;
+
+    public DischargePatientCommand(ApplicationContext applicationContext) {
+        this.service = applicationContext.getHospitalisationService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
@@ -28,11 +33,13 @@ public class DischargePatientCommand implements Command {
 
         int patientId = Integer.parseInt(request.getParameter(PATIENT_ID));
         int hospitalisationId = Integer.parseInt(request.getParameter(HOSPITALISATION_ID));
-        LocalDate endDate = LocalDate.parse(request.getParameter(END_DATE));
+        LocalDate endDate = LocalDate.parse(request.getParameter(HOSPITALISATION_END_DATE));
         try {
             service.dischargePatient(user, hospitalisationId, endDate);
         } catch (ApplicationException e) {
-            e.printStackTrace();
+            LOG.error("Exception has occurred during executing discharge patient command, message = {}",
+                    e.getType().getErrorMessage());
+            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
         return new CommandResult(getPageToRedirect(PATIENT_DETAILS,

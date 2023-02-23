@@ -14,28 +14,16 @@ public class HospitalisationTo {
     private String diagnosis;
     private List<AppointmentTo> appointments;
 
-    public HospitalisationTo() {
-    }
-
-    public HospitalisationTo(int id, int patientId, LocalDate startDate, LocalDate endDate, String status, String diagnosis) {
-        this.id = id;
-        this.patientId = patientId;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.status = status;
-        this.diagnosis = diagnosis;
-    }
-
-    public HospitalisationTo(int id, int patientId, String patientFirstName, String patientLastName,
-                             LocalDate startDate, LocalDate endDate, String status, String diagnosis) {
-        this.id = id;
-        this.patientId = patientId;
-        this.patientFirstName = patientFirstName;
-        this.patientLastName = patientLastName;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.status = status;
-        this.diagnosis = diagnosis;
+    private HospitalisationTo(Builder builder) {
+        this.id = builder.id;
+        this.patientId = builder.patientId;
+        this.patientFirstName = builder.patientFirstName;
+        this.patientLastName = builder.patientLastName;
+        this.startDate = builder.startDate;
+        this.endDate = builder.endDate;
+        this.status = builder.status;
+        this.diagnosis = builder.diagnosis;
+        this.appointments = builder.appointments;
     }
 
     public int getId() {
@@ -108,5 +96,66 @@ public class HospitalisationTo {
 
     public void setAppointments(List<AppointmentTo> appointments) {
         this.appointments = appointments;
+    }
+
+    public static class Builder {
+        private int id;
+        private int patientId;
+        private String patientFirstName;
+        private String patientLastName;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private String status;
+        private String diagnosis;
+        private List<AppointmentTo> appointments;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder patientId(int patientId) {
+            this.patientId = patientId;
+            return this;
+        }
+
+        public Builder patientFirstName(String patientFirstName) {
+            this.patientFirstName = patientFirstName;
+            return this;
+        }
+
+        public Builder patientLastName(String patientLastName) {
+            this.patientLastName = patientLastName;
+            return this;
+        }
+
+        public Builder startDate(LocalDate startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
+        public Builder endDate(LocalDate endDate) {
+            this.endDate = endDate;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder diagnosis(String diagnosis) {
+            this.diagnosis = diagnosis;
+            return this;
+        }
+
+        public Builder appointments(List<AppointmentTo> appointments) {
+            this.appointments = appointments;
+            return this;
+        }
+
+        public HospitalisationTo build() {
+            return new HospitalisationTo(this);
+        }
     }
 }

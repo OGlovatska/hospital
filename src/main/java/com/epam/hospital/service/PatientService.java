@@ -3,6 +3,7 @@ package com.epam.hospital.service;
 import com.epam.hospital.dao.impl.PatientDaoImpl;
 import com.epam.hospital.dao.impl.StaffDaoImpl;
 import com.epam.hospital.dao.impl.StaffPatientDaoImpl;
+import com.epam.hospital.dao.impl.UserDaoImpl;
 import com.epam.hospital.exception.*;
 import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.Staff;
@@ -23,26 +24,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.epam.hospital.exception.ErrorType.APP_ERROR;
-import static com.epam.hospital.exception.ErrorType.WRONG_REQUEST;
+import static com.epam.hospital.exception.ErrorType.*;
 import static com.epam.hospital.util.EmailUtil.sendRegistrationEmail;
 import static com.epam.hospital.util.PatientUtil.*;
 import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
+import static com.epam.hospital.util.ValidationUtil.validateUniqueEmail;
 
 public class PatientService {
     private static final Logger LOG = LoggerFactory.getLogger(PatientService.class);
-    private final PatientDaoImpl patientDao = new PatientDaoImpl();
-    private final StaffPatientDaoImpl staffPatientDao = new StaffPatientDaoImpl();
-    private final PatientRepository patientRepository = new PatientRepository();
-    private final StaffDaoImpl staffDao = new StaffDaoImpl();
+    private final PatientDaoImpl patientDao;
+    private final StaffPatientDaoImpl staffPatientDao;
+    private final PatientRepository patientRepository;
+    private final StaffDaoImpl staffDao;
 
-    public List<PatientTo> getAllPatientsOfStaff(long staffId, String offset, String limit, String orderBy, String direction) throws IllegalRequestDataException {
+    public PatientService(PatientDaoImpl patientDao, StaffPatientDaoImpl staffPatientDao,
+                          PatientRepository patientRepository, StaffDaoImpl staffDao) {
+        this.patientDao = patientDao;
+        this.staffPatientDao = staffPatientDao;
+        this.patientRepository = patientRepository;
+        this.staffDao = staffDao;
+    }
+
+    public List<PatientTo> getAllPatientsOfStaff(long staffId, int offset, int limit, String orderBy, String direction) throws IllegalRequestDataException {
         try {
             return getPatientTos(patientDao.getAllPatients(staffId,
                     new Pageable(offset, limit, new Sort(orderBy, direction))));
         } catch (DBException e) {
             LOG.error("Exception has occurred during executing getAllPatientsOfStaff() method in PatientService", e);
-            throw new IllegalRequestDataException();
+            throw new ApplicationException(APP_ERROR);
         }
     }
 
@@ -51,7 +60,7 @@ public class PatientService {
             return getPatientTos(patientDao.getAllPatientsNotAssignedToStaff(staffId));
         } catch (DBException e) {
             LOG.error("Exception has occurred during executing getAllPatientsNotAssignedToStaff() method in PatientService", e);
-            throw new IllegalRequestDataException();
+            throw new ApplicationException(APP_ERROR);
         }
     }
 
@@ -64,40 +73,52 @@ public class PatientService {
         }
     }
 
-    public void assignPatientToStaff(int staffId, int patientId) {
-        try {
-            StaffPatient assigment = new StaffPatient(staffId, patientId);
-            staffPatientDao.save(assigment);
-        } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getStaffCount() method in PatientService", e);
-            throw new IllegalRequestDataException(APP_ERROR);
-        }
-    }
-
-    public PatientTo savePatient(String password, User user, Patient patient) {
-        try {
-            patientRepository.save(user, patient);
-            sendRegistrationEmail(password, user);
-            return createNewPatientTo(user, patient);
-        } catch (DBException e) {
-            LOG.error("Exception has occurred during executing savePatient() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
-        }
-    }
-
-    public Map<Integer, List<PatientTo>> getAllPatients(UserTo user, String offset, String limit, String orderBy, String direction) {
+    public void assignPatientToStaff(UserTo user, int staffId, int patientId) {
         checkUserNotNull(user);
-        if (user.getRole().equals(Role.ADMIN.name())) {
+        if (user.getRole().equals(Role.ADMIN)) {
+            try {
+                StaffPatient assigment = new StaffPatient(staffId, patientId);
+                staffPatientDao.save(assigment);
+            } catch (DBException e) {
+                LOG.error("Exception has occurred during executing getStaffCount() method in PatientService", e);
+                throw new ApplicationException(APP_ERROR);
+            }
+        } else {
+            LOG.error("Only ADMIN can assign patient to staff, current user role is {}", user.getRole());
+            throw new IllegalRequestDataException(NOT_ADMIN);
+        }
+    }
+
+    public void savePatient(UserTo user, String password, User newUser, Patient newPatient) {
+        checkUserNotNull(user);
+        validateUniqueEmail(user.getEmail());
+        if (user.getRole().equals(Role.ADMIN)) {
+            try {
+                patientRepository.save(newUser, newPatient);
+                sendRegistrationEmail(password, newUser);
+            } catch (DBException e) {
+                LOG.error("Exception has occurred during executing savePatient() method", e);
+                throw new IllegalRequestDataException(APP_ERROR);
+            }
+        } else {
+            LOG.error("Only ADMIN can create new patient, current user role is {}", user.getRole());
+            throw new IllegalRequestDataException(NOT_ADMIN);
+        }
+    }
+
+    public Map<Integer, List<PatientTo>> getAllPatients(UserTo user, int offset, int limit, String orderBy, String direction) {
+        checkUserNotNull(user);
+        if (user.getRole().equals(Role.ADMIN)) {
             return getPatientsForAdmin(new Pageable(offset, limit, new Sort(orderBy, direction)));
-        } else if (user.getRole().equals(Role.DOCTOR.name()) || user.getRole().equals(Role.NURSE.name())){
+        } else if (user.getRole().equals(Role.DOCTOR) || user.getRole().equals(Role.NURSE)) {
             return getPatientsForStaff(user, new Pageable(offset, limit, new Sort(orderBy, direction)));
         } else {
             LOG.error("Current user can't get patients list, role is {}", user.getRole());
-            throw new IllegalRequestDataException(WRONG_REQUEST);
+            throw new IllegalRequestDataException(NOT_ADMIN);
         }
     }
 
-    private Map<Integer, List<PatientTo>> getPatientsForAdmin(Pageable pageable){
+    private Map<Integer, List<PatientTo>> getPatientsForAdmin(Pageable pageable) {
         try {
             Map<Integer, List<PatientTo>> patients = new HashMap<>();
             int patientsCount = getPatientsCount();
@@ -106,11 +127,11 @@ public class PatientService {
             return patients;
         } catch (DBException e) {
             LOG.error("Exception has occurred during executing getAllPatients() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new IllegalRequestDataException(NOT_ADMIN);
         }
     }
 
-    private Map<Integer, List<PatientTo>> getPatientsForStaff(UserTo user, Pageable pageable){
+    private Map<Integer, List<PatientTo>> getPatientsForStaff(UserTo user, Pageable pageable) {
         try {
             Staff staff = staffDao.getByUserId(user.getId()).orElseThrow();
             if (staff != null) {
@@ -138,18 +159,27 @@ public class PatientService {
     }
 
     public List<String> getAllGenders() {
-            List<String> roles = new ArrayList<>();
-            roles.add(Gender.FEMALE.name());
-            roles.add(Gender.MALE.name());
-            return roles;
+        List<String> roles = new ArrayList<>();
+        roles.add(Gender.FEMALE.name());
+        roles.add(Gender.MALE.name());
+        return roles;
     }
 
     public PatientTo getPatient(long patientId) {
         try {
             return createPatientTo(patientDao.get(patientId).orElseThrow());
         } catch (DBException e) {
-            e.printStackTrace();
-            throw new IllegalRequestDataException(WRONG_REQUEST);
+            LOG.error("Exception has occurred during executing getPatient() method, message = {}", e.getMessage());
+            throw new ApplicationException(APP_ERROR);
+        }
+    }
+
+    public PatientTo getPatient(UserTo user) {
+        try {
+            return createPatientTo(patientDao.getByUserId(user.getId()).orElseThrow());
+        } catch (DBException e) {
+            LOG.error("Exception has occurred during executing getPatient() method, message = {}", e.getMessage());
+            throw new ApplicationException(APP_ERROR);
         }
     }
 }

@@ -143,14 +143,18 @@ public class StaffDaoImpl implements Dao<Staff> {
     }
 
     private Staff getStaff(ResultSet resultSet) throws SQLException {
-        Staff staff = new Staff();
+        /*Staff staff = new Staff();
         staff.setId(resultSet.getInt(ID));
         staff.setUserId(resultSet.getInt(USER_ID));
         staff.setFirstName(resultSet.getString(FIRST_NAME));
         staff.setLastName(resultSet.getString(LAST_NAME));
         staff.setEmail(resultSet.getString(EMAIL));
         staff.setRole(Role.valueOf(resultSet.getString(ROLE)));
-        staff.setSpecialisation(resultSet.getString(SPECIALISATION));
-        return staff;
+        staff.setSpecialisation(resultSet.getString(SPECIALISATION));*/
+
+        return new Staff.Builder().id(resultSet.getInt(ID)).userId(resultSet.getInt(USER_ID))
+                .firstName(resultSet.getString(FIRST_NAME)).lastName(resultSet.getString(LAST_NAME))
+                .email(resultSet.getString(EMAIL)).role(Role.valueOf(resultSet.getString(ROLE)))
+                .specialisation(resultSet.getString(SPECIALISATION)).build();
     }
 }

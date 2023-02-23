@@ -1,5 +1,6 @@
 package com.epam.hospital.command.impl.user;
 
+import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
@@ -9,11 +10,18 @@ import com.epam.hospital.to.UserTo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.epam.hospital.command.constant.Parameter.*;
 
 public class LoginCommand implements Command {
-    private final UserService userService = new UserService();
+    private static final Logger LOG = LoggerFactory.getLogger(LoginCommand.class);
+    private final UserService userService;
+
+    public LoginCommand(ApplicationContext applicationContext) {
+        this.userService = applicationContext.getUserService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
@@ -22,7 +30,9 @@ public class LoginCommand implements Command {
             HttpSession session = request.getSession();
             session.setAttribute(USER, user);
         } catch (ApplicationException e){
-            e.printStackTrace();
+            LOG.error("Exception has occurred during executing login command, message = {}", e.getType().getErrorMessage());
+            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            return new CommandResult(Page.LOGIN);
         }
         return new CommandResult(Page.MAIN);
     }

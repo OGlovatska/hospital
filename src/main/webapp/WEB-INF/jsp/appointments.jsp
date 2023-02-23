@@ -113,7 +113,7 @@
             <div class="col-sm-12 col-md-7">
                 <div class="dataTables_paginate paging_simple_numbers">
                     <ul class="pagination">
-                        <c:if test="${requestScope.totalCount > requestScope.totalCount}">
+                        <c:if test="${requestScope.totalCount > requestScope.limit}">
                             <c:choose>
                                 <c:when test="${requestScope.page > 1}">
                                     <li class="paginate_button page-item previous" id="example_previous">

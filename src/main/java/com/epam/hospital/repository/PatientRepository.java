@@ -1,5 +1,6 @@
 package com.epam.hospital.repository;
 
+import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.dao.impl.PatientDaoImpl;
 import com.epam.hospital.dao.impl.UserDaoImpl;
 import com.epam.hospital.db.manager.DBManager;
@@ -17,9 +18,14 @@ import java.util.Optional;
 
 public class PatientRepository {
     private static final Logger LOG = LoggerFactory.getLogger(PatientRepository.class);
-    private final UserDaoImpl userDao = new UserDaoImpl();
-    private final PatientDaoImpl patientDao = new PatientDaoImpl();
+    private final UserDaoImpl userDao;
+    private final PatientDaoImpl patientDao;
     private final DBManager dbManager = MySQLDBManager.getInstance();
+
+    public PatientRepository(UserDaoImpl userDao, PatientDaoImpl patientDao) {
+        this.userDao = userDao;
+        this.patientDao = patientDao;
+    }
 
     public Optional<Patient> save(User user, Patient patient) throws DBException {
         Connection connection = null;

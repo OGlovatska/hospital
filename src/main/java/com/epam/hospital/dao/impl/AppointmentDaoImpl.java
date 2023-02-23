@@ -158,16 +158,12 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
     }
 
     private Appointment getAppointment(ResultSet resultSet) throws SQLException {
-        Appointment appointment = new Appointment();
-        appointment.setId(resultSet.getInt(ID));
-        appointment.setHospitalisationId(resultSet.getInt(HOSPITALISATION_ID));
-        appointment.setPatientId(resultSet.getInt(PATIENT_ID));
-        appointment.setStaffId(resultSet.getInt(STAFF_ID));
-        appointment.setDateTime(Timestamp.valueOf(resultSet.getString(DATE)).toLocalDateTime());
-        appointment.setType(resultSet.getString(TYPE));
-        appointment.setDescription(resultSet.getString(DESCRIPTION));
-        appointment.setConclusion(resultSet.getString(CONCLUSION));
-        appointment.setStatus(resultSet.getString(STATUS));
-        return appointment;
+        return new Appointment.Builder().id(resultSet.getInt(ID))
+                .hospitalisationId(resultSet.getInt(HOSPITALISATION_ID))
+                .patientId(resultSet.getInt(PATIENT_ID)).staffId(resultSet.getInt(STAFF_ID))
+                .dateTime(Timestamp.valueOf(resultSet.getString(DATE)).toLocalDateTime())
+                .type(resultSet.getString(TYPE)).description(resultSet.getString(DESCRIPTION))
+                .conclusion(resultSet.getString(CONCLUSION)).status(resultSet.getString(STATUS))
+                .build();
     }
 }

@@ -1,11 +1,13 @@
 package com.epam.hospital.command.impl.hospitalisation;
 
+import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
+import com.epam.hospital.command.constant.Attribute;
 import com.epam.hospital.command.constant.Page;
 import com.epam.hospital.exception.ApplicationException;
-import com.epam.hospital.model.Hospitalisation;
 import com.epam.hospital.service.HospitalisationService;
+import com.epam.hospital.service.PatientService;
 import com.epam.hospital.to.HospitalisationTo;
 import com.epam.hospital.to.PatientTo;
 import com.epam.hospital.to.UserTo;
@@ -21,12 +23,17 @@ import java.util.Map;
 
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.command.constant.Parameter.DIRECTION;
-import static com.epam.hospital.util.PaginationUtil.getPaginationAttributes;
-import static com.epam.hospital.util.PaginationUtil.setPaginationAttributes;
+import static com.epam.hospital.util.RequestUtil.*;
 
 public class HospitalisationsListCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(HospitalisationsListCommand.class);
-    private final HospitalisationService service = new HospitalisationService();
+    private final HospitalisationService hospitalisationService;
+    private final PatientService patientService;
+
+    public HospitalisationsListCommand(ApplicationContext applicationContext) {
+        this.hospitalisationService = applicationContext.getHospitalisationService();
+        this.patientService = applicationContext.getPatientService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
@@ -35,19 +42,27 @@ public class HospitalisationsListCommand implements Command {
 
         List<HospitalisationTo> hospitalisations = new ArrayList<>();
         int totalCount = 0;
-        Map<String, String> attributes = getPaginationAttributes(request);
+        Map<String, Object> paginationAttributes = getPaginationAttributes(request);
+        int offset = (int) paginationAttributes.get(OFFSET);
+        int limit = (int) paginationAttributes.get(LIMIT);
+        String orderBy = (String) paginationAttributes.get(ORDER_BY);
+        String direction = (String) paginationAttributes.get(DIRECTION);
         try {
-            Map<Integer, List<HospitalisationTo>> hospitalisationTos = service.getAllHospitalisations(user, attributes.get(OFFSET),
-                    attributes.get(LIMIT), attributes.get(ORDER_BY), attributes.get(DIRECTION));
-            hospitalisations = hospitalisationTos.values().stream().findFirst().orElseThrow();
-            totalCount = hospitalisationTos.keySet().stream().findFirst().orElseThrow();
+            PatientTo patient = patientService.getPatient(user);
+            hospitalisations = hospitalisationService.getAllHospitalisationsOfPatient(patient.getId(),
+                    offset, limit, orderBy, direction);
+            totalCount = hospitalisationService.getAllHospitalisationsOfPatientCount(patient.getId());
         } catch (ApplicationException e) {
-            e.printStackTrace();
+            LOG.error("Exception has occurred during executing hospitalisations list command, message = {}",
+                    e.getType().getErrorMessage());
+            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
-        request.setAttribute(HOSPITALISATIONS, hospitalisations);
 
-        setPaginationAttributes(request, totalCount, attributes.get(LIMIT), attributes.get(OFFSET),
-                attributes.get(CURRENT_PAGE), attributes.get(ORDER_BY), attributes.get(DIRECTION));
+        setRequestAttributes(request, new Attribute(HOSPITALISATIONS, hospitalisations),
+                new Attribute(TOTAL_COUNT, totalCount), new Attribute(LIMIT, limit),
+                new Attribute(OFFSET, offset), new Attribute(NUMBER_OF_PAGES, numberOfPages(totalCount, limit)),
+                new Attribute(CURRENT_PAGE, paginationAttributes.get(CURRENT_PAGE)),
+                new Attribute(ORDER_BY, orderBy), new Attribute(DIRECTION, direction));
         return new CommandResult(Page.HOSPITALISATIONS);
     }
 }

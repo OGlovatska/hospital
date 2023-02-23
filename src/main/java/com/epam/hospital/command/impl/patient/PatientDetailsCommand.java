@@ -1,10 +1,12 @@
 package com.epam.hospital.command.impl.patient;
 
+import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
+import com.epam.hospital.command.constant.Attribute;
 import com.epam.hospital.command.constant.Page;
+import com.epam.hospital.command.constant.Parameter;
 import com.epam.hospital.exception.ApplicationException;
-import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.service.HospitalisationService;
 import com.epam.hospital.service.PatientService;
@@ -24,15 +26,22 @@ import java.util.List;
 
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.command.constant.Parameter.HOSPITALISATIONS_LIMIT;
-import static com.epam.hospital.util.PaginationUtil.numberOfPages;
+import static com.epam.hospital.util.RequestUtil.numberOfPages;
+import static com.epam.hospital.util.RequestUtil.setRequestAttributes;
 import static com.epam.hospital.util.ValidationUtil.validateCurrentPageValue;
 import static com.epam.hospital.util.ValidationUtil.validateLimitValue;
 
 public class PatientDetailsCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(PatientDetailsCommand.class);
-    private final StaffService staffService = new StaffService();
-    private final HospitalisationService hospitalisationService = new HospitalisationService();
-    private final PatientService patientService = new PatientService();
+    private final StaffService staffService;
+    private final HospitalisationService hospitalisationService;
+    private final PatientService patientService;
+
+    public PatientDetailsCommand(ApplicationContext applicationContext) {
+        this.staffService = applicationContext.getStaffService();
+        this.hospitalisationService = applicationContext.getHospitalisationService();
+        this.patientService = applicationContext.getPatientService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
@@ -43,30 +52,36 @@ public class PatientDetailsCommand implements Command {
         request.setAttribute(PATIENT_ID, patientId);
 
         PatientTo patient = null;
-        HospitalisationTo hospitalisation = new HospitalisationTo();
+        HospitalisationTo hospitalisation = null;
         try {
             patient = patientService.getPatient(patientId);
             hospitalisation = hospitalisationService.getPatientCurrentHospitalisation(patientId);
-        } catch (ApplicationException e){
-            e.printStackTrace();
+        } catch (ApplicationException e) {
+            LOG.error("Exception has occurred during executing patient details command, message = {}",
+                    e.getType().getErrorMessage());
+            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
         request.setAttribute(CURRENT_PATIENT, patient);
         request.setAttribute(HOSPITALISATION, hospitalisation);
 
         String activeTab = request.getParameter(ACTIVE_TAB);
-        if (activeTab == null || activeTab.isEmpty()){
-            if (user.getRole().equals(Role.ADMIN.name())){
-                request.setAttribute(ACTIVE_TAB, "nav-staff");
-            } else {
-                request.setAttribute(ACTIVE_TAB, "nav-hospitalisations");
-            }
-        } else {
-            request.setAttribute(ACTIVE_TAB, activeTab);
-        }
+        setActiveTab(request, user, activeTab);
 
         setStaffTabAttributes(request, patientId);
         setHospitalisationsTabAttributes(request, patientId);
         return new CommandResult(Page.PATIENT_DETAILS);
+    }
+
+    private void setActiveTab(HttpServletRequest request, UserTo user, String activeTab) {
+        if (activeTab == null || activeTab.isEmpty()) {
+            if (user.getRole().equals(Role.ADMIN)) {
+                request.setAttribute(ACTIVE_TAB, STAFF_TAB);
+            } else {
+                request.setAttribute(ACTIVE_TAB, HOSPITALISATIONS_TAB);
+            }
+        } else {
+            request.setAttribute(ACTIVE_TAB, activeTab);
+        }
     }
 
     private void setHospitalisationsTabAttributes(HttpServletRequest request, int patientId) {
@@ -81,26 +96,25 @@ public class PatientDetailsCommand implements Command {
         String direction = request.getParameter(HOSPITALISATIONS_SORT_DIRECTION);
 
         try {
-            hospitalisations = hospitalisationService.getAllHospitalisationsOfPatient(patientId, String.valueOf(offset),
-                    String.valueOf(limit), orderBy,direction);
+            hospitalisations = hospitalisationService.getAllHospitalisationsOfPatient(patientId, offset,
+                    limit, orderBy, direction);
             hospitalisationsCount = hospitalisationService.getAllHospitalisationsOfPatientCount(patientId);
             hospitalisationStatuses = hospitalisationService.getHospitalisationStatuses();
-        } catch (ApplicationException e){
-            e.printStackTrace();
+        } catch (ApplicationException e) {
+            LOG.error("Exception has occurred during executing create patient details command, message = {}",
+                    e.getType().getErrorMessage());
+            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
-        request.setAttribute(HOSPITALISATIONS, hospitalisations);
-        request.setAttribute(HOSPITALISATIONS_COUNT, hospitalisationsCount);
-        request.setAttribute(HOSPITALISATIONS_LIMIT, limit);
-        request.setAttribute(HOSPITALISATIONS_OFFSET, offset);
-        request.setAttribute(CURRENT_HOSPITALISATIONS_PAGE, page);
-        request.setAttribute(HOSPITALISATIONS_ORDER_BY, orderBy);
-        request.setAttribute(HOSPITALISATIONS_SORT_DIRECTION, direction);
-        request.setAttribute(HOSPITALISATIONS_NUMBER_OF_PAGES, numberOfPages(hospitalisationsCount, limit));
-        request.setAttribute(HOSPITALISATION_STATUSES, hospitalisationStatuses);
+        setRequestAttributes(request, new Attribute(HOSPITALISATIONS_COUNT, hospitalisationsCount),
+                new Attribute(HOSPITALISATIONS_NUMBER_OF_PAGES, numberOfPages(hospitalisationsCount, limit)),
+                new Attribute(CURRENT_HOSPITALISATIONS_PAGE, page), new Attribute(HOSPITALISATIONS_OFFSET, offset),
+                new Attribute(HOSPITALISATIONS_LIMIT, limit), new Attribute(HOSPITALISATIONS_ORDER_BY, orderBy),
+                new Attribute(HOSPITALISATIONS_SORT_DIRECTION, direction), new Attribute(HOSPITALISATIONS, hospitalisations),
+                new Attribute(HOSPITALISATION_STATUSES, hospitalisationStatuses));
     }
 
-    private void setStaffTabAttributes(HttpServletRequest request, int patientId){
+    private void setStaffTabAttributes(HttpServletRequest request, int patientId) {
         List<StaffTo> assignedStaff = new ArrayList<>();
         List<StaffTo> notAssignedStaff = new ArrayList<>();
         int assignedStaffCount = 0;
@@ -117,16 +131,16 @@ public class PatientDetailsCommand implements Command {
             assignedStaffCount = staffService.getStaffOfPatientCount(patientId);
             notAssignedStaff = staffService.getAllStaffNotAssignedToPatient(patientId);
         } catch (ApplicationException e) {
-            e.printStackTrace();
+            LOG.error("Exception has occurred during executing create patient details command, message = {}",
+                    e.getType().getErrorMessage());
+            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
-        request.setAttribute(ASSIGNED_STAFF, assignedStaff);
-        request.setAttribute(NOT_ASSIGNED_STAFF, notAssignedStaff);
-        request.setAttribute(STAFF_LIMIT, limit);
-        request.setAttribute(STAFF_OFFSET, offset);
-        request.setAttribute(CURRENT_STAFF_PAGE, page);
-        request.setAttribute(STAFF_ORDER_BY, orderBy);
-        request.setAttribute(STAFF_SORT_DIRECTION, direction);
-        request.setAttribute(STAFF_COUNT, assignedStaffCount);
-        request.setAttribute(STAFF_NUMBER_OF_PAGES, numberOfPages(assignedStaffCount, limit));
+
+        setRequestAttributes(request, new Attribute(STAFF_COUNT, assignedStaffCount),
+                new Attribute(STAFF_NUMBER_OF_PAGES, numberOfPages(assignedStaffCount, limit)),
+                new Attribute(CURRENT_STAFF_PAGE, page), new Attribute(STAFF_OFFSET, offset),
+                new Attribute(STAFF_LIMIT, limit), new Attribute(STAFF_ORDER_BY, orderBy),
+                new Attribute(STAFF_SORT_DIRECTION, direction), new Attribute(ASSIGNED_STAFF, assignedStaff),
+                new Attribute(NOT_ASSIGNED_STAFF, notAssignedStaff));
     }
 }

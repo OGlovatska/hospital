@@ -1,21 +1,19 @@
 package com.epam.hospital.to;
 
+import com.epam.hospital.model.enums.Gender;
+
 import java.time.LocalDate;
 
 public class PatientTo extends UserTo {
     private int userId;
     private LocalDate dateOfBirth;
-    private String gender;
+    private Gender gender;
 
-    public PatientTo() {
-    }
-
-    public PatientTo(int id, String firstName, String lastName, String email, String role,
-                     int userId, LocalDate dateOfBirth, String gender) {
-        super(id, firstName, lastName, email, role);
-        this.userId = userId;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
+    private PatientTo(Builder builder){
+        super(builder);
+        this.userId = builder.userId;
+        this.dateOfBirth = builder.dateOfBirth;
+        this.gender = builder.gender;
     }
 
     public int getUserId() {
@@ -34,11 +32,36 @@ public class PatientTo extends UserTo {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public static class Builder extends UserTo.Builder<Builder>{
+        private int userId;
+        private LocalDate dateOfBirth;
+        private Gender gender;
+
+        public Builder userId(int userId){
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder dateOfBirth(LocalDate dateOfBirth){
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
+        public Builder gender(Gender gender){
+            this.gender = gender;
+            return this;
+        }
+
+        public PatientTo build(){
+            return new PatientTo(this);
+        }
     }
 }

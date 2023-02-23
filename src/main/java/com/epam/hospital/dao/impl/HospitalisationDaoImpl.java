@@ -109,10 +109,6 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
         }
     }
 
-    public int getHospitalisationsCount() throws DBException {
-        return getCount(GET_HOSPITALISATIONS_COUNT);
-    }
-
     public int getAllHospitalisationsOfPatientCount(int patientId) throws DBException {
         return getCount(String.format(GET_HOSPITALISATIONS_OF_PATIENT_COUNT, patientId));
     }
@@ -149,12 +145,10 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
     }
 
     private Hospitalisation getHospitalisation(ResultSet resultSet) throws SQLException {
-        Hospitalisation hospitalisation = new Hospitalisation();
-        hospitalisation.setId(resultSet.getInt(ID));
-        hospitalisation.setPatientId(resultSet.getInt(PATIENT_ID));
-        hospitalisation.setStartDate(resultSet.getDate(START_DATE).toLocalDate());
-        hospitalisation.setStatus(resultSet.getString(STATUS));
-        hospitalisation.setDiagnosis(resultSet.getString(DIAGNOSIS));
+        Hospitalisation hospitalisation = new Hospitalisation.Builder()
+                .id(resultSet.getInt(ID)).patientId(resultSet.getInt(PATIENT_ID))
+                .startDate(resultSet.getDate(START_DATE).toLocalDate())
+                .status(resultSet.getString(STATUS)).diagnosis(resultSet.getString(DIAGNOSIS)).build();
 
         Date endDate = resultSet.getDate(END_DATE);
         hospitalisation.setEndDate(endDate != null ? endDate.toLocalDate() : null);

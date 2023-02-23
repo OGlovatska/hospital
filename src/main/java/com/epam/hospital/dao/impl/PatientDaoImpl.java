@@ -5,6 +5,7 @@ import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.Patient;
+import com.epam.hospital.model.enums.Gender;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.pagination.Pageable;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class PatientDaoImpl implements Dao<Patient> {
         } catch (SQLException e) {
             LOG.error("Exception has occurred during executing GET PATIENT query, error code={}, message={}",
                     e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -86,7 +87,7 @@ public class PatientDaoImpl implements Dao<Patient> {
             PreparedStatement statement = connection.prepareStatement(ADD_PATIENT, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, patient.getUserId());
             statement.setDate(2, Date.valueOf(patient.getDateOfBirth()));
-            statement.setString(3, patient.getGender());
+            statement.setObject(3, patient.getGender());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -133,15 +134,12 @@ public class PatientDaoImpl implements Dao<Patient> {
     }
 
     private Patient getPatient(ResultSet resultSet) throws SQLException {
-        Patient patient = new Patient();
-        patient.setId(resultSet.getInt(ID));
-        patient.setUserId(resultSet.getInt(USER_ID));
-        patient.setFirstName(resultSet.getString(FIRST_NAME));
-        patient.setLastName(resultSet.getString(LAST_NAME));
-        patient.setEmail(resultSet.getString(EMAIL));
-        patient.setRole(Role.valueOf(resultSet.getString(ROLE)));
-        patient.setDateOfBirth(resultSet.getDate(DATE_OF_BIRTH).toLocalDate());
-        patient.setGender(resultSet.getString(GENDER));
-        return patient;
+        return new Patient.Builder().id(resultSet.getInt(ID))
+                .userId(resultSet.getInt(USER_ID)).firstName(resultSet.getString(FIRST_NAME))
+                .lastName(resultSet.getString(LAST_NAME)).email(resultSet.getString(EMAIL))
+                .role(Role.valueOf(resultSet.getString(ROLE)))
+                .dateOfBirth(resultSet.getDate(DATE_OF_BIRTH).toLocalDate())
+                .gender(Gender.valueOf(resultSet.getString(GENDER).toUpperCase()))
+                .build();
     }
 }
