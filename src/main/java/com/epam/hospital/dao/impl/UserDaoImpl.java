@@ -19,7 +19,6 @@ import static com.epam.hospital.dao.constant.field.UserFields.*;
 import static com.epam.hospital.dao.constant.query.UserQueries.*;
 
 public class UserDaoImpl implements Dao<User> {
-    private static final Logger LOG = LoggerFactory.getLogger(UserDaoImpl.class);
     private final DBManager dbManager = MySQLDBManager.getInstance();
 
     @Override
@@ -39,9 +38,7 @@ public class UserDaoImpl implements Dao<User> {
                 return Optional.of(getUser(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET USER query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -56,9 +53,7 @@ public class UserDaoImpl implements Dao<User> {
                 users.add(getUser(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET ALL USERS query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return users;
     }
@@ -68,9 +63,7 @@ public class UserDaoImpl implements Dao<User> {
         try (Connection connection = dbManager.getConnection()) {
             return save(user, connection);
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE USER query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
     }
 
@@ -89,8 +82,6 @@ public class UserDaoImpl implements Dao<User> {
                 return Optional.of(user);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE USER query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
             throw new DBException(e.getMessage());
         }
         return Optional.empty();
@@ -108,20 +99,13 @@ public class UserDaoImpl implements Dao<User> {
             statement.setInt(6, user.getId());
             return get(user.getId());
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing UPDATE USER query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
     }
 
     private User getUser(ResultSet resultSet) throws SQLException {
-        User user = new User();
-        user.setId(resultSet.getInt(ID));
-        user.setFirstName(resultSet.getString(FIRST_NAME));
-        user.setLastName(resultSet.getString(LAST_NAME));
-        user.setEmail(resultSet.getString(EMAIL));
-        user.setPassword(resultSet.getString(PASSWORD));
-        user.setRole(Role.valueOf(resultSet.getString(ROLE)));
-        return user;
+        return new User.Builder<>().id(resultSet.getInt(ID)).firstName(resultSet.getString(FIRST_NAME))
+                .lastName(resultSet.getString(LAST_NAME)).email(resultSet.getString(EMAIL))
+                .password(resultSet.getString(PASSWORD)).role(Role.valueOf(resultSet.getString(ROLE))).build();
     }
 }

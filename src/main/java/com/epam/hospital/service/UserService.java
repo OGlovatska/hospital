@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.NoSuchElementException;
 
+import static com.epam.hospital.exception.ErrorType.APP_ERROR;
+import static com.epam.hospital.exception.ErrorType.USER_NOT_FOUND;
 import static com.epam.hospital.util.ValidationUtil.*;
 
 public class UserService {
@@ -25,16 +27,12 @@ public class UserService {
         checkEmptyString(email, password);
         try {
             User user = userDao.getByEmail(email).orElseThrow();
-            validatePassword(password,  user.getPassword());
+            validatePassword(password, user.getPassword());
             return UserUtil.getUserTo(user);
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAuthorizedUser() method in UserService, message = {}",
-                    e.getMessage());
-            throw new ApplicationException(ErrorType.APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         } catch (NoSuchElementException e) {
-            LOG.error("Exception has occurred during executing getAuthorizedUser() method in UserService, message = {}",
-                    e.getMessage());
-            throw new IllegalRequestDataException(ErrorType.USER_NOT_FOUND);
+            throw new IllegalRequestDataException(USER_NOT_FOUND);
         }
     }
 }

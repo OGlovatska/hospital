@@ -3,13 +3,11 @@ package com.epam.hospital.command.impl.staff;
 import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
-import com.epam.hospital.command.constant.Attribute;
 import com.epam.hospital.command.constant.Page;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.service.StaffService;
 import com.epam.hospital.to.StaffTo;
 import com.epam.hospital.to.UserTo;
-import com.epam.hospital.util.RequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -22,14 +20,18 @@ import java.util.Map;
 
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.util.RequestUtil.getPaginationAttributes;
-import static com.epam.hospital.util.RequestUtil.setRequestAttributes;
+import static com.epam.hospital.util.RequestUtil.setPaginationAttributes;
 
 public class StaffListCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(StaffListCommand.class);
     private final StaffService service;
 
-    public StaffListCommand(ApplicationContext applicationContext) {
-        this.service = applicationContext.getStaffService();
+    public StaffListCommand() {
+        this.service = ApplicationContext.getInstance().getStaffService();
+    }
+
+    public StaffListCommand(StaffService service) {
+        this.service = service;
     }
 
     @Override
@@ -42,12 +44,9 @@ public class StaffListCommand implements Command {
         List<StaffTo> staff = new ArrayList<>();
         int totalCount = 0;
         Map<String, Object> paginationAttributes = getPaginationAttributes(request);
-        int offset = (int) paginationAttributes.get(OFFSET);
-        int limit = (int) paginationAttributes.get(LIMIT);
-        String orderBy = (String) paginationAttributes.get(ORDER_BY);
-        String direction = (String) paginationAttributes.get(DIRECTION);
         try {
-            staff = service.getAllStaff(user, offset, limit, orderBy, direction);
+            staff = service.getAllStaff(user, (int) paginationAttributes.get(OFFSET), (int) paginationAttributes.get(LIMIT),
+                    (String) paginationAttributes.get(ORDER_BY), (String) paginationAttributes.get(DIRECTION));
             totalCount = service.getStaffCount();
             specialisations = service.getAllSpecialisations();
             roles = service.getStaffRoles();
@@ -57,9 +56,17 @@ public class StaffListCommand implements Command {
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
-        setRequestAttributes(request, new Attribute(TOTAL_COUNT, totalCount), new Attribute(LIMIT, limit),
-                new Attribute(OFFSET, offset), new Attribute(ORDER_BY, orderBy), new Attribute(DIRECTION, direction),
-                new Attribute(STAFF, staff), new Attribute(SPECIALISATIONS, specialisations), new Attribute(ROLES, roles));
+        setRequestAttributes(request, specialisations, roles, staff, totalCount, paginationAttributes);
         return new CommandResult(Page.STAFF);
+    }
+
+    private void setRequestAttributes(HttpServletRequest request, List<String> specialisations, List<String> roles,
+                                      List<StaffTo> staff, int totalCount, Map<String, Object> paginationAttributes) {
+        setPaginationAttributes(request, totalCount, (int) paginationAttributes.get(LIMIT),
+                (int) paginationAttributes.get(OFFSET), (int) paginationAttributes.get(CURRENT_PAGE),
+                (String) paginationAttributes.get(ORDER_BY), (String) paginationAttributes.get(DIRECTION));
+        request.setAttribute(STAFF, staff);
+        request.setAttribute(SPECIALISATIONS, specialisations);
+        request.setAttribute(ROLES, roles);
     }
 }

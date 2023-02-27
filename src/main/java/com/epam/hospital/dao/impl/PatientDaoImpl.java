@@ -22,7 +22,6 @@ import static com.epam.hospital.dao.constant.field.UserFields.*;
 import static com.epam.hospital.dao.constant.query.PatientQuery.*;
 
 public class PatientDaoImpl implements Dao<Patient> {
-    private static final Logger LOG = LoggerFactory.getLogger(PatientDaoImpl.class);
     private final DBManager dbManager = MySQLDBManager.getInstance();
 
     @Override
@@ -42,8 +41,6 @@ public class PatientDaoImpl implements Dao<Patient> {
                 return Optional.of(getPatient(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET PATIENT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
             throw new DBException(e.getMessage());
         }
         return Optional.empty();
@@ -59,9 +56,7 @@ public class PatientDaoImpl implements Dao<Patient> {
         try (Connection connection = dbManager.getConnection()) {
             return save(patient, connection);
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE PATIENT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
     }
 
@@ -95,9 +90,7 @@ public class PatientDaoImpl implements Dao<Patient> {
                 return Optional.of(patient);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE STAFF query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -111,9 +104,7 @@ public class PatientDaoImpl implements Dao<Patient> {
                 users.add(getPatient(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET ALL PATIENTS query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return users;
     }
@@ -126,9 +117,7 @@ public class PatientDaoImpl implements Dao<Patient> {
                 return resultSet.getInt(PATIENTS);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET STAFF COUNT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return 0;
     }

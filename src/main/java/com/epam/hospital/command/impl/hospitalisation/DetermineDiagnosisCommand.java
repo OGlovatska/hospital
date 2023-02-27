@@ -21,8 +21,12 @@ public class DetermineDiagnosisCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(DetermineDiagnosisCommand.class);
     private final HospitalisationService service;
 
-    public DetermineDiagnosisCommand(ApplicationContext applicationContext) {
-        this.service = applicationContext.getHospitalisationService();
+    public DetermineDiagnosisCommand() {
+        this.service = ApplicationContext.getInstance().getHospitalisationService();
+    }
+
+    public DetermineDiagnosisCommand(HospitalisationService service) {
+        this.service = service;
     }
 
     @Override
@@ -35,9 +39,9 @@ public class DetermineDiagnosisCommand implements Command {
         String diagnosis = request.getParameter(DIAGNOSIS);
         try {
             service.determinePatientDiagnosis(user, hospitalisationId, diagnosis);
-        } catch (ApplicationException e){
+        } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing determine diagnosis command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 

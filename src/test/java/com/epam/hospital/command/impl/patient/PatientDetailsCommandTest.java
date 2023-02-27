@@ -1,6 +1,5 @@
 package com.epam.hospital.command.impl.patient;
 
-import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
 import com.epam.hospital.service.HospitalisationService;
@@ -23,21 +22,18 @@ public class PatientDetailsCommandTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
+    private final StaffService staffService = mock(StaffService.class);
     private final HospitalisationService hospitalisationService = mock(HospitalisationService.class);
     private final PatientService patientService = mock(PatientService.class);
-    private final StaffService staffService = mock(StaffService.class);
-    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final PatientDetailsCommand command = new PatientDetailsCommand(staffService, hospitalisationService, patientService);
 
     @Test
     public void testExecute() {
-        when(applicationContext.getHospitalisationService()).thenReturn(hospitalisationService);
-        when(applicationContext.getPatientService()).thenReturn(patientService);
-        when(applicationContext.getStaffService()).thenReturn(staffService);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(USER)).thenReturn(getAdminUserTo());
         when(request.getParameter(PATIENT_ID)).thenReturn(String.valueOf(TestData.PATIENT_ID));
 
-        CommandResult result = new PatientDetailsCommand(applicationContext).execute(request, response);
+        CommandResult result = command.execute(request, response);
         assertEquals(new CommandResult(Page.PATIENT_DETAILS).getPage(), result.getPage());
     }
 }

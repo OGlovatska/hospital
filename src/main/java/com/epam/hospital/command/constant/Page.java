@@ -10,6 +10,7 @@ public class Page {
     public static final String APPOINTMENTS = "/WEB-INF/jsp/appointments.jsp";
     public static final String HOSPITALISATIONS = "/WEB-INF/jsp/hospitalisations.jsp";
     public static final String ADD_APPOINTMENT = "/WEB-INF/jsp/addAppointment.jsp";
+    public static final String HOSPITALISATION_DETAILS = "/WEB-INF/jsp/hospitalisationDetails.jsp";
 
     private Page() {
     }

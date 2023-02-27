@@ -33,10 +33,10 @@
                     <select name="orderBy" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
                         <option value="" selected disabled>Order by</option>
                         <option value="start_date" ${requestScope.orderBy eq "start_date" ? "selected" : ""}>
-                            Start date
+                            Hospitalisation date
                         </option>
                         <option value="end_date" ${requestScope.orderBy eq "end_date" ? "selected" : ""}>
-                            End date
+                            Discharging date
                         </option>
                         <option value="status" ${requestScope.orderBy eq "status" ? "selected" : ""}>
                             Status
@@ -53,81 +53,102 @@
                         </option>
                     </select>
                 </div>
-<%--                <div class="col-auto">--%>
-<%--                    <button type="submit" class="btn btn-outline-primary me-2 btn-sm">Show</button>--%>
-<%--                </div>--%>
             </form>
         </div>
-        <div class="table-responsive">
-            <table class="table accordion">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Start date</th>
-                    <th scope="col">End date</th>
-                    <th scope="col">Diagnosis</th>
-                    <th scope="col">Status</th>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Hospitalisation date</th>
+                <th scope="col">Discharging date</th>
+                <th scope="col">Diagnosis</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="hospitalisation" items="${requestScope.hospitalisations}">
+                <tr onclick="document.location='api?command=hospitalisation&hospitalisationId=${hospitalisation.id}';" onmouseover=""
+                    style="cursor: pointer;">
+                    <td><c:out value="${hospitalisation.id}"/></td>
+                    <td><c:out value="${hospitalisation.startDate}"/></td>
+                    <td><c:out value="${hospitalisation.endDate}"/></td>
+                    <td><c:out value="${hospitalisation.diagnosis}"/></td>
+                    <td><c:out value="${hospitalisation.status}"/></td>
                 </tr>
-                </thead>
-                <tbody>
-                <c:forEach var="hospitalisation" items="${requestScope.hospitalisations}">
-                    <tr data-bs-toggle="collapse" data-bs-target="#r${hospitalisation.id}">
-                        <th scope="row">${hospitalisation.id} <i class="bi bi-chevron-down"></i></th>
-                        <td>${hospitalisation.startDate}</td>
-                        <td>${hospitalisation.endDate}</td>
-                        <td>${hospitalisation.diagnosis}</td>
-                        <td>${hospitalisation.status}</td>
-                    </tr>
-                    <tr class="collapse accordion-collapse" id="r${hospitalisation.id}" data-bs-parent=".table">
-                        <td colspan="8">
-                            <div class="accordion-body">
-                                <c:choose>
-                                    <c:when test="${fn:length(hospitalisation.appointments) > 0}">
-                                        <div style="display: flex; align-items: center; align-self: center; justify-content: center; justify-self: center; width: 80%; margin: 0 auto;">
-                                            <h6>Appointments</h6>
-                                        </div>
-                                        <table class="table table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Date</th>
-                                                <th>Staff</th>
-                                                <th>Specialisation</th>
-                                                <th>Type</th>
-                                                <th>Description</th>
-                                                <th>Conclusion</th>
-                                                <th>Status</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <c:forEach var="appointment" items="${hospitalisation.appointments}">
-                                                <tr>
-                                                    <td>${appointment.id}</td>
-                                                    <td>${function:formatDateTime(appointment.dateTime)}</td>
-                                                    <td>${appointment.staffFirstName} ${appointment.staffLastName}</td>
-                                                    <td>${appointment.specialisation}</td>
-                                                    <td>${appointment.type}</td>
-                                                    <td>${appointment.description}</td>
-                                                    <td>${appointment.conclusion}</td>
-                                                    <td>${appointment.status}</td>
-                                                </tr>
-                                            </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div style="display: flex; align-items: center; align-self: center; justify-content: center; justify-self: center; width: 80%; margin: 0 auto;">
-                                            <h6>No appointments</h6>
-                                        </div>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-        </div>
+            </c:forEach>
+            </tbody>
+        </table>
+
+<%--        <div class="table-responsive">--%>
+<%--            <table class="table accordion">--%>
+<%--                <thead>--%>
+<%--                <tr>--%>
+<%--                    <th scope="col">#</th>--%>
+<%--                    <th scope="col">Hospitalisation date</th>--%>
+<%--                    <th scope="col">Discharging date</th>--%>
+<%--                    <th scope="col">Diagnosis</th>--%>
+<%--                    <th scope="col">Status</th>--%>
+<%--                </tr>--%>
+<%--                </thead>--%>
+<%--                <tbody>--%>
+<%--                <c:forEach var="hospitalisation" items="${requestScope.hospitalisations}">--%>
+<%--                    <tr data-bs-toggle="collapse" data-bs-target="#r${hospitalisation.id}">--%>
+<%--                        <th scope="row">${hospitalisation.id} <i class="bi bi-chevron-down"></i></th>--%>
+<%--                        <td>${hospitalisation.startDate}</td>--%>
+<%--                        <td>${hospitalisation.endDate}</td>--%>
+<%--                        <td>${hospitalisation.diagnosis}</td>--%>
+<%--                        <td>${hospitalisation.status}</td>--%>
+<%--                    </tr>--%>
+<%--                    <tr class="collapse accordion-collapse" id="r${hospitalisation.id}" data-bs-parent=".table">--%>
+<%--                        <td colspan="8">--%>
+<%--                            <div class="accordion-body">--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${fn:length(hospitalisation.appointments) > 0}">--%>
+<%--                                        <div style="display: flex; align-items: center; align-self: center; justify-content: center; justify-self: center; width: 80%; margin: 0 auto;">--%>
+<%--                                            <h6>Appointments</h6>--%>
+<%--                                        </div>--%>
+<%--                                        <table class="table table-bordered">--%>
+<%--                                            <thead>--%>
+<%--                                            <tr>--%>
+<%--                                                <th>#</th>--%>
+<%--                                                <th>Date</th>--%>
+<%--                                                <th>Staff</th>--%>
+<%--                                                <th>Specialisation</th>--%>
+<%--                                                <th>Type</th>--%>
+<%--                                                <th>Description</th>--%>
+<%--                                                <th>Conclusion</th>--%>
+<%--                                                <th>Status</th>--%>
+<%--                                            </tr>--%>
+<%--                                            </thead>--%>
+<%--                                            <tbody>--%>
+<%--                                            <c:forEach var="appointment" items="${hospitalisation.appointments}">--%>
+<%--                                                <tr>--%>
+<%--                                                    <td>${appointment.id}</td>--%>
+<%--                                                    <td>${function:formatDateTime(appointment.dateTime)}</td>--%>
+<%--                                                    <td>${appointment.staffFirstName} ${appointment.staffLastName}</td>--%>
+<%--                                                    <td>${appointment.specialisation}</td>--%>
+<%--                                                    <td>${appointment.type}</td>--%>
+<%--                                                    <td>${appointment.description}</td>--%>
+<%--                                                    <td>${appointment.conclusion}</td>--%>
+<%--                                                    <td>${appointment.status}</td>--%>
+<%--                                                </tr>--%>
+<%--                                            </c:forEach>--%>
+<%--                                            </tbody>--%>
+<%--                                        </table>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:otherwise>--%>
+<%--                                        <div style="display: flex; align-items: center; align-self: center; justify-content: center; justify-self: center; width: 80%; margin: 0 auto;">--%>
+<%--                                            <h6>No appointments</h6>--%>
+<%--                                        </div>--%>
+<%--                                    </c:otherwise>--%>
+<%--                                </c:choose>--%>
+<%--                            </div>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                </c:forEach>--%>
+<%--                </tbody>--%>
+<%--            </table>--%>
+<%--        </div>--%>
         <div class="row">
             <div class="col-sm-12 col-md-5">
                 <div class="dataTables_info" id="example_info" role="status" aria-live="polite">

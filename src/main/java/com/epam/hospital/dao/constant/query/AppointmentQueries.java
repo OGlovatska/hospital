@@ -19,13 +19,15 @@ public class AppointmentQueries {
 
     public static final String GET_APPOINTMENTS_OF_PATIENT_COUNT = "SELECT COUNT(*) as appointments FROM appointment WHERE patient_id=%s";
 
+    public static final String GET_APPOINTMENTS_OF_HOSPITALISATION_COUNT = "SELECT COUNT(*) as appointments FROM appointment WHERE hospitalisation_id=%s";
+
     public static final String GET_APPOINTMENTS_FOR_DATE_COUNT = "SELECT COUNT(*) as appointments FROM appointment WHERE DATE(date_time)='%s'";
 
     public static final String GET_ALL_APPOINTMENTS_FOR_STAFF = "SELECT * FROM appointment WHERE staff_id=%s %s";
 
     public static final String GET_ALL_APPOINTMENTS_FOR_PATIENT = "SELECT * FROM appointment WHERE patient_id=%s %s";
 
-    public static final String GET_ALL_APPOINTMENTS_FOR_HOSPITALISATION = "SELECT * FROM appointment WHERE hospitalisation_id=%s";
+    public static final String GET_ALL_APPOINTMENTS_FOR_HOSPITALISATION = "SELECT * FROM appointment WHERE hospitalisation_id=%s %s";
 
     private AppointmentQueries() {
     }

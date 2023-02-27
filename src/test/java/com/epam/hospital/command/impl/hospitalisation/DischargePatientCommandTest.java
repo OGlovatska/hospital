@@ -1,6 +1,5 @@
 package com.epam.hospital.command.impl.hospitalisation;
 
-import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.service.HospitalisationService;
 import com.epam.hospital.TestData;
@@ -29,18 +28,17 @@ public class DischargePatientCommandTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
     private final HospitalisationService service = mock(HospitalisationService.class);
-    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final DischargePatientCommand command = new DischargePatientCommand(service);
 
     @Test
     public void testExecute() {
-        when(applicationContext.getHospitalisationService()).thenReturn(service);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(USER)).thenReturn(getDoctorUserTo());
         when(request.getParameter(HOSPITALISATION_ID)).thenReturn(String.valueOf(TestData.HOSPITALISATION_ID));
         when(request.getParameter(PATIENT_ID)).thenReturn(String.valueOf(TestData.PATIENT_ID));
         when(request.getParameter(HOSPITALISATION_END_DATE)).thenReturn(String.valueOf(DISCHARGING_DATE));
 
-        CommandResult result = new DischargePatientCommand(applicationContext).execute(request, response);
+        CommandResult result = command.execute(request, response);
         assertEquals(getPageToRedirect(PATIENT_DETAILS,
                 getParameter(PATIENT_ID, String.valueOf(TestData.PATIENT_ID))), result.getPage());
         Mockito.verify(service, Mockito.times(1))

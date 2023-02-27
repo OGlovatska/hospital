@@ -23,11 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.command.constant.Parameter.HOSPITALISATIONS_LIMIT;
-import static com.epam.hospital.util.RequestUtil.numberOfPages;
-import static com.epam.hospital.util.RequestUtil.setRequestAttributes;
+import static com.epam.hospital.util.RequestUtil.*;
 import static com.epam.hospital.util.ValidationUtil.validateCurrentPageValue;
 import static com.epam.hospital.util.ValidationUtil.validateLimitValue;
 
@@ -37,10 +37,16 @@ public class PatientDetailsCommand implements Command {
     private final HospitalisationService hospitalisationService;
     private final PatientService patientService;
 
-    public PatientDetailsCommand(ApplicationContext applicationContext) {
-        this.staffService = applicationContext.getStaffService();
-        this.hospitalisationService = applicationContext.getHospitalisationService();
-        this.patientService = applicationContext.getPatientService();
+    public PatientDetailsCommand() {
+        this.staffService = ApplicationContext.getInstance().getStaffService();
+        this.hospitalisationService = ApplicationContext.getInstance().getHospitalisationService();
+        this.patientService = ApplicationContext.getInstance().getPatientService();
+    }
+
+    public PatientDetailsCommand(StaffService staffService, HospitalisationService hospitalisationService, PatientService patientService) {
+        this.staffService = staffService;
+        this.hospitalisationService = hospitalisationService;
+        this.patientService = patientService;
     }
 
     @Override
@@ -58,7 +64,7 @@ public class PatientDetailsCommand implements Command {
             hospitalisation = hospitalisationService.getPatientCurrentHospitalisation(patientId);
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing patient details command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
         request.setAttribute(CURRENT_PATIENT, patient);
@@ -102,7 +108,7 @@ public class PatientDetailsCommand implements Command {
             hospitalisationStatuses = hospitalisationService.getHospitalisationStatuses();
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create patient details command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
@@ -132,7 +138,7 @@ public class PatientDetailsCommand implements Command {
             notAssignedStaff = staffService.getAllStaffNotAssignedToPatient(patientId);
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create patient details command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 

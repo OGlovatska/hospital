@@ -19,7 +19,6 @@ import static com.epam.hospital.dao.constant.field.AppointmentFields.*;
 import static com.epam.hospital.dao.constant.field.CommonFields.*;
 
 public class AppointmentDaoImpl implements Dao<Appointment> {
-    private static final Logger LOG = LoggerFactory.getLogger(AppointmentDaoImpl.class);
     private final DBManager dbManager = MySQLDBManager.getInstance();
 
     @Override
@@ -32,9 +31,7 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
                 return Optional.of(getAppointment(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET APPOINTMENT BY ID query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -52,8 +49,8 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
         return getAll(String.format(GET_ALL_APPOINTMENTS_FOR_STAFF, staffId, pageable.query()));
     }
 
-    public List<Appointment> getAllAppointmentsByHospitalisation(long hospitalisationId) throws DBException {
-        return getAll(String.format(GET_ALL_APPOINTMENTS_FOR_HOSPITALISATION, hospitalisationId));
+    public List<Appointment> getAllAppointmentsByHospitalisation(long hospitalisationId, Pageable pageable) throws DBException {
+        return getAll(String.format(GET_ALL_APPOINTMENTS_FOR_HOSPITALISATION, hospitalisationId, pageable.query()));
     }
 
     public List<Appointment> getAllAppointmentsOfPatient(int patientId, Pageable pageable) throws DBException {
@@ -69,9 +66,7 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
                 appointments.add(getAppointment(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET ALL APPOINTMENTS query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return appointments;
     }
@@ -99,9 +94,7 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
                 return Optional.of(appointment);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE APPOINTMENT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -120,9 +113,7 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
             statement.executeUpdate();
             return get(appointment.getId());
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing UPDATE USER query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
     }
 
@@ -138,6 +129,10 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
         return getCount(String.format(GET_APPOINTMENTS_OF_PATIENT_COUNT, patientId));
     }
 
+    public int appointmentsCountForHospitalisation(int hospitalisationId) throws DBException {
+        return getCount(String.format(GET_APPOINTMENTS_OF_HOSPITALISATION_COUNT, hospitalisationId));
+    }
+
     public int appointmentsForDateCount(String date) throws DBException{
         return getCount(String.format(GET_APPOINTMENTS_FOR_DATE_COUNT, date));
     }
@@ -150,9 +145,7 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
                 return resultSet.getInt(APPOINTMENTS);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET APPOINTMENTS COUNT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return 0;
     }

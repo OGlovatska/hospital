@@ -19,18 +19,22 @@ public class LoginCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(LoginCommand.class);
     private final UserService userService;
 
-    public LoginCommand(ApplicationContext applicationContext) {
-        this.userService = applicationContext.getUserService();
+    public LoginCommand() {
+        this.userService = ApplicationContext.getInstance().getUserService();
+    }
+
+    public LoginCommand(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        try{
+        try {
             UserTo user = userService.getAuthorizedUser(request.getParameter(EMAIL), request.getParameter(PASSWORD));
             HttpSession session = request.getSession();
             session.setAttribute(USER, user);
-        } catch (ApplicationException e){
-            LOG.error("Exception has occurred during executing login command, message = {}", e.getType().getErrorMessage());
+        } catch (ApplicationException e) {
+            LOG.error("Exception has occurred during executing login command, message = {}", e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
             return new CommandResult(Page.LOGIN);
         }

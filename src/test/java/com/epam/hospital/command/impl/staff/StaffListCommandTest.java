@@ -20,15 +20,14 @@ public class StaffListCommandTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
     private final StaffService service = mock(StaffService.class);
-    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final StaffListCommand command = new StaffListCommand(service);
 
     @Test
     public void testExecute() {
-        when(applicationContext.getStaffService()).thenReturn(service);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(USER)).thenReturn(getAdminUserTo());
 
-        CommandResult result = new StaffListCommand(applicationContext).execute(request, response);
+        CommandResult result = command.execute(request, response);
         assertEquals(new CommandResult(Page.STAFF).getPage(), result.getPage());
     }
 }

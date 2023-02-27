@@ -27,10 +27,17 @@ public class CreateAppointmentCommand implements Command {
     private final AppointmentService appointmentService;
     private final StaffService staffService;
 
-    public CreateAppointmentCommand(ApplicationContext applicationContext) {
-        this.patientService = applicationContext.getPatientService();
-        this.appointmentService = applicationContext.getAppointmentService();
-        this.staffService = applicationContext.getStaffService();
+    public CreateAppointmentCommand() {
+        this.patientService = ApplicationContext.getInstance().getPatientService();
+        this.appointmentService = ApplicationContext.getInstance().getAppointmentService();
+        this.staffService = ApplicationContext.getInstance().getStaffService();
+    }
+
+    public CreateAppointmentCommand(PatientService patientService, AppointmentService appointmentService,
+                                    StaffService staffService) {
+        this.patientService = patientService;
+        this.appointmentService = appointmentService;
+        this.staffService = staffService;
     }
 
     @Override
@@ -51,15 +58,19 @@ public class CreateAppointmentCommand implements Command {
             appointmentStatuses = appointmentService.getAppointmentStatuses();
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create appointment command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
             return new CommandResult(Page.APPOINTMENTS);
         }
 
+        setRequestAttributes(request, assignedPatients, appointmentTypes, appointmentStatuses, staff);
+        return new CommandResult(Page.ADD_APPOINTMENT);
+    }
+
+    private void setRequestAttributes(HttpServletRequest request, List<PatientTo> assignedPatients, List<String> appointmentTypes, List<String> appointmentStatuses, StaffTo staff) {
         request.setAttribute(STAFF_ID, staff.getId());
         request.setAttribute(ASSIGNED_PATIENTS, assignedPatients);
         request.setAttribute(APPOINTMENT_TYPES, appointmentTypes);
         request.setAttribute(APPOINTMENT_STATUSES, appointmentStatuses);
-        return new CommandResult(Page.ADD_APPOINTMENT);
     }
 }

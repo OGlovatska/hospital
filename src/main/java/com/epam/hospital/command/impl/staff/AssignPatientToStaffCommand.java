@@ -20,8 +20,12 @@ public class AssignPatientToStaffCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(AssignPatientToStaffCommand.class);
     private final PatientService service;
 
-    public AssignPatientToStaffCommand(ApplicationContext applicationContext) {
-        this.service = applicationContext.getPatientService();
+    public AssignPatientToStaffCommand() {
+        this.service = ApplicationContext.getInstance().getPatientService();
+    }
+
+    public AssignPatientToStaffCommand(PatientService service) {
+        this.service = service;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class AssignPatientToStaffCommand implements Command {
             service.assignPatientToStaff(user, staffId, patientId);
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing assign staff to patient command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
         return new CommandResult(getPageToRedirect(STAFF_DETAILS,

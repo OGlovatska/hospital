@@ -1,6 +1,5 @@
 package com.epam.hospital.command.impl.appointment;
 
-import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.model.Appointment;
 import com.epam.hospital.service.AppointmentService;
@@ -26,11 +25,10 @@ public class SaveAppointmentCommandTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
     private final AppointmentService service = mock(AppointmentService.class);
-    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final SaveAppointmentCommand command = new SaveAppointmentCommand(service);
 
     @Test
     public void testExecute() {
-        when(applicationContext.getAppointmentService()).thenReturn(service);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(USER)).thenReturn(getNurseUserTo());
         when(request.getParameter(STAFF_ID)).thenReturn(String.valueOf(NURSE_STAFF_ID));
@@ -40,7 +38,7 @@ public class SaveAppointmentCommandTest {
         when(request.getParameter(DESCRIPTION)).thenReturn(APPOINTMENT_DESCRIPTION);
         when(request.getParameter(STATUS)).thenReturn(APPOINTMENT_STATUS);
 
-        CommandResult result = new SaveAppointmentCommand(applicationContext).execute(request, response);
+        CommandResult result = command.execute(request, response);
         assertEquals(getPageToRedirect(APPOINTMENTS), result.getPage());
         Mockito.verify(service, Mockito.times(1)).saveAppointment(any(UserTo.class),any(Appointment.class));
     }

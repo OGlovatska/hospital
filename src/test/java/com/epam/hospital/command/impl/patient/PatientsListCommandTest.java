@@ -20,15 +20,14 @@ public class PatientsListCommandTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
     private final PatientService service = mock(PatientService.class);
-    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final PatientsListCommand command = new PatientsListCommand(service);
 
     @Test
     public void testExecute() {
-        when(applicationContext.getPatientService()).thenReturn(service);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(USER)).thenReturn(getPatientUserTo());
 
-        CommandResult result = new PatientsListCommand(applicationContext).execute(request, response);
+        CommandResult result = command.execute(request, response);
         assertEquals(new CommandResult(Page.PATIENTS).getPage(), result.getPage());
     }
 }

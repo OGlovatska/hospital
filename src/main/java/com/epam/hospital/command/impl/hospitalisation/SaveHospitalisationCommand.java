@@ -23,8 +23,12 @@ public class SaveHospitalisationCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(SaveHospitalisationCommand.class);
     private final HospitalisationService service;
 
-    public SaveHospitalisationCommand(ApplicationContext applicationContext){
-        this.service = applicationContext.getHospitalisationService();
+    public SaveHospitalisationCommand() {
+        this.service = ApplicationContext.getInstance().getHospitalisationService();
+    }
+
+    public SaveHospitalisationCommand(HospitalisationService service) {
+        this.service = service;
     }
 
     @Override
@@ -36,9 +40,9 @@ public class SaveHospitalisationCommand implements Command {
         Hospitalisation hospitalisation = createHospitalisation(request);
         try {
             service.saveHospitalisation(user, hospitalisation);
-        } catch (ApplicationException e){
+        } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing save hospitalisation command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 

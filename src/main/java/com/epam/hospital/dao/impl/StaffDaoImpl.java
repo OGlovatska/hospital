@@ -19,7 +19,6 @@ import static com.epam.hospital.dao.constant.field.UserFields.*;
 import static com.epam.hospital.dao.constant.query.StaffQueries.*;
 
 public class StaffDaoImpl implements Dao<Staff> {
-    private static final Logger LOG = LoggerFactory.getLogger(StaffDaoImpl.class);
     private final DBManager dbManager = MySQLDBManager.getInstance();
 
     @Override
@@ -39,9 +38,7 @@ public class StaffDaoImpl implements Dao<Staff> {
                 return Optional.of(getStaff(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET STAFF query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -56,9 +53,7 @@ public class StaffDaoImpl implements Dao<Staff> {
         try (Connection connection = dbManager.getConnection()) {
             return save(staff, connection);
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE STAFF query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
     }
 
@@ -74,9 +69,7 @@ public class StaffDaoImpl implements Dao<Staff> {
                 return Optional.of(staff);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE STAFF query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -96,9 +89,7 @@ public class StaffDaoImpl implements Dao<Staff> {
                 staff.put(getStaff(resultSet), resultSet.getInt(PATIENTS));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET ALL STAFF query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return staff;
     }
@@ -120,9 +111,7 @@ public class StaffDaoImpl implements Dao<Staff> {
                 staff.add(getStaff(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET ALL STAFF query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return staff;
     }
@@ -135,23 +124,12 @@ public class StaffDaoImpl implements Dao<Staff> {
                 return resultSet.getInt(STAFF);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET STAFF COUNT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return 0;
     }
 
     private Staff getStaff(ResultSet resultSet) throws SQLException {
-        /*Staff staff = new Staff();
-        staff.setId(resultSet.getInt(ID));
-        staff.setUserId(resultSet.getInt(USER_ID));
-        staff.setFirstName(resultSet.getString(FIRST_NAME));
-        staff.setLastName(resultSet.getString(LAST_NAME));
-        staff.setEmail(resultSet.getString(EMAIL));
-        staff.setRole(Role.valueOf(resultSet.getString(ROLE)));
-        staff.setSpecialisation(resultSet.getString(SPECIALISATION));*/
-
         return new Staff.Builder().id(resultSet.getInt(ID)).userId(resultSet.getInt(USER_ID))
                 .firstName(resultSet.getString(FIRST_NAME)).lastName(resultSet.getString(LAST_NAME))
                 .email(resultSet.getString(EMAIL)).role(Role.valueOf(resultSet.getString(ROLE)))

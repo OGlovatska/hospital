@@ -19,7 +19,6 @@ import static com.epam.hospital.dao.constant.field.HospitalisationFields.*;
 import static com.epam.hospital.dao.constant.field.CommonFields.*;
 
 public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
-    private static final Logger LOG = LoggerFactory.getLogger(HospitalisationDaoImpl.class);
     private final DBManager dbManager = MySQLDBManager.getInstance();
 
     @Override
@@ -32,9 +31,7 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
                 return Optional.of(getHospitalisation(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET HOSPITALISATION BY ID query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -61,9 +58,7 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
                 hospitalisations.add(getHospitalisation(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET ALL HOSPITALISATIONS query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return hospitalisations;
     }
@@ -84,9 +79,7 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
                 return Optional.of(hospitalisation);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE HOSPITALISATION query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -103,9 +96,7 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
             statement.executeUpdate();
             return get(hospitalisation.getId());
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing UPDATE HOSPITALISATION query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
     }
 
@@ -121,9 +112,7 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
                 return resultSet.getInt(HOSPITALISATIONS);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET HOSPITALISATION COUNT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return 0;
     }
@@ -137,9 +126,7 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
                 return Optional.of(getHospitalisation(resultSet));
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET PATIENT CURRENT HOSPITALISATION query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }

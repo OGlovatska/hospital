@@ -29,7 +29,6 @@ import static com.epam.hospital.util.StaffUtil.*;
 import static com.epam.hospital.util.ValidationUtil.*;
 
 public class StaffService {
-    private static final Logger LOG = LoggerFactory.getLogger(StaffService.class);
     private final StaffDaoImpl staffDao;
     private final StaffPatientDaoImpl staffPatientDao;
     private final StaffRepository staffRepository;
@@ -48,12 +47,10 @@ public class StaffService {
                 return StaffUtil.getStaffTos(staffDao.getAllStaff(new Pageable(offset,
                         limit, new Sort(orderBy, direction))));
             } catch (DBException e) {
-                LOG.error("Exception has occurred during executing getAllStaff() method", e);
-                throw new IllegalRequestDataException(APP_ERROR);
+                throw new ApplicationException(e.getMessage(), APP_ERROR);
             }
         } else {
-            LOG.error("Only ADMIN can get all staff list, current user role is {}", user.getRole());
-            throw new IllegalRequestDataException(WRONG_REQUEST);
+            throw new IllegalRequestDataException(NOT_ADMIN);
         }
     }
 
@@ -61,8 +58,7 @@ public class StaffService {
         try {
             return staffDao.staffCount();
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getStaffCount() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -88,11 +84,9 @@ public class StaffService {
                 staffRepository.save(newUser, newStaff);
                 sendRegistrationEmail(password, newUser);
             } catch (DBException e) {
-                LOG.error("Exception has occurred during executing saveStaff() method, message = {}", e.getMessage());
                 throw new ApplicationException(e.getMessage(), APP_ERROR);
             }
         } else {
-            LOG.error("Only ADMIN can create new staff, current user role is {}", user.getRole());
             throw new IllegalRequestDataException(NOT_ADMIN);
         }
     }
@@ -103,8 +97,7 @@ public class StaffService {
                     new Pageable(Integer.parseInt(offset), Integer.parseInt(limit),
                             new Sort(orderBy, direction))));
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllStaffOfPatient() method ", e);
-            throw new ApplicationException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -112,8 +105,7 @@ public class StaffService {
         try {
             return staffPatientDao.staffOfPatientCount(patientId);
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getStaffOfPatientCount() method", e);
-            throw new ApplicationException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -121,8 +113,7 @@ public class StaffService {
         try {
             return getStaffTos(staffDao.getAllStaffNotAssignedToPatient(patientId));
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllPatientsNotAssignedToStaff() method", e);
-            throw new ApplicationException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -130,7 +121,6 @@ public class StaffService {
         try {
             return createStaffTo(staffDao.get(staffId).orElseThrow(), 0);
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getStaff method, message = {}", e.getMessage());
             throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
@@ -141,10 +131,8 @@ public class StaffService {
             try {
                 return createStaffTo(staffDao.getByUserId(user.getId()).orElseThrow(), 0);
             } catch (DBException e) {
-                LOG.error("Exception has occurred during executing getStaff method, message = {}", e.getMessage());
-                throw new ApplicationException(APP_ERROR);
-            } catch (NoSuchElementException e){
-                LOG.error("Exception has occurred during executing getStaff method, message = {}", e.getMessage());
+                throw new ApplicationException(e.getMessage(), APP_ERROR);
+            } catch (NoSuchElementException e) {
                 throw new IllegalRequestDataException(STAFF_NOT_FOUND);
             }
         } else {

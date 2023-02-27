@@ -24,11 +24,10 @@ public class SaveStaffCommandTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
     private final StaffService service = mock(StaffService.class);
-    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final SaveStaffCommand command = new SaveStaffCommand(service);
 
     @Test
     public void testExecute() {
-        when(applicationContext.getStaffService()).thenReturn(service);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(USER)).thenReturn(getAdminUserTo());
         when(request.getParameter(FIRST_NAME)).thenReturn(DOCTOR_FIRST_NAME);
@@ -37,7 +36,7 @@ public class SaveStaffCommandTest {
         when(request.getParameter(ROLE)).thenReturn(String.valueOf(DOCTOR_ROLE));
         when(request.getParameter(SPECIALISATION)).thenReturn(TestData.SPECIALISATION);
 
-        CommandResult result = new SaveStaffCommand(applicationContext).execute(request, response);
+        CommandResult result = command.execute(request, response);
         assertEquals(getPageToRedirect(STAFF_LIST), result.getPage());
     }
 }

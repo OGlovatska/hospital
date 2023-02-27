@@ -10,13 +10,6 @@
 <head>
     <jsp:include page="fragments/head.jsp"/>
     <jsp:include page="fragments/header.jsp"/>
-    <script>
-        $(document).ready(function() {
-            $('#patientModal').on('hidden.bs.modal', function () {
-                $('#patientModal form')[0].reset();
-            });
-        });
-    </script>
 </head>
 <body>
 <div class="container">
@@ -26,36 +19,30 @@
                 <div class="card-body">
                     <div class="row gutters">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <h6 class="mb-2 text-primary">Personal Details</h6>
+                            <h6 class="mb-2 text-primary">Hospitalisation Details</h6>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="firstName">First name</label>
-                                <input type="text" class="form-control" id="firstName" placeholder="${requestScope.currentStaff.firstName}" readonly="readonly">
+                                <label for="hospitalisationDate">Hospitalisation date</label>
+                                <input type="text" class="form-control" id="hospitalisationDate" placeholder="${requestScope.hospitalisation.startDate}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="lastName">Last name</label>
-                                <input type="text" class="form-control" id="lastName" placeholder="${requestScope.currentStaff.lastName}" readonly="readonly">
+                                <label for="dischargingDate">Discharging date</label>
+                                <input type="text" class="form-control" id="dischargingDate" placeholder="${requestScope.hospitalisation.endDate}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="eMail">Email</label>
-                                <input type="email" class="form-control" id="eMail" placeholder="${requestScope.currentStaff.email}" readonly="readonly">
+                                <label for="status">Status</label>
+                                <input type="text" class="form-control" id="status" placeholder="${requestScope.hospitalisation.status}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="role">Role</label>
-                                <input type="text" class="form-control" id="role" placeholder="${requestScope.currentStaff.role}" readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="specialisation">Specialisation</label>
-                                <input type="url" class="form-control" id="specialisation" placeholder="${requestScope.currentStaff.specialisation}" readonly="readonly">
+                                <label for="diagnosis">Diagnosis</label>
+                                <input type="text" class="form-control" id="diagnosis" placeholder="${requestScope.hospitalisation.diagnosis}" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -65,19 +52,19 @@
     </div>
     <nav style="padding-top: 15px">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-patients-tab" data-bs-toggle="tab" data-bs-target="#nav-patients"
-                    type="button" role="tab" aria-controls="nav-patients" aria-selected="true">Assigned patients
+            <button class="nav-link active" id="nav-appointments-tab" data-bs-toggle="tab" data-bs-target="#nav-appointments"
+                    type="button" role="tab" aria-controls="nav-patients" aria-selected="true">Appointments
             </button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent" style="padding-top: 15px">
         <div class="tab-pane fade show active"
-             id="nav-patients" role="tabpanel" aria-labelledby="nav-patients-tab">
+             id="nav-appointments" role="tabpanel" aria-labelledby="nav-appointments-tab">
             <div class="dataTables_wrapper dt-bootstrap5">
                 <div class="d-flex">
                     <form class="row g-3" action="api" method="get">
-                        <input type="hidden" name="command" value="staff"/>
-                        <input type="hidden" name="staffId" value="${requestScope.staffId}"/>
+                        <input type="hidden" name="command" value="hospitalisation"/>
+                        <input type="hidden" name="hospitalisationId" value="${requestScope.hospitalisationId}"/>
                         <div class="col-auto">
                             <select name="limit" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
                                 <option value="10" ${requestScope.limit eq "10" ? "selected" : ""}>10</option>
@@ -89,14 +76,11 @@
                         <div class="col-auto">
                             <select name="orderBy" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
                                 <option value="" selected disabled>Order by</option>
-                                <option value="first_name" ${requestScope.orderBy eq "first_name" ? "selected" : ""}>
-                                    First name
+                                <option value="date_time" ${requestScope.orderBy eq "date_time" ? "selected" : ""}>
+                                    Date
                                 </option>
-                                <option value="last_name" ${requestScope.orderBy eq "last_name" ? "selected" : ""}>
-                                    Last name
-                                </option>
-                                <option value="date_of_birth" ${requestScope.orderBy eq "date_of_birth" ? "selected" : ""}>
-                                    Date of birth
+                                <option value="type" ${requestScope.orderBy eq "type" ? "selected" : ""}>
+                                    Type
                                 </option>
                             </select>
                         </div>
@@ -111,33 +95,29 @@
                             </select>
                         </div>
                     </form>
-                    <div class="col-auto" style="padding-left: 15px">
-                        <button type="submit" class="btn btn-outline-primary me-2 btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#patientModal">
-                            Assign patient
-                        </button>
-                    </div>
                 </div>
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">First name</th>
-                        <th scope="col">Last name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Date of birth</th>
-                        <th scope="col">Gender</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Patient</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Conclusion</th>
+                        <th scope="col">Status</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="patient" items="${requestScope.assignedPatients}">
+                    <c:forEach var="appointment" items="${requestScope.appointments}">
                         <tr>
-                            <td><c:out value="${patient.id}"/></td>
-                            <td><c:out value="${patient.firstName}"/></td>
-                            <td><c:out value="${patient.lastName}"/></td>
-                            <td><c:out value="${patient.email}"/></td>
-                            <td><c:out value="${patient.dateOfBirth}"/></td>
-                            <td><c:out value="${patient.gender}"/></td>
+                            <td><c:out value="${appointment.id}"/></td>
+                            <td><c:out value="${function:formatDateTime(appointment.dateTime)}"/></td>
+                            <td><c:out value="${appointment.staffFirstName} ${appointment.staffLastName}"/></td>
+                            <td><c:out value="${appointment.type}"/></td>
+                            <td><c:out value="${appointment.description}"/></td>
+                            <td><c:out value="${appointment.conclusion}"/></td>
+                            <td><c:out value="${appointment.status}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -147,11 +127,11 @@
                         <div class="dataTables_info" role="status" aria-live="polite">
                             Showing
                             <c:choose>
-                                <c:when test="${fn:length(requestScope.assignedPatients) eq 0}"> 0 entries</c:when>
+                                <c:when test="${fn:length(requestScope.appointments) eq 0}"> 0 entries</c:when>
                                 <c:otherwise>
                                     ${requestScope.offset + 1} to
                                     <c:choose>
-                                        <c:when test="${fn:length(requestScope.assignedPatients) < requestScope.limit}">
+                                        <c:when test="${fn:length(requestScope.appointments) < requestScope.limit}">
                                             ${requestScope.totalCount}
                                         </c:when>
                                         <c:otherwise>
@@ -170,7 +150,7 @@
                                     <c:choose>
                                         <c:when test="${requestScope.page > 1}">
                                             <li class="paginate_button page-item previous" id="example_previous">
-                                                <a href="api?command=staff&staffId=${requestScope.staffId}&page=${requestScope.page - 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
+                                                <a href="api?command=hospitalisation&hospitalisationId=${requestScope.hospitalisationId}&page=${requestScope.page - 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                                    aria-controls="example" data-dt-idx="previous" tabindex="0"
                                                    class="page-link">Previous</a></li>
                                         </c:when>
@@ -193,7 +173,7 @@
                                             <c:otherwise>
                                                 <li class="page-item">
                                                     <a class="page-link"
-                                                       href="api?command=staff&staffId=${requestScope.staffId}&page=${i}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}">${i}</a>
+                                                       href="api?command=hospitalisation&hospitalisationId=${requestScope.hospitalisationId}&page=${i}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}">${i}</a>
                                                 </li>
                                             </c:otherwise>
                                         </c:choose>
@@ -201,7 +181,7 @@
                                     <c:choose>
                                         <c:when test="${requestScope.page < requestScope.numberOfPages}">
                                             <li class="paginate_button page-item next" id="example_next">
-                                                <a href="api?command=staff&staffId=${requestScope.staffId}&page=${requestScope.page + 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
+                                                <a href="api?command=hospitalisation&hospitalisationId=${requestScope.hospitalisationId}&page=${requestScope.page + 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                                    aria-controls="example" data-dt-idx="next" tabindex="0"
                                                    class="page-link">Next</a></li>
                                         </c:when>
@@ -222,38 +202,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="patientModal" tabindex="-1" aria-labelledby="patientModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5">Assign patient to staff</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="api" method="post" name="save-form">
-                <input type="hidden" name="command" value="assign-patient-to-staff">
-                <input type="hidden" name="staffId" value="${requestScope.staffId}">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Patient</label>
-                        <select name="patientId" class="form-select form-select-md mb-3"
-                                aria-label=".form-select-md example">
-                            <option value="" disabled selected>Please choose</option>
-                            <c:forEach items="${requestScope.notAssignedPatients}" var="patient">
-                                <option name="patientId" value="${patient.id}">
-                                        ${patient.firstName} ${patient.lastName}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-outline-primary me-2">Assign</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

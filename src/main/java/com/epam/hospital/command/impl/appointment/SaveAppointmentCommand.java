@@ -23,8 +23,12 @@ public class SaveAppointmentCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(SaveAppointmentCommand.class);
     private final AppointmentService service;
 
-    public SaveAppointmentCommand(ApplicationContext applicationContext) {
-        this.service = applicationContext.getAppointmentService();
+    public SaveAppointmentCommand() {
+        this.service = ApplicationContext.getInstance().getAppointmentService();
+    }
+
+    public SaveAppointmentCommand(AppointmentService service) {
+        this.service = service;
     }
 
     @Override
@@ -35,13 +39,12 @@ public class SaveAppointmentCommand implements Command {
         Appointment appointment = createAppointment(request);
         try {
             service.saveAppointment(user, appointment);
-        } catch (ApplicationException e){
+        } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create appointment command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
             return new CommandResult(getPageToRedirect(CREATE_APPOINTMENT));
         }
-        request.setAttribute("message", "some message");
         return new CommandResult(getPageToRedirect(APPOINTMENTS), true);
     }
 }

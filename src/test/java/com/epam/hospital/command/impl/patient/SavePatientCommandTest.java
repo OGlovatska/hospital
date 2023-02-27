@@ -22,11 +22,10 @@ public class SavePatientCommandTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
     private final PatientService service = mock(PatientService.class);
-    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final SavePatientCommand command = new SavePatientCommand(service);
 
     @Test
     public void testExecute() {
-        when(applicationContext.getPatientService()).thenReturn(service);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(USER)).thenReturn(getAdminUserTo());
         when(request.getParameter(FIRST_NAME)).thenReturn(PATIENT_FIRST_NAME);
@@ -36,7 +35,7 @@ public class SavePatientCommandTest {
         when(request.getParameter(DATE_OF_BIRTH)).thenReturn(String.valueOf(PATIENT_DATE_OF_BIRTH));
         when(request.getParameter(GENDER)).thenReturn(String.valueOf(PATIENT_GENDER));
 
-        CommandResult result = new SavePatientCommand(applicationContext).execute(request, response);
+        CommandResult result = command.execute(request, response);
         assertEquals(getPageToRedirect(PATIENTS_LIST), result.getPage());
     }
 

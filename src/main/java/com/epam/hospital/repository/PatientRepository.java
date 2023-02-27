@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class PatientRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(PatientRepository.class);
     private final UserDaoImpl userDao;
     private final PatientDaoImpl patientDao;
     private final DBManager dbManager = MySQLDBManager.getInstance();
@@ -42,9 +41,8 @@ public class PatientRepository {
             connection.commit();
             return Optional.of(patient);
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE USER PATIENT query", e);
             dbManager.rollbackConnection(connection);
-            throw new DBException();
+            throw new DBException(e.getMessage());
         } finally {
             dbManager.closeConnection(connection);
         }

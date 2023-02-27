@@ -22,8 +22,12 @@ public class DischargePatientCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(DischargePatientCommand.class);
     private final HospitalisationService service;
 
-    public DischargePatientCommand(ApplicationContext applicationContext) {
-        this.service = applicationContext.getHospitalisationService();
+    public DischargePatientCommand() {
+        this.service = ApplicationContext.getInstance().getHospitalisationService();
+    }
+
+    public DischargePatientCommand(HospitalisationService service) {
+        this.service = service;
     }
 
     @Override
@@ -38,7 +42,7 @@ public class DischargePatientCommand implements Command {
             service.dischargePatient(user, hospitalisationId, endDate);
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing discharge patient command, message = {}",
-                    e.getType().getErrorMessage());
+                    e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 

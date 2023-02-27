@@ -26,8 +26,12 @@ public class SaveStaffCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(SaveStaffCommand.class);
     private final StaffService service;
 
-    public SaveStaffCommand(ApplicationContext applicationContext) {
-        this.service = applicationContext.getStaffService();
+    public SaveStaffCommand() {
+        this.service = ApplicationContext.getInstance().getStaffService();
+    }
+
+    public SaveStaffCommand(StaffService service) {
+        this.service = service;
     }
 
     @Override
@@ -40,7 +44,7 @@ public class SaveStaffCommand implements Command {
         User newUser = createUser(request, password);
         try {
             service.saveStaff(user, password, newUser, newStaff);
-        } catch (ApplicationException e){
+        } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing save staff command, message = {}",
                     e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());

@@ -31,7 +31,6 @@ import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
 import static com.epam.hospital.util.ValidationUtil.validateUniqueEmail;
 
 public class PatientService {
-    private static final Logger LOG = LoggerFactory.getLogger(PatientService.class);
     private final PatientDaoImpl patientDao;
     private final StaffPatientDaoImpl staffPatientDao;
     private final PatientRepository patientRepository;
@@ -50,8 +49,7 @@ public class PatientService {
             return getPatientTos(patientDao.getAllPatients(staffId,
                     new Pageable(offset, limit, new Sort(orderBy, direction))));
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllPatientsOfStaff() method in PatientService", e);
-            throw new ApplicationException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -59,8 +57,7 @@ public class PatientService {
         try {
             return getPatientTos(patientDao.getAllPatientsNotAssignedToStaff(staffId));
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllPatientsNotAssignedToStaff() method in PatientService", e);
-            throw new ApplicationException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -68,8 +65,7 @@ public class PatientService {
         try {
             return staffPatientDao.patientsOfStaffCount(staffId);
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getStaffCount() method in PatientService", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -80,11 +76,9 @@ public class PatientService {
                 StaffPatient assigment = new StaffPatient(staffId, patientId);
                 staffPatientDao.save(assigment);
             } catch (DBException e) {
-                LOG.error("Exception has occurred during executing getStaffCount() method in PatientService", e);
-                throw new ApplicationException(APP_ERROR);
+                throw new ApplicationException(e.getMessage(), APP_ERROR);
             }
         } else {
-            LOG.error("Only ADMIN can assign patient to staff, current user role is {}", user.getRole());
             throw new IllegalRequestDataException(NOT_ADMIN);
         }
     }
@@ -97,11 +91,9 @@ public class PatientService {
                 patientRepository.save(newUser, newPatient);
                 sendRegistrationEmail(password, newUser);
             } catch (DBException e) {
-                LOG.error("Exception has occurred during executing savePatient() method", e);
-                throw new IllegalRequestDataException(APP_ERROR);
+                throw new ApplicationException(e.getMessage(), APP_ERROR);
             }
         } else {
-            LOG.error("Only ADMIN can create new patient, current user role is {}", user.getRole());
             throw new IllegalRequestDataException(NOT_ADMIN);
         }
     }
@@ -113,8 +105,7 @@ public class PatientService {
         } else if (user.getRole().equals(Role.DOCTOR) || user.getRole().equals(Role.NURSE)) {
             return getPatientsForStaff(user, new Pageable(offset, limit, new Sort(orderBy, direction)));
         } else {
-            LOG.error("Current user can't get patients list, role is {}", user.getRole());
-            throw new IllegalRequestDataException(NOT_ADMIN);
+            throw new IllegalRequestDataException(WRONG_REQUEST);
         }
     }
 
@@ -126,14 +117,13 @@ public class PatientService {
             patients.put(patientsCount, patientTos);
             return patients;
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllPatients() method", e);
-            throw new IllegalRequestDataException(NOT_ADMIN);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
     private Map<Integer, List<PatientTo>> getPatientsForStaff(UserTo user, Pageable pageable) {
         try {
-            Staff staff = staffDao.getByUserId(user.getId()).orElseThrow();
+            Staff staff = staffDao.getByUserId(user.getId()).orElse(null);
             if (staff != null) {
                 Map<Integer, List<PatientTo>> patients = new HashMap<>();
                 int patientsCount = staffPatientDao.patientsOfStaffCount(staff.getId());
@@ -141,11 +131,10 @@ public class PatientService {
                 patients.put(patientsCount, patientTos);
                 return patients;
             } else {
-                throw new IllegalRequestDataException(WRONG_REQUEST);
+                throw new IllegalRequestDataException(STAFF_NOT_FOUND);
             }
         } catch (DBException e) {
-            e.printStackTrace();
-            throw new ApplicationException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -153,8 +142,7 @@ public class PatientService {
         try {
             return patientDao.patientsCount();
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getPatientsCount() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -169,8 +157,7 @@ public class PatientService {
         try {
             return createPatientTo(patientDao.get(patientId).orElseThrow());
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getPatient() method, message = {}", e.getMessage());
-            throw new ApplicationException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -178,8 +165,7 @@ public class PatientService {
         try {
             return createPatientTo(patientDao.getByUserId(user.getId()).orElseThrow());
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getPatient() method, message = {}", e.getMessage());
-            throw new ApplicationException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 }

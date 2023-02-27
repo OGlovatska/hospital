@@ -368,7 +368,6 @@
                     </div>
                 </div>
             </c:if>
-                <%--        <div class="tab-pane fade" id="nav-appointments" role="tabpanel" aria-labelledby="nav-appointments-tab">...</div>--%>
             <div class="tab-pane fade <c:if test="${requestScope.activeTab == 'nav-hospitalisations'}">show active</c:if>"
                  id="nav-hospitalisations" role="tabpanel" aria-labelledby="nav-hospitalisations-tab">
                 <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap5">

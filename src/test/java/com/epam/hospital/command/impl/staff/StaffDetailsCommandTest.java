@@ -22,19 +22,15 @@ public class StaffDetailsCommandTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
     private final PatientService patientService = mock(PatientService.class);
-    private final AppointmentService appointmentService = mock(AppointmentService.class);
     private final StaffService staffService = mock(StaffService.class);
-    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final StaffDetailsCommand command = new StaffDetailsCommand(patientService, staffService);
 
     @Test
     public void testExecute() {
-        when(applicationContext.getPatientService()).thenReturn(patientService);
-        when(applicationContext.getAppointmentService()).thenReturn(appointmentService);
-        when(applicationContext.getStaffService()).thenReturn(staffService);
         when(request.getSession()).thenReturn(session);
         when(request.getParameter(STAFF_ID)).thenReturn(String.valueOf(DOCTOR_STAFF_ID));
 
-        CommandResult result = new StaffDetailsCommand(applicationContext).execute(request, response);
+        CommandResult result = command.execute(request, response);
         assertEquals(new CommandResult(Page.STAFF_DETAILS).getPage(), result.getPage());
     }
 }

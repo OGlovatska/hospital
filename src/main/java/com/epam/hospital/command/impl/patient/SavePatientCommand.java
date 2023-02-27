@@ -26,8 +26,12 @@ public class SavePatientCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(SavePatientCommand.class);
     private final PatientService service;
 
-    public SavePatientCommand(ApplicationContext applicationContext) {
-        this.service = applicationContext.getPatientService();
+    public SavePatientCommand() {
+        this.service = ApplicationContext.getInstance().getPatientService();
+    }
+
+    public SavePatientCommand(PatientService service) {
+        this.service = service;
     }
 
     @Override
@@ -40,12 +44,11 @@ public class SavePatientCommand implements Command {
         User newUser = createUser(request, password);
         try {
             service.savePatient(user, password, newUser, newPatient);
-            return new CommandResult(getPageToRedirect(PATIENTS_LIST), true);
-        } catch (ApplicationException e){
+        } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing save patient command, message = {}",
                     e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
-            return null;
         }
+        return new CommandResult(getPageToRedirect(PATIENTS_LIST), true);
     }
 }

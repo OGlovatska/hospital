@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class StaffRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(StaffRepository.class);
     private final UserDaoImpl userDao = new UserDaoImpl();
     private final StaffDaoImpl staffDao = new StaffDaoImpl();
     private final DBManager dbManager = MySQLDBManager.getInstance();
@@ -35,7 +34,6 @@ public class StaffRepository {
             connection.commit();
             return Optional.of(staff);
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE USER STAFF query", e);
             dbManager.rollbackConnection(connection);
             throw new DBException(e.getMessage());
         } finally {

@@ -16,7 +16,6 @@ import static com.epam.hospital.dao.constant.field.CommonFields.*;
 import static com.epam.hospital.dao.constant.query.StaffPatientQueries.*;
 
 public class StaffPatientDaoImpl implements Dao<StaffPatient> {
-    private static final Logger LOG = LoggerFactory.getLogger(StaffPatientDaoImpl.class);
     private final DBManager dbManager = MySQLDBManager.getInstance();
 
     @Override
@@ -42,9 +41,7 @@ public class StaffPatientDaoImpl implements Dao<StaffPatient> {
                 return Optional.of(assignment);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing SAVE PATIENT TO STAFF query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return Optional.empty();
     }
@@ -63,9 +60,7 @@ public class StaffPatientDaoImpl implements Dao<StaffPatient> {
                 return resultSet.getInt(PATIENTS);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET PATIENTS OF STAFF COUNT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return 0;
     }
@@ -79,9 +74,7 @@ public class StaffPatientDaoImpl implements Dao<StaffPatient> {
                 return resultSet.getInt(STAFF);
             }
         } catch (SQLException e) {
-            LOG.error("Exception has occurred during executing GET PATIENTS OF STAFF COUNT query, error code={}, message={}",
-                    e.getErrorCode(), e.getMessage());
-            throw new DBException();
+            throw new DBException(e.getMessage());
         }
         return 0;
     }

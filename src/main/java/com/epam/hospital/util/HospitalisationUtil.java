@@ -21,15 +21,6 @@ public class HospitalisationUtil {
                 .build();
     }
 
-    public static HospitalisationTo createHospitalisationTo(Hospitalisation hospitalisation, Patient patient, List<AppointmentTo> appointments) {
-        return new HospitalisationTo.Builder().id(hospitalisation.getId()).patientId(hospitalisation.getPatientId())
-                .patientFirstName(patient.getFirstName()).patientLastName(patient.getLastName())
-                .startDate(hospitalisation.getStartDate()).endDate(hospitalisation.getEndDate())
-                .status(hospitalisation.getStatus()).diagnosis(hospitalisation.getDiagnosis())
-                .appointments(appointments)
-                .build();
-    }
-
     public static HospitalisationTo createHospitalisationTo(Hospitalisation hospitalisation) {
         return new HospitalisationTo.Builder().id(hospitalisation.getId())
                 .patientId(hospitalisation.getPatientId()).startDate(hospitalisation.getStartDate())

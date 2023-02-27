@@ -29,7 +29,6 @@ import static com.epam.hospital.util.AppointmentUtil.createAppointmentTo;
 import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
 
 public class AppointmentService {
-    private static final Logger LOG = LoggerFactory.getLogger(AppointmentService.class);
     private final AppointmentDaoImpl appointmentDao;
     private final PatientDaoImpl patientDao;
     private final StaffDaoImpl staffDao;
@@ -62,8 +61,7 @@ public class AppointmentService {
             appointments.put(appointmentsCount, appointmentTos);
             return appointments;
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllAppointments() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -77,12 +75,10 @@ public class AppointmentService {
                 appointments.put(appointmentsCount, appointmentTos);
                 return appointments;
             } else {
-                LOG.error("If user role is DOCTOR or NURSE staff object must not be null, current user role is {}", user.getRole());
-                throw new IllegalRequestDataException(WRONG_REQUEST);
+                throw new IllegalRequestDataException(STAFF_NOT_FOUND);
             }
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllAppointments() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -97,12 +93,10 @@ public class AppointmentService {
                 appointments.put(appointmentsCount, appointmentTos);
                 return appointments;
             } else {
-                LOG.error("If user role is Patient patient object must not be null, current user role is {}", user.getRole());
-                throw new IllegalRequestDataException(WRONG_REQUEST);
+                throw new IllegalRequestDataException(PATIENT_NOT_FOUND);
             }
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllAppointments() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -110,8 +104,7 @@ public class AppointmentService {
         try {
             return appointmentDao.appointmentsCount();
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllAppointmentsCount() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -119,8 +112,7 @@ public class AppointmentService {
         try {
             return appointmentDao.appointmentsCountForStaff(staffId);
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllAppointmentsCount() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -128,8 +120,7 @@ public class AppointmentService {
         try {
             return appointmentDao.appointmentsForDateCount(date);
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllAppointmentsCount() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -138,8 +129,7 @@ public class AppointmentService {
             return getAppointmentTos(appointmentDao.getAllAppointmentsOfStaff(staffId,
                     new Pageable(offset, limit, new Sort(orderBy, direction))));
         } catch (DBException e) {
-            LOG.error("Exception has occurred during executing getAllAppointments() method", e);
-            throw new IllegalRequestDataException(APP_ERROR);
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
         }
     }
 
@@ -164,7 +154,7 @@ public class AppointmentService {
         } else if (user.getRole().equals(Role.NURSE)) {
             return Arrays.asList(AppointmentType.MEDICATION.name(), AppointmentType.PROCEDURE.name());
         } else {
-            throw new IllegalRequestDataException(VALIDATION_ERROR);
+            throw new IllegalRequestDataException(WRONG_REQUEST);
         }
     }
 
@@ -177,14 +167,11 @@ public class AppointmentService {
                 appointment.setHospitalisationId(hospitalisation.getId());
                 appointmentDao.save(appointment);
             } catch (DBException e) {
-                LOG.error("Exception has occurred during executing saveAppointment() method {}", e.getMessage());
-                throw new ApplicationException(APP_ERROR);
+                throw new ApplicationException(e.getMessage(), APP_ERROR);
             } catch (NoSuchElementException e) {
-                LOG.error("Can't add appointment to not hospitalised patient");
                 throw new IllegalRequestDataException(PATIENT_NOT_HOSPITALISED);
             }
         } else {
-            LOG.error("Only users with role DOCTOR or NURSE can save appointment, current user role is {}", user.getRole());
             throw new IllegalRequestDataException(NOT_STAFF);
         }
     }
@@ -194,6 +181,21 @@ public class AppointmentService {
                 .stream(AppointmentStatus.values())
                 .map(AppointmentStatus::name)
                 .collect(Collectors.toList());
+    }
+
+    public Map<Integer, List<AppointmentTo>> getAllAppointments(UserTo user, int hospitalisationId, int offset,
+                                                                int limit, String orderBy, String direction) {
+        checkUserNotNull(user);
+        try {
+            List<AppointmentTo> appointmentTos = getAppointmentTos(appointmentDao.getAllAppointmentsByHospitalisation(
+                    hospitalisationId, new Pageable(offset, limit, new Sort(orderBy, direction))));
+            int appointmentsCount = appointmentDao.appointmentsCountForHospitalisation(hospitalisationId);
+            Map<Integer, List<AppointmentTo>> appointments = new HashMap<>();
+            appointments.put(appointmentsCount, appointmentTos);
+            return appointments;
+        } catch (DBException e) {
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
+        }
     }
 }
 
