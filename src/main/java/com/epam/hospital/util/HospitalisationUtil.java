@@ -2,6 +2,7 @@ package com.epam.hospital.util;
 
 import com.epam.hospital.model.Hospitalisation;
 import com.epam.hospital.model.Patient;
+import com.epam.hospital.model.enums.HospitalisationStatus;
 import com.epam.hospital.to.AppointmentTo;
 import com.epam.hospital.to.HospitalisationTo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,8 +34,8 @@ public class HospitalisationUtil {
         return new Hospitalisation.Builder()
                 .patientId(Integer.parseInt(request.getParameter(PATIENT_ID)))
                 .startDate(request.getParameter(HOSPITALISATION_START_DATE) != null ? LocalDate.parse(request.getParameter(HOSPITALISATION_START_DATE)) : null)
-                .endDate(request.getParameter(HOSPITALISATION_END_DATE) != null ? LocalDate.parse(request.getParameter(HOSPITALISATION_END_DATE)) : null)
-                .status(request.getParameter(STATUS)).diagnosis(request.getParameter(DIAGNOSIS))
+                .endDate(null)
+                .status(HospitalisationStatus.HOSPITALIZED)
                 .build();
     }
 }

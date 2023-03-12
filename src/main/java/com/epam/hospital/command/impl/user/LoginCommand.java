@@ -13,7 +13,10 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.epam.hospital.command.constant.Command.MAIN;
+import static com.epam.hospital.command.constant.Command.PATIENTS_LIST;
 import static com.epam.hospital.command.constant.Parameter.*;
+import static com.epam.hospital.util.CommandUtil.getPageToRedirect;
 
 public class LoginCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(LoginCommand.class);
@@ -33,11 +36,11 @@ public class LoginCommand implements Command {
             UserTo user = userService.getAuthorizedUser(request.getParameter(EMAIL), request.getParameter(PASSWORD));
             HttpSession session = request.getSession();
             session.setAttribute(USER, user);
+            return new CommandResult(getPageToRedirect(MAIN), true);
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing login command, message = {}", e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
             return new CommandResult(Page.LOGIN);
         }
-        return new CommandResult(Page.MAIN);
     }
 }

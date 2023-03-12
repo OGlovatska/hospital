@@ -36,6 +36,20 @@ public class RequestUtil {
         return attributes;
     }
 
+    public static Map<String, Object> getPaginationAttributes(String page, String limit, String orderBy, String direction) {
+        Map<String, Object> attributes = new HashMap<>();
+        int validatedPage = validateCurrentPageValue(page);
+        int validatedLimit = validateLimitValue(limit);
+        int offset = validatedPage * validatedPage - validatedPage;
+
+        attributes.put(CURRENT_PAGE, validatedPage);
+        attributes.put(LIMIT, validatedLimit);
+        attributes.put(OFFSET, offset);
+        attributes.put(ORDER_BY, validateOrderByValue(orderBy));
+        attributes.put(DIRECTION, validateDirectionValue(direction));
+        return attributes;
+    }
+
     public static void setPaginationAttributes(HttpServletRequest request, int totalCount, int limit, int offset,
                                                int page, String orderBy, String direction) {
         request.setAttribute(TOTAL_COUNT, totalCount);
@@ -48,7 +62,7 @@ public class RequestUtil {
     }
 
     public static void setRequestAttributes(HttpServletRequest request, Attribute... attributes) {
-        for (Attribute attribute : attributes){
+        for (Attribute attribute : attributes) {
             request.setAttribute(attribute.getName(), attribute.getValue());
         }
     }

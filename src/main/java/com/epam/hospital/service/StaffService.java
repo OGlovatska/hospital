@@ -78,7 +78,7 @@ public class StaffService {
 
     public void saveStaff(UserTo user, String password, User newUser, Staff newStaff) {
         checkUserNotNull(user);
-        validateUniqueEmail(user.getEmail());
+        validateUniqueEmail(newUser.getEmail());
         if (user.getRole().equals(Role.ADMIN)) {
             try {
                 staffRepository.save(newUser, newStaff);
@@ -91,11 +91,9 @@ public class StaffService {
         }
     }
 
-    public List<StaffTo> getAllStaffOfPatient(int patientId, String offset, String limit, String orderBy, String direction) {
+    public List<StaffTo> getAllStaffOfPatient(int patientId, int offset, int limit, String orderBy, String direction) {
         try {
-            return getStaffTos(staffDao.getAllStaff(patientId,
-                    new Pageable(Integer.parseInt(offset), Integer.parseInt(limit),
-                            new Sort(orderBy, direction))));
+            return getStaffTos(staffDao.getAllStaff(patientId, new Pageable(offset, limit, new Sort(orderBy, direction))));
         } catch (DBException e) {
             throw new ApplicationException(e.getMessage(), APP_ERROR);
         }

@@ -5,6 +5,7 @@ import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.Hospitalisation;
+import com.epam.hospital.model.enums.HospitalisationStatus;
 import com.epam.hospital.pagination.Pageable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,7 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
             statement.setInt(1, hospitalisation.getPatientId());
             statement.setDate(2, hospitalisation.getStartDate() != null ? Date.valueOf(hospitalisation.getStartDate()) : null);
             statement.setDate(3, hospitalisation.getEndDate() != null ? Date.valueOf(hospitalisation.getEndDate()) : null);
-            statement.setString(4, hospitalisation.getStatus());
+            statement.setString(4, hospitalisation.getStatus().name());
             statement.setString(5, hospitalisation.getDiagnosis());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
@@ -90,7 +91,7 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
              PreparedStatement statement = connection.prepareStatement(UPDATE_HOSPITALISATION)) {
             statement.setDate(1, hospitalisation.getStartDate() != null ? Date.valueOf(hospitalisation.getStartDate()) : null);
             statement.setDate(2, hospitalisation.getEndDate() != null ? Date.valueOf(hospitalisation.getEndDate()) : null);
-            statement.setString(3, hospitalisation.getStatus());
+            statement.setString(3, hospitalisation.getStatus().name());
             statement.setString(4, hospitalisation.getDiagnosis());
             statement.setInt(5, hospitalisation.getId());
             statement.executeUpdate();
@@ -135,7 +136,8 @@ public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
         Hospitalisation hospitalisation = new Hospitalisation.Builder()
                 .id(resultSet.getInt(ID)).patientId(resultSet.getInt(PATIENT_ID))
                 .startDate(resultSet.getDate(START_DATE).toLocalDate())
-                .status(resultSet.getString(STATUS)).diagnosis(resultSet.getString(DIAGNOSIS)).build();
+                .status(HospitalisationStatus.valueOf(resultSet.getString(STATUS)))
+                .diagnosis(resultSet.getString(DIAGNOSIS)).build();
 
         Date endDate = resultSet.getDate(END_DATE);
         hospitalisation.setEndDate(endDate != null ? endDate.toLocalDate() : null);

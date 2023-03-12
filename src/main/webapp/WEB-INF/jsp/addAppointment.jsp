@@ -10,7 +10,7 @@
     <jsp:include page="fragments/header.jsp"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment-with-locales.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
 
@@ -20,8 +20,10 @@
 
     <script>
         $(function () {
+            moment.locale("${sessionScope.lang}");
             $('#datetimepicker2').datetimepicker({
                 format: 'YYYY-MM-DD HH:mm',
+                locale: moment.locale(),
             });
         });
     </script>
@@ -33,13 +35,13 @@
             <input type="hidden" name="command" value="save-appointment"/>
             <input type="hidden" name="staffId" value="${requestScope.staffId}"/>
             <div class="col-12 text-center">
-                <h3 class="text-primary"><strong>Create appointment</strong></h3>
+                <h3 class="text-primary"><strong><fmt:message key="appointment.create"/></strong></h3>
             </div>
             <div class="mb-3">
-                <label class="form-label">Patient</label>
+                <label class="form-label"><fmt:message key="patient.patient"/></label>
                 <select name="patientId" class="form-select form-select-md mb-3"
                         aria-label=".form-select-md example">
-                    <option value="" disabled selected>Please choose</option>
+                    <option value="" disabled selected><fmt:message key="common.choose"/></option>
                     <c:forEach items="${requestScope.assignedPatients}" var="patient">
                         <option name="patientId" value="${patient.id}">
                                 ${patient.firstName} ${patient.lastName}
@@ -48,35 +50,31 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label class="form-label">Appointment type</label>
-                <select name="type" class="form-select form-select-md mb-3"
-                        aria-label=".form-select-md example">
-                    <option value="" disabled selected>Please choose</option>
-                         <c:forEach items="${requestScope.appointmentTypes}" var="type">
-                            <option value="${type}">${type}</option>
-                        </c:forEach>
+                <label class="form-label"><fmt:message key="common.type"/></label>
+                <select name="type" class="form-select form-select-md mb-3" aria-label=".form-select-md example">
+                    <option value="" disabled selected><fmt:message key="common.choose"/></option>
+                    <option value="PROCEDURE"><fmt:message key="appointment.type.procedure"/></option>
+                    <option value="MEDICATION"><fmt:message key="appointment.type.medication"/></option>
+                    <c:if test="${sessionScope.user.role eq 'DOCTOR'}">
+                        <option value="SURGERY"><fmt:message key="appointment.type.surgery"/></option>
+                        <option value="ANALYSIS"><fmt:message key="appointment.type.analysis"/></option>
+                    </c:if>
                 </select>
             </div>
             <div class="mb-3">
-                <label class="form-label">Appointment status</label>
-                <select name="status" class="form-select form-select-md mb-3"
-                        aria-label=".form-select-md example">
-                    <option value="" disabled selected>Please choose</option>
-                    <c:forEach items="${requestScope.appointmentStatuses}" var="status">
-                        <option value="${status}">${status}</option>
-                    </c:forEach>
-                </select>
+                <div class="mb-3">
+                    <label class="form-label"><fmt:message key="common.status"/></label>
+                    <input type="text" name="status" value="<fmt:message key="appointment.status.assigned"/>"
+                           id="status" class="form-control" readonly="readonly"
+                           placeholder="<fmt:message key="appointment.status.assigned"/>">
+                </div>
             </div>
             <div class="mb-3">
-                <label class="form-label">Description</label>
+                <label class="form-label"><fmt:message key="appointment.description"/></label>
                 <textarea class="form-control" rows="3" name="description"></textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label">Conclusion</label>
-                <textarea class="form-control" rows="3" name="conclusion"></textarea>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Date and time</label>
+                <label class="form-label"><fmt:message key="appointment.date.time"/></label>
                 <div class='input-group date' id='datetimepicker2'>
                     <input type='text' class="form-control" name="dateTime"/>
                     <span class="input-group-addon">
@@ -85,7 +83,7 @@
                 </div>
             </div>
             <div class="text-center mt-3">
-                <button type="submit" class="btn btn-lg btn-block btn-primary">Submit</button>
+                <button type="submit" class="btn btn-lg btn-block btn-primary"><fmt:message key="common.save"/></button>
             </div>
         </form>
     </div>

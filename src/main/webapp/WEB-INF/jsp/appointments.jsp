@@ -18,7 +18,7 @@
             <form class="row g-3" action="api" method="get">
                 <input type="hidden" name="command" value="appointments-list"/>
                 <div class="col-auto">
-                    <select name="limit" aria-controls="example" class="form-select form-select-sm">
+                    <select name="limit" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
                         <option value="10" ${requestScope.limit eq "10" ? "selected" : ""}>10
                         </option>
                         <option value="25" ${requestScope.limit eq "25" ? "selected" : ""}>25
@@ -30,35 +30,38 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <select name="orderBy" aria-controls="example" class="form-select form-select-sm">
-                        <option value="" selected disabled>Order by</option>
+                    <select name="orderBy" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
+                        <option value="" selected disabled><fmt:message key="common.order.by"/></option>
+                        <option value="id"  ${requestScope.orderBy eq "id" ? "selected" : ""}>
+                            <fmt:message key="common.default"/>
+                        </option>
                         <option value="date_time" ${requestScope.orderBy eq "date_time" ? "selected" : ""}>
-                            Date
+                            <fmt:message key="common.date"/>
                         </option>
                         <option value="type" ${requestScope.orderBy eq "type" ? "selected" : ""}>
-                            Type
+                            <fmt:message key="common.type"/>
                         </option>
                     </select>
                 </div>
                 <div class="col-auto">
-                    <select name="dir" aria-controls="example" class="form-select form-select-sm">
-                        <option value="" selected disabled>Direction</option>
-                        <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>Ascending
+                    <select name="dir" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
+                        <option value="" selected disabled><fmt:message key="common.direction"/></option>
+                        <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>
+                            <fmt:message key="common.ascending"/>
                         </option>
                         <option value="DESC" ${requestScope.dir eq "DESC" ? "selected" : ""}>
-                            Descending
+                            <fmt:message key="common.descending"/>
                         </option>
                     </select>
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-outline-primary me-2 btn-sm">Show</button>
                 </div>
             </form>
             <c:if test="${sessionScope.user.role eq 'DOCTOR' or sessionScope.user.role eq 'NURSE'}">
-                <div class="col-auto">
+                <div class="col-auto" style="padding-left: 15px">
                     <form action="api" method="get">
                         <input type="hidden" name="command" value="create-appointment"/>
-                        <button type="submit" class="btn btn-outline-primary me-2 btn-sm">Add appointment</button>
+                        <button type="submit" class="btn btn-outline-primary me-2 btn-sm">
+                            <fmt:message key="appointment.add"/>
+                        </button>
                     </form>
                 </div>
             </c:if>
@@ -67,12 +70,12 @@
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Date</th>
-                <th scope="col">Patient</th>
-                <th scope="col">Type</th>
-                <th scope="col">Description</th>
-                <th scope="col">Conclusion</th>
-                <th scope="col">Status</th>
+                <th scope="col"><fmt:message key="common.date"/></th>
+                <th scope="col"><fmt:message key="patient.patient"/></th>
+                <th scope="col"><fmt:message key="common.type"/></th>
+                <th scope="col"><fmt:message key="appointment.description"/></th>
+                <th scope="col"><fmt:message key="appointment.conclusion"/></th>
+                <th scope="col"><fmt:message key="common.status"/></th>
             </tr>
             </thead>
             <tbody>
@@ -92,11 +95,11 @@
         <div class="row">
             <div class="col-sm-12 col-md-5">
                 <div class="dataTables_info" role="status" aria-live="polite">
-                    Showing
+                    <fmt:message key="pagination.showing"/>
                     <c:choose>
-                        <c:when test="${fn:length(requestScope.appointments) eq 0}"> 0 entries</c:when>
+                        <c:when test="${fn:length(requestScope.appointments) eq 0}"> 0 <fmt:message key="pagination.entries"/></c:when>
                         <c:otherwise>
-                            ${requestScope.offset + 1} to
+                            <fmt:message key="pagination.from"/> ${requestScope.offset + 1} <fmt:message key="pagination.to"/>
                             <c:choose>
                                 <c:when test="${fn:length(requestScope.appointments) < requestScope.limit}">
                                     ${requestScope.totalCount}
@@ -105,7 +108,8 @@
                                     ${requestScope.offset + requestScope.limit}
                                 </c:otherwise>
                             </c:choose>
-                            of ${requestScope.totalCount} entries
+                            <fmt:message key="pagination.of"/> ${requestScope.totalCount}
+                            <fmt:message key="pagination.entries"/>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -119,13 +123,13 @@
                                     <li class="paginate_button page-item previous" id="example_previous">
                                         <a href="api?command=appointments-list&staffId=${requestScope.staffId}&page=${requestScope.page - 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                            aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                           class="page-link">Previous</a></li>
+                                           class="page-link"><fmt:message key="pagination.previous"/></a></li>
                                 </c:when>
                                 <c:otherwise>
                                     <li class="paginate_button page-item previous disabled"
                                         id="example_previous">
                                         <a href="#" aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                           class="page-link">Previous</a>
+                                           class="page-link"><fmt:message key="pagination.previous"/></a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>
@@ -150,12 +154,12 @@
                                     <li class="paginate_button page-item next" id="example_next">
                                         <a href="api?command=appointments-list&staffId=${requestScope.staffId}&page=${requestScope.page + 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                            aria-controls="example" data-dt-idx="next" tabindex="0"
-                                           class="page-link">Next</a></li>
+                                           class="page-link"><fmt:message key="pagination.next"/></a></li>
                                 </c:when>
                                 <c:otherwise>
                                     <li class="paginate_button page-item next disabled" id="example_previous">
                                         <a href="#" aria-controls="example" data-dt-idx="next" tabindex="0"
-                                           class="page-link">Next</a>
+                                           class="page-link"><fmt:message key="pagination.next"/></a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>
@@ -166,5 +170,6 @@
         </div>
     </div>
 </div>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

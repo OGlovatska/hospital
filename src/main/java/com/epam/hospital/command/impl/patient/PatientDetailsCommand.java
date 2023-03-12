@@ -28,8 +28,7 @@ import java.util.Map;
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.command.constant.Parameter.HOSPITALISATIONS_LIMIT;
 import static com.epam.hospital.util.RequestUtil.*;
-import static com.epam.hospital.util.ValidationUtil.validateCurrentPageValue;
-import static com.epam.hospital.util.ValidationUtil.validateLimitValue;
+import static com.epam.hospital.util.ValidationUtil.*;
 
 public class PatientDetailsCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(PatientDetailsCommand.class);
@@ -95,15 +94,13 @@ public class PatientDetailsCommand implements Command {
         List<String> hospitalisationStatuses = new ArrayList<>();
         int hospitalisationsCount = 0;
 
-        int page = validateCurrentPageValue(request.getParameter(CURRENT_HOSPITALISATIONS_PAGE));
-        int limit = validateLimitValue(request.getParameter(HOSPITALISATIONS_LIMIT));
-        int offset = page * limit - limit;
-        String orderBy = request.getParameter(HOSPITALISATIONS_ORDER_BY);
-        String direction = request.getParameter(HOSPITALISATIONS_SORT_DIRECTION);
-
+        Map<String, Object> paginationAttributes = getPaginationAttributes(request.getParameter(CURRENT_HOSPITALISATIONS_PAGE),
+                request.getParameter(HOSPITALISATIONS_LIMIT), request.getParameter(HOSPITALISATIONS_ORDER_BY),
+                request.getParameter(HOSPITALISATIONS_SORT_DIRECTION));
         try {
-            hospitalisations = hospitalisationService.getAllHospitalisationsOfPatient(patientId, offset,
-                    limit, orderBy, direction);
+            hospitalisations = hospitalisationService.getAllHospitalisationsOfPatient(patientId,
+                    (int) paginationAttributes.get(OFFSET), (int) paginationAttributes.get(LIMIT),
+                    (String) paginationAttributes.get(ORDER_BY), (String) paginationAttributes.get(DIRECTION));
             hospitalisationsCount = hospitalisationService.getAllHospitalisationsOfPatientCount(patientId);
             hospitalisationStatuses = hospitalisationService.getHospitalisationStatuses();
         } catch (ApplicationException e) {
@@ -112,11 +109,19 @@ public class PatientDetailsCommand implements Command {
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
+        setHospitalisationTabRequestAttributes(request, hospitalisations, hospitalisationStatuses,
+                hospitalisationsCount, paginationAttributes);
+    }
+
+    private void setHospitalisationTabRequestAttributes(HttpServletRequest request, List<HospitalisationTo> hospitalisations, List<String> hospitalisationStatuses, int hospitalisationsCount, Map<String, Object> paginationAttributes) {
         setRequestAttributes(request, new Attribute(HOSPITALISATIONS_COUNT, hospitalisationsCount),
-                new Attribute(HOSPITALISATIONS_NUMBER_OF_PAGES, numberOfPages(hospitalisationsCount, limit)),
-                new Attribute(CURRENT_HOSPITALISATIONS_PAGE, page), new Attribute(HOSPITALISATIONS_OFFSET, offset),
-                new Attribute(HOSPITALISATIONS_LIMIT, limit), new Attribute(HOSPITALISATIONS_ORDER_BY, orderBy),
-                new Attribute(HOSPITALISATIONS_SORT_DIRECTION, direction), new Attribute(HOSPITALISATIONS, hospitalisations),
+                new Attribute(HOSPITALISATIONS_NUMBER_OF_PAGES, numberOfPages(hospitalisationsCount, (int) paginationAttributes.get(LIMIT))),
+                new Attribute(CURRENT_HOSPITALISATIONS_PAGE, paginationAttributes.get(CURRENT_PAGE)),
+                new Attribute(HOSPITALISATIONS_OFFSET, paginationAttributes.get(OFFSET)),
+                new Attribute(HOSPITALISATIONS_LIMIT, paginationAttributes.get(LIMIT)),
+                new Attribute(HOSPITALISATIONS_ORDER_BY, paginationAttributes.get(ORDER_BY)),
+                new Attribute(HOSPITALISATIONS_SORT_DIRECTION, paginationAttributes.get(DIRECTION)),
+                new Attribute(HOSPITALISATIONS, hospitalisations),
                 new Attribute(HOSPITALISATION_STATUSES, hospitalisationStatuses));
     }
 
@@ -125,15 +130,13 @@ public class PatientDetailsCommand implements Command {
         List<StaffTo> notAssignedStaff = new ArrayList<>();
         int assignedStaffCount = 0;
 
-        int page = validateCurrentPageValue(request.getParameter(CURRENT_STAFF_PAGE));
-        int limit = validateLimitValue(request.getParameter(STAFF_LIMIT));
-        int offset = page * limit - limit;
-        String orderBy = request.getParameter(STAFF_ORDER_BY);
-        String direction = request.getParameter(STAFF_SORT_DIRECTION);
-
+        Map<String, Object> paginationAttributes = getPaginationAttributes(request.getParameter(CURRENT_STAFF_PAGE),
+                request.getParameter(STAFF_LIMIT), request.getParameter(STAFF_ORDER_BY),
+                request.getParameter(STAFF_SORT_DIRECTION));
         try {
-            assignedStaff = staffService.getAllStaffOfPatient(patientId, String.valueOf(offset),
-                    String.valueOf(limit), orderBy, direction);
+            assignedStaff = staffService.getAllStaffOfPatient(patientId, (int) paginationAttributes.get(OFFSET),
+                    (int) paginationAttributes.get(LIMIT), (String) paginationAttributes.get(ORDER_BY),
+                    (String) paginationAttributes.get(DIRECTION));
             assignedStaffCount = staffService.getStaffOfPatientCount(patientId);
             notAssignedStaff = staffService.getAllStaffNotAssignedToPatient(patientId);
         } catch (ApplicationException e) {
@@ -142,11 +145,15 @@ public class PatientDetailsCommand implements Command {
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
+        setStaffTabRequestAttributes(request, assignedStaff, notAssignedStaff, assignedStaffCount, paginationAttributes);
+    }
+
+    private void setStaffTabRequestAttributes(HttpServletRequest request, List<StaffTo> assignedStaff, List<StaffTo> notAssignedStaff, int assignedStaffCount, Map<String, Object> paginationAttributes) {
         setRequestAttributes(request, new Attribute(STAFF_COUNT, assignedStaffCount),
-                new Attribute(STAFF_NUMBER_OF_PAGES, numberOfPages(assignedStaffCount, limit)),
-                new Attribute(CURRENT_STAFF_PAGE, page), new Attribute(STAFF_OFFSET, offset),
-                new Attribute(STAFF_LIMIT, limit), new Attribute(STAFF_ORDER_BY, orderBy),
-                new Attribute(STAFF_SORT_DIRECTION, direction), new Attribute(ASSIGNED_STAFF, assignedStaff),
+                new Attribute(STAFF_NUMBER_OF_PAGES, numberOfPages(assignedStaffCount, (int) paginationAttributes.get(LIMIT))),
+                new Attribute(CURRENT_STAFF_PAGE, paginationAttributes.get(CURRENT_PAGE)), new Attribute(STAFF_OFFSET, paginationAttributes.get(OFFSET)),
+                new Attribute(STAFF_LIMIT, paginationAttributes.get(LIMIT)), new Attribute(STAFF_ORDER_BY, paginationAttributes.get(ORDER_BY)),
+                new Attribute(STAFF_SORT_DIRECTION, paginationAttributes.get(DIRECTION)), new Attribute(ASSIGNED_STAFF, assignedStaff),
                 new Attribute(NOT_ASSIGNED_STAFF, notAssignedStaff));
     }
 }

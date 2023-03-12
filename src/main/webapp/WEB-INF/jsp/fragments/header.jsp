@@ -11,7 +11,7 @@
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-end py-3 mb-4 border-bottom">
         <c:choose>
             <c:when test="${sessionScope.user eq null}">
-                <a href="api?command=about" class="navbar-brand d-flex me-auto">
+                <a href="api" class="navbar-brand d-flex me-auto">
                     <img src="resources/images/logo.png" alt="logo" width="142" height="32">
                 </a>
             </c:when>
@@ -62,7 +62,7 @@
                     <li><a class="dropdown-item"
                            href="${requestScope['javax.servlet.forward.request_uri']}?lang=en">EN</a></li>
                     <li><a class="dropdown-item"
-                           href="${requestScope['javax.servlet.forward.request_uri']}?lang=ua">UA</a></li>
+                           href="${requestScope['javax.servlet.forward.request_uri']}?lang=uk_UA">UA</a></li>
                 </ul>
             </div>
         </form>

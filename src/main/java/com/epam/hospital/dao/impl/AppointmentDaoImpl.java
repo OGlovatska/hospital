@@ -5,6 +5,7 @@ import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.Appointment;
+import com.epam.hospital.model.enums.AppointmentType;
 import com.epam.hospital.pagination.Pageable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,7 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
             statement.setInt(2, appointment.getPatientId());
             statement.setInt(3, appointment.getStaffId());
             statement.setObject(4, appointment.getDateTime());
-            statement.setString(5, appointment.getType());
+            statement.setString(5, appointment.getType().toString());
             statement.setString(6, appointment.getDescription());
             statement.setString(7, appointment.getConclusion());
             statement.setString(8, appointment.getStatus());
@@ -105,7 +106,7 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
              PreparedStatement statement = connection.prepareStatement(UPDATE_APPOINTMENT)) {
             statement.setInt(1, appointment.getStaffId());
             statement.setDate(2, Date.valueOf(String.valueOf(appointment.getDateTime())));
-            statement.setString(3, appointment.getType());
+            statement.setString(3, appointment.getType().toString());
             statement.setString(4, appointment.getDescription());
             statement.setString(5, appointment.getConclusion());
             statement.setString(6, appointment.getStatus());
@@ -155,7 +156,7 @@ public class AppointmentDaoImpl implements Dao<Appointment> {
                 .hospitalisationId(resultSet.getInt(HOSPITALISATION_ID))
                 .patientId(resultSet.getInt(PATIENT_ID)).staffId(resultSet.getInt(STAFF_ID))
                 .dateTime(Timestamp.valueOf(resultSet.getString(DATE)).toLocalDateTime())
-                .type(resultSet.getString(TYPE)).description(resultSet.getString(DESCRIPTION))
+                .type(AppointmentType.valueOf(resultSet.getString(TYPE))).description(resultSet.getString(DESCRIPTION))
                 .conclusion(resultSet.getString(CONCLUSION)).status(resultSet.getString(STATUS))
                 .build();
     }

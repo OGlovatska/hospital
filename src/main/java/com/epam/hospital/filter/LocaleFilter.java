@@ -1,6 +1,5 @@
 package com.epam.hospital.filter;
 
-import com.epam.hospital.service.PatientService;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebInitParam;
@@ -17,7 +16,7 @@ import static com.epam.hospital.command.constant.Parameter.LANGUAGE;
         initParams =  @WebInitParam(name = "default", value = "en"))
 public class LocaleFilter implements Filter{
     private static final Logger LOG = LoggerFactory.getLogger(LocaleFilter.class);
-    private static final String CURRENT_PAGE = "referer";
+    private static final String CURRENT_PAGE = "Referer";
     private String defaultLocale;
 
     @Override
@@ -31,7 +30,7 @@ public class LocaleFilter implements Filter{
         String locale = httpRequest.getParameter(LANGUAGE);
         if (locale != null && !locale.isEmpty()) {
             httpRequest.getSession().setAttribute(LANGUAGE, locale);
-            ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getHeader(CURRENT_PAGE));
+            ((HttpServletResponse) response).sendRedirect(httpRequest.getHeader(CURRENT_PAGE));
         } else {
             String sessionLocale = (String) httpRequest.getSession().getAttribute(LANGUAGE);
             if (sessionLocale == null || sessionLocale.isEmpty()) {

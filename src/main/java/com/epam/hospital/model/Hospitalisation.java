@@ -1,31 +1,23 @@
 package com.epam.hospital.model;
 
+import com.epam.hospital.model.enums.HospitalisationStatus;
+
 import java.time.LocalDate;
 
 public class Hospitalisation extends Entity {
     private int patientId;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String status;
+    private HospitalisationStatus status;
     private String diagnosis;
 
     private Hospitalisation(Builder builder) {
         super(builder.id);
         this.patientId = builder.patientId;
-        ;
         this.startDate = builder.startDate;
         this.endDate = builder.endDate;
         this.status = builder.status;
         this.diagnosis = builder.diagnosis;
-    }
-
-    public Hospitalisation(int id, int patientId, LocalDate startDate, LocalDate endDate, String status, String diagnosis) {
-        super(id);
-        this.patientId = patientId;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.status = status;
-        this.diagnosis = diagnosis;
     }
 
     public int getPatientId() {
@@ -52,11 +44,11 @@ public class Hospitalisation extends Entity {
         this.endDate = endDate;
     }
 
-    public String getStatus() {
+    public HospitalisationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(HospitalisationStatus status) {
         this.status = status;
     }
 
@@ -85,7 +77,7 @@ public class Hospitalisation extends Entity {
         private int patientId;
         private LocalDate startDate;
         private LocalDate endDate;
-        private String status;
+        private HospitalisationStatus status;
         private String diagnosis;
 
         public Builder id(int id) {
@@ -108,7 +100,7 @@ public class Hospitalisation extends Entity {
             return this;
         }
 
-        public Builder status(String status) {
+        public Builder status(HospitalisationStatus status) {
             this.status = status;
             return this;
         }

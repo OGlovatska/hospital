@@ -12,6 +12,7 @@
     <jsp:include page="fragments/header.jsp"/>
 </head>
 <body>
+<main>
 <div class="container">
     <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap5">
         <div class="d-flex">
@@ -31,25 +32,29 @@
                 </div>
                 <div class="col-auto">
                     <select name="orderBy" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
-                        <option value="" selected disabled>Order by</option>
+                        <option value="" selected disabled><fmt:message key="common.order.by"/></option>
+                        <option value="id"  ${requestScope.orderBy eq "id" ? "selected" : ""}>
+                            <fmt:message key="common.default"/>
+                        </option>
                         <option value="start_date" ${requestScope.orderBy eq "start_date" ? "selected" : ""}>
-                            Hospitalisation date
+                            <fmt:message key="hospitalisation.date"/>
                         </option>
                         <option value="end_date" ${requestScope.orderBy eq "end_date" ? "selected" : ""}>
-                            Discharging date
+                            <fmt:message key="hospitalisation.discharging.date"/>
                         </option>
                         <option value="status" ${requestScope.orderBy eq "status" ? "selected" : ""}>
-                            Status
+                            <fmt:message key="common.status"/>
                         </option>
                     </select>
                 </div>
                 <div class="col-auto">
                     <select name="dir" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
-                        <option value="" selected disabled>Direction</option>
-                        <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>Ascending
+                        <option value="" selected disabled><fmt:message key="common.direction"/></option>
+                        <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>
+                            <fmt:message key="common.ascending"/>
                         </option>
                         <option value="DESC" ${requestScope.dir eq "DESC" ? "selected" : ""}>
-                            Descending
+                            <fmt:message key="common.descending"/>
                         </option>
                     </select>
                 </div>
@@ -59,16 +64,16 @@
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Hospitalisation date</th>
-                <th scope="col">Discharging date</th>
-                <th scope="col">Diagnosis</th>
-                <th scope="col">Status</th>
+                <th scope="col"><fmt:message key="hospitalisation.date"/></th>
+                <th scope="col"><fmt:message key="hospitalisation.discharging.date"/></th>
+                <th scope="col"><fmt:message key="hospitalisation.diagnosis"/></th>
+                <th scope="col"><fmt:message key="common.status"/></th>
             </tr>
             </thead>
             <tbody>
             <c:forEach var="hospitalisation" items="${requestScope.hospitalisations}">
-                <tr onclick="document.location='api?command=hospitalisation&hospitalisationId=${hospitalisation.id}';" onmouseover=""
-                    style="cursor: pointer;">
+                <tr onclick="document.location='api?command=hospitalisation&hospitalisationId=${hospitalisation.id}';"
+                    onmouseover="" style="cursor: pointer;">
                     <td><c:out value="${hospitalisation.id}"/></td>
                     <td><c:out value="${hospitalisation.startDate}"/></td>
                     <td><c:out value="${hospitalisation.endDate}"/></td>
@@ -78,90 +83,28 @@
             </c:forEach>
             </tbody>
         </table>
-
-<%--        <div class="table-responsive">--%>
-<%--            <table class="table accordion">--%>
-<%--                <thead>--%>
-<%--                <tr>--%>
-<%--                    <th scope="col">#</th>--%>
-<%--                    <th scope="col">Hospitalisation date</th>--%>
-<%--                    <th scope="col">Discharging date</th>--%>
-<%--                    <th scope="col">Diagnosis</th>--%>
-<%--                    <th scope="col">Status</th>--%>
-<%--                </tr>--%>
-<%--                </thead>--%>
-<%--                <tbody>--%>
-<%--                <c:forEach var="hospitalisation" items="${requestScope.hospitalisations}">--%>
-<%--                    <tr data-bs-toggle="collapse" data-bs-target="#r${hospitalisation.id}">--%>
-<%--                        <th scope="row">${hospitalisation.id} <i class="bi bi-chevron-down"></i></th>--%>
-<%--                        <td>${hospitalisation.startDate}</td>--%>
-<%--                        <td>${hospitalisation.endDate}</td>--%>
-<%--                        <td>${hospitalisation.diagnosis}</td>--%>
-<%--                        <td>${hospitalisation.status}</td>--%>
-<%--                    </tr>--%>
-<%--                    <tr class="collapse accordion-collapse" id="r${hospitalisation.id}" data-bs-parent=".table">--%>
-<%--                        <td colspan="8">--%>
-<%--                            <div class="accordion-body">--%>
-<%--                                <c:choose>--%>
-<%--                                    <c:when test="${fn:length(hospitalisation.appointments) > 0}">--%>
-<%--                                        <div style="display: flex; align-items: center; align-self: center; justify-content: center; justify-self: center; width: 80%; margin: 0 auto;">--%>
-<%--                                            <h6>Appointments</h6>--%>
-<%--                                        </div>--%>
-<%--                                        <table class="table table-bordered">--%>
-<%--                                            <thead>--%>
-<%--                                            <tr>--%>
-<%--                                                <th>#</th>--%>
-<%--                                                <th>Date</th>--%>
-<%--                                                <th>Staff</th>--%>
-<%--                                                <th>Specialisation</th>--%>
-<%--                                                <th>Type</th>--%>
-<%--                                                <th>Description</th>--%>
-<%--                                                <th>Conclusion</th>--%>
-<%--                                                <th>Status</th>--%>
-<%--                                            </tr>--%>
-<%--                                            </thead>--%>
-<%--                                            <tbody>--%>
-<%--                                            <c:forEach var="appointment" items="${hospitalisation.appointments}">--%>
-<%--                                                <tr>--%>
-<%--                                                    <td>${appointment.id}</td>--%>
-<%--                                                    <td>${function:formatDateTime(appointment.dateTime)}</td>--%>
-<%--                                                    <td>${appointment.staffFirstName} ${appointment.staffLastName}</td>--%>
-<%--                                                    <td>${appointment.specialisation}</td>--%>
-<%--                                                    <td>${appointment.type}</td>--%>
-<%--                                                    <td>${appointment.description}</td>--%>
-<%--                                                    <td>${appointment.conclusion}</td>--%>
-<%--                                                    <td>${appointment.status}</td>--%>
-<%--                                                </tr>--%>
-<%--                                            </c:forEach>--%>
-<%--                                            </tbody>--%>
-<%--                                        </table>--%>
-<%--                                    </c:when>--%>
-<%--                                    <c:otherwise>--%>
-<%--                                        <div style="display: flex; align-items: center; align-self: center; justify-content: center; justify-self: center; width: 80%; margin: 0 auto;">--%>
-<%--                                            <h6>No appointments</h6>--%>
-<%--                                        </div>--%>
-<%--                                    </c:otherwise>--%>
-<%--                                </c:choose>--%>
-<%--                            </div>--%>
-<%--                        </td>--%>
-<%--                    </tr>--%>
-<%--                </c:forEach>--%>
-<%--                </tbody>--%>
-<%--            </table>--%>
-<%--        </div>--%>
         <div class="row">
             <div class="col-sm-12 col-md-5">
-                <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
-                    Showing ${requestScope.offset + 1} to
+                <div class="dataTables_info" role="status" aria-live="polite">
+                    <fmt:message key="pagination.showing"/>
                     <c:choose>
-                        <c:when test="${fn:length(requestScope.hospitalisations) < requestScope.limit}">
-                            ${requestScope.totalCount}
+                        <c:when test="${fn:length(requestScope.hospitalisations) eq 0}">
+                            0 <fmt:message key="pagination.entries"/>
                         </c:when>
                         <c:otherwise>
-                            ${requestScope.offset + requestScope.limit}
+                            <fmt:message key="pagination.from"/> ${requestScope.offset + 1} <fmt:message key="pagination.to"/>
+                            <c:choose>
+                                <c:when test="${fn:length(requestScope.hospitalisations) < requestScope.limit}">
+                                    ${requestScope.totalCount}
+                                </c:when>
+                                <c:otherwise>
+                                    ${requestScope.offset + requestScope.limit}
+                                </c:otherwise>
+                            </c:choose>
+                            <fmt:message key="pagination.of"/> ${requestScope.totalCount}
+                            <fmt:message key="pagination.entries"/>
                         </c:otherwise>
                     </c:choose>
-                    of ${requestScope.totalCount} entries
                 </div>
             </div>
             <div class="col-sm-12 col-md-7">
@@ -174,12 +117,12 @@
                                         <a href="api?command=hospitalisations-list&page=${requestScope.page - 1}&limit=${requestScope.limit}
                                                         &orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                            aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                           class="page-link">Previous</a></li>
+                                           class="page-link"><fmt:message key="pagination.previous"/></a></li>
                                 </c:when>
                                 <c:otherwise>
                                     <li class="paginate_button page-item previous disabled" id="example_previous">
                                         <a href="#" aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                           class="page-link">Previous</a>
+                                           class="page-link"><fmt:message key="pagination.previous"/></a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>
@@ -206,12 +149,12 @@
                                         <a href="api?command=hospitalisations-list&page=${requestScope.page + 1}&limit=${requestScope.limit}
                                                         &orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                            aria-controls="example" data-dt-idx="next" tabindex="0"
-                                           class="page-link">Next</a></li>
+                                           class="page-link"><fmt:message key="pagination.next"/></a></li>
                                 </c:when>
                                 <c:otherwise>
                                     <li class="paginate_button page-item next disabled" id="example_previous">
                                         <a href="#" aria-controls="example" data-dt-idx="next" tabindex="0"
-                                           class="page-link">Next</a>
+                                           class="page-link"><fmt:message key="pagination.next"/></a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>
@@ -222,5 +165,7 @@
         </div>
     </div>
 </div>
+</main>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

@@ -29,7 +29,7 @@
 </svg>
 <main>
     <div class="container px-4 py-5" id="featured-3">
-        <h2 class="pb-2 border-bottom">Hello, ${sessionScope.user.firstName}</h2>
+        <h2 class="pb-2 border-bottom"><fmt:message key="main.hello"/>, ${sessionScope.user.firstName}</h2>
         <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
             <c:if test="${sessionScope.user.role eq 'PATIENT'}">
                 <div class="feature col">
@@ -38,10 +38,10 @@
                             <use xlink:href="#collection"/>
                         </svg>
                     </div>
-                    <h3 class="fs-2">Hospital card</h3>
-                    <p>List of all patient hospitalizations and related appointments</p>
+                    <h3 class="fs-2"><fmt:message key="main.hospital.card"/></h3>
+                    <p><fmt:message key="main.hospital.card.description"/></p>
                     <a href="api?command=hospitalisations-list" class="icon-link d-inline-flex align-items-center">
-                        See
+                        <fmt:message key="common.see"/>
                         <svg class="bi" width="1em" height="1em">
                             <use xlink:href="#chevron-right"/>
                         </svg>
@@ -55,10 +55,10 @@
                             <use xlink:href="#toggles2"/>
                         </svg>
                     </div>
-                    <h3 class="fs-2">Appointments</h3>
-                    <p>List of all appointments</p>
+                    <h3 class="fs-2"><fmt:message key="appointment.appointments"/></h3>
+                    <p><p><fmt:message key="main.appointments.description"/></p></p>
                     <a href="api?command=appointments-list" class="icon-link d-inline-flex align-items-center">
-                        See
+                        <fmt:message key="common.see"/>
                         <svg class="bi" width="1em" height="1em">
                             <use xlink:href="#chevron-right"/>
                         </svg>
@@ -74,10 +74,10 @@
                             <use xlink:href="#people-circle"/>
                         </svg>
                     </div>
-                    <h3 class="fs-2">Patients</h3>
-                    <p>List of all hospital patients</p>
+                    <h3 class="fs-2"><fmt:message key="main.patients"/></h3>
+                    <p><fmt:message key="main.patients.description"/></p>
                     <a href="api?command=patients-list" class="icon-link d-inline-flex align-items-center">
-                        See
+                        <fmt:message key="common.see"/>
                         <svg class="bi" width="1em" height="1em">
                             <use xlink:href="#chevron-right"/>
                         </svg>
@@ -91,11 +91,11 @@
                             <use xlink:href="#people-circle"/>
                         </svg>
                     </div>
-                    <h3 class="fs-2">Staff</h3>
-                    <p>List of all hospital staff</p>
+                    <h3 class="fs-2"><fmt:message key="main.staff"/></h3>
+                    <p><fmt:message key="main.staff.description"/></p>
                     <a href="api?command=staff-list"
                        class="icon-link d-inline-flex align-items-center">
-                        See
+                        <fmt:message key="common.see"/>
                         <svg class="bi" width="1em" height="1em">
                             <use xlink:href="#chevron-right"/>
                         </svg>

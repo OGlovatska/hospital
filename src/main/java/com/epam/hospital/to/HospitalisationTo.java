@@ -1,5 +1,7 @@
 package com.epam.hospital.to;
 
+import com.epam.hospital.model.enums.HospitalisationStatus;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,7 +12,7 @@ public class HospitalisationTo {
     private String patientLastName;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String status;
+    private HospitalisationStatus status;
     private String diagnosis;
 
     private HospitalisationTo(Builder builder) {
@@ -72,11 +74,11 @@ public class HospitalisationTo {
         this.endDate = endDate;
     }
 
-    public String getStatus() {
+    public HospitalisationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(HospitalisationStatus status) {
         this.status = status;
     }
 
@@ -95,7 +97,7 @@ public class HospitalisationTo {
         private String patientLastName;
         private LocalDate startDate;
         private LocalDate endDate;
-        private String status;
+        private HospitalisationStatus status;
         private String diagnosis;
 
         public Builder id(int id) {
@@ -128,7 +130,7 @@ public class HospitalisationTo {
             return this;
         }
 
-        public Builder status(String status) {
+        public Builder status(HospitalisationStatus status) {
             this.status = status;
             return this;
         }

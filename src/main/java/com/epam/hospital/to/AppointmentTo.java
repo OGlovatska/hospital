@@ -1,5 +1,7 @@
 package com.epam.hospital.to;
 
+import com.epam.hospital.model.enums.AppointmentType;
+
 import java.time.LocalDateTime;
 
 public class AppointmentTo {
@@ -8,7 +10,7 @@ public class AppointmentTo {
     private int patientId;
     private int staffId;
     private LocalDateTime dateTime;
-    private String type;
+    private AppointmentType type;
     private String description;
     private String conclusion;
     private String status;
@@ -76,11 +78,11 @@ public class AppointmentTo {
         this.dateTime = dateTime;
     }
 
-    public String getType() {
+    public AppointmentType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(AppointmentType type) {
         this.type = type;
     }
 
@@ -174,7 +176,7 @@ public class AppointmentTo {
         private int patientId;
         private int staffId;
         private LocalDateTime dateTime;
-        private String type;
+        private AppointmentType type;
         private String description;
         private String conclusion;
         private String status;
@@ -210,7 +212,7 @@ public class AppointmentTo {
             return this;
         }
 
-        public Builder type(String type) {
+        public Builder type(AppointmentType type) {
             this.type = type;
             return this;
         }

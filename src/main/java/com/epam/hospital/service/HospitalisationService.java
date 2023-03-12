@@ -103,7 +103,7 @@ public class HospitalisationService {
                 if (hospitalisation != null) {
                     if (hospitalisation.getDiagnosis() != null && !hospitalisation.getDiagnosis().isEmpty()) {
                         hospitalisation.setEndDate(endDate);
-                        hospitalisation.setStatus(HospitalisationStatus.DISCHARGED.name());
+                        hospitalisation.setStatus(HospitalisationStatus.DISCHARGED);
                         hospitalisationDao.update(hospitalisation);
                     } else {
                         throw new IllegalRequestDataException(NO_DIAGNOSIS);

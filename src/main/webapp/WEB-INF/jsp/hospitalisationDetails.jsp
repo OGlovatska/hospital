@@ -19,30 +19,34 @@
                 <div class="card-body">
                     <div class="row gutters">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <h6 class="mb-2 text-primary">Hospitalisation Details</h6>
+                            <h6 class="mb-2 text-primary"><fmt:message key="hospitalisation.details"/></h6>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="hospitalisationDate">Hospitalisation date</label>
-                                <input type="text" class="form-control" id="hospitalisationDate" placeholder="${requestScope.hospitalisation.startDate}" readonly="readonly">
+                                <label for="hospitalisationDate"><fmt:message key="hospitalisation.date"/></label>
+                                <input type="text" class="form-control" id="hospitalisationDate"
+                                       placeholder="${requestScope.hospitalisation.startDate}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="dischargingDate">Discharging date</label>
-                                <input type="text" class="form-control" id="dischargingDate" placeholder="${requestScope.hospitalisation.endDate}" readonly="readonly">
+                                <label for="dischargingDate"><fmt:message key="hospitalisation.discharging.date"/></label>
+                                <input type="text" class="form-control" id="dischargingDate"
+                                       placeholder="${requestScope.hospitalisation.endDate}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="status">Status</label>
-                                <input type="text" class="form-control" id="status" placeholder="${requestScope.hospitalisation.status}" readonly="readonly">
+                                <label for="status"><fmt:message key="common.status"/></label>
+                                <input type="text" class="form-control" id="status"
+                                       placeholder="${requestScope.hospitalisation.status}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="diagnosis">Diagnosis</label>
-                                <input type="text" class="form-control" id="diagnosis" placeholder="${requestScope.hospitalisation.diagnosis}" readonly="readonly">
+                                <label for="diagnosis"><fmt:message key="hospitalisation.diagnosis"/></label>
+                                <input type="text" class="form-control" id="diagnosis"
+                                       placeholder="${requestScope.hospitalisation.diagnosis}" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -52,8 +56,10 @@
     </div>
     <nav style="padding-top: 15px">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-appointments-tab" data-bs-toggle="tab" data-bs-target="#nav-appointments"
-                    type="button" role="tab" aria-controls="nav-patients" aria-selected="true">Appointments
+            <button class="nav-link active" id="nav-appointments-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-appointments"
+                    type="button" role="tab" aria-controls="nav-patients" aria-selected="true">
+                <fmt:message key="appointment.appointments"/>
             </button>
         </div>
     </nav>
@@ -66,7 +72,8 @@
                         <input type="hidden" name="command" value="hospitalisation"/>
                         <input type="hidden" name="hospitalisationId" value="${requestScope.hospitalisationId}"/>
                         <div class="col-auto">
-                            <select name="limit" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
+                            <select name="limit" aria-controls="example" class="form-select form-select-sm"
+                                    onchange=submit()>
                                 <option value="10" ${requestScope.limit eq "10" ? "selected" : ""}>10</option>
                                 <option value="25" ${requestScope.limit eq "25" ? "selected" : ""}>25</option>
                                 <option value="50" ${requestScope.limit eq "50" ? "selected" : ""}>50</option>
@@ -74,23 +81,29 @@
                             </select>
                         </div>
                         <div class="col-auto">
-                            <select name="orderBy" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
-                                <option value="" selected disabled>Order by</option>
+                            <select name="orderBy" aria-controls="example" class="form-select form-select-sm"
+                                    onchange=submit()>
+                                <option value="" selected disabled><fmt:message key="common.order.by"/></option>
+                                <option value="id"  ${requestScope.orderBy eq "id" ? "selected" : ""}>
+                                    <fmt:message key="common.default"/>
+                                </option>
                                 <option value="date_time" ${requestScope.orderBy eq "date_time" ? "selected" : ""}>
-                                    Date
+                                    <fmt:message key="common.date"/>
                                 </option>
                                 <option value="type" ${requestScope.orderBy eq "type" ? "selected" : ""}>
-                                    Type
+                                    <fmt:message key="common.type"/>
                                 </option>
                             </select>
                         </div>
                         <div class="col-auto">
-                            <select name="dir" aria-controls="example" class="form-select form-select-sm"  onchange=submit()>
-                                <option value="" selected disabled>Direction</option>
-                                <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>Ascending
+                            <select name="dir" aria-controls="example" class="form-select form-select-sm"
+                                    onchange=submit()>
+                                <option value="" selected disabled><fmt:message key="common.direction"/></option>
+                                <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>
+                                    <fmt:message key="common.ascending"/>
                                 </option>
                                 <option value="DESC" ${requestScope.dir eq "DESC" ? "selected" : ""}>
-                                    Descending
+                                    <fmt:message key="common.descending"/>
                                 </option>
                             </select>
                         </div>
@@ -100,12 +113,12 @@
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Patient</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Conclusion</th>
-                        <th scope="col">Status</th>
+                        <th scope="col"><fmt:message key="common.date"/></th>
+                        <th scope="col"><fmt:message key="common.staff"/></th>
+                        <th scope="col"><fmt:message key="common.type"/></th>
+                        <th scope="col"><fmt:message key="appointment.description"/></th>
+                        <th scope="col"><fmt:message key="appointment.conclusion"/></th>
+                        <th scope="col"><fmt:message key="common.status"/></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -125,11 +138,11 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-5">
                         <div class="dataTables_info" role="status" aria-live="polite">
-                            Showing
+                            <fmt:message key="pagination.showing"/>
                             <c:choose>
-                                <c:when test="${fn:length(requestScope.appointments) eq 0}"> 0 entries</c:when>
+                                <c:when test="${fn:length(requestScope.appointments) eq 0}"> 0 <fmt:message key="pagination.entries"/></c:when>
                                 <c:otherwise>
-                                    ${requestScope.offset + 1} to
+                                    <fmt:message key="pagination.from"/> ${requestScope.offset + 1} <fmt:message key="pagination.to"/>
                                     <c:choose>
                                         <c:when test="${fn:length(requestScope.appointments) < requestScope.limit}">
                                             ${requestScope.totalCount}
@@ -138,7 +151,8 @@
                                             ${requestScope.offset + requestScope.limit}
                                         </c:otherwise>
                                     </c:choose>
-                                    of ${requestScope.totalCount} entries
+                                    <fmt:message key="pagination.of"/> ${requestScope.totalCount}
+                                    <fmt:message key="pagination.entries"/>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -152,13 +166,13 @@
                                             <li class="paginate_button page-item previous" id="example_previous">
                                                 <a href="api?command=hospitalisation&hospitalisationId=${requestScope.hospitalisationId}&page=${requestScope.page - 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                                    aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                                   class="page-link">Previous</a></li>
+                                                   class="page-link"><fmt:message key="pagination.previous"/></a></li>
                                         </c:when>
                                         <c:otherwise>
                                             <li class="paginate_button page-item previous disabled"
                                                 id="example_previous">
                                                 <a href="#" aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                                   class="page-link">Previous</a>
+                                                   class="page-link"><fmt:message key="pagination.previous"/></a>
                                             </li>
                                         </c:otherwise>
                                     </c:choose>
@@ -183,12 +197,12 @@
                                             <li class="paginate_button page-item next" id="example_next">
                                                 <a href="api?command=hospitalisation&hospitalisationId=${requestScope.hospitalisationId}&page=${requestScope.page + 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                                    aria-controls="example" data-dt-idx="next" tabindex="0"
-                                                   class="page-link">Next</a></li>
+                                                   class="page-link"><fmt:message key="pagination.next"/></a></li>
                                         </c:when>
                                         <c:otherwise>
                                             <li class="paginate_button page-item next disabled" id="example_previous">
                                                 <a href="#" aria-controls="example" data-dt-idx="next" tabindex="0"
-                                                   class="page-link">Next</a>
+                                                   class="page-link"><fmt:message key="pagination.next"/></a>
                                             </li>
                                         </c:otherwise>
                                     </c:choose>

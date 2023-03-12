@@ -144,20 +144,6 @@ public class AppointmentService {
         return appointmentTos;
     }
 
-    public List<String> getAppointmentTypes(UserTo user) {
-        checkUserNotNull(user);
-        if (user.getRole().equals(Role.ADMIN) || user.getRole().equals(Role.DOCTOR)) {
-            return Arrays
-                    .stream(AppointmentType.values())
-                    .map(AppointmentType::name)
-                    .collect(Collectors.toList());
-        } else if (user.getRole().equals(Role.NURSE)) {
-            return Arrays.asList(AppointmentType.MEDICATION.name(), AppointmentType.PROCEDURE.name());
-        } else {
-            throw new IllegalRequestDataException(WRONG_REQUEST);
-        }
-    }
-
     public void saveAppointment(UserTo user, Appointment appointment) {
         checkUserNotNull(user);
         if (user.getRole().equals(Role.DOCTOR) || user.getRole().equals(Role.NURSE)) {

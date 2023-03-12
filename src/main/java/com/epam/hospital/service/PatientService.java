@@ -85,7 +85,7 @@ public class PatientService {
 
     public void savePatient(UserTo user, String password, User newUser, Patient newPatient) {
         checkUserNotNull(user);
-        validateUniqueEmail(user.getEmail());
+        validateUniqueEmail(newUser.getEmail());
         if (user.getRole().equals(Role.ADMIN)) {
             try {
                 patientRepository.save(newUser, newPatient);

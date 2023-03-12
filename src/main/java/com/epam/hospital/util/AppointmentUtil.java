@@ -3,6 +3,8 @@ package com.epam.hospital.util;
 import com.epam.hospital.model.Appointment;
 import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.Staff;
+import com.epam.hospital.model.enums.AppointmentStatus;
+import com.epam.hospital.model.enums.AppointmentType;
 import com.epam.hospital.to.AppointmentTo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -25,8 +27,8 @@ public class AppointmentUtil {
         return new Appointment.Builder().patientId(Integer.parseInt(request.getParameter(PATIENT_ID)))
                 .staffId(Integer.parseInt(request.getParameter(STAFF_ID)))
                 .dateTime(DateTimeUtil.parseLocalDateTime(request.getParameter(DATE_TIME)))
-                .type(request.getParameter(TYPE)).description(request.getParameter(DESCRIPTION))
-                .conclusion(request.getParameter(CONCLUSION)).status(request.getParameter(STATUS))
+                .type(AppointmentType.valueOf(request.getParameter(TYPE))).description(request.getParameter(DESCRIPTION))
+                .status(AppointmentStatus.ASSIGNED.name())
                 .build();
     }
 }

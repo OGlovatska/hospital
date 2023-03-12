@@ -46,16 +46,12 @@ public class CreateAppointmentCommand implements Command {
         UserTo user = (UserTo) session.getAttribute(USER);
 
         List<PatientTo> assignedPatients;
-        List<String> appointmentTypes;
-        List<String> appointmentStatuses;
         StaffTo staff;
 
         try {
             staff = staffService.getStaff(user);
             assignedPatients = patientService.getAllPatientsOfStaff(staff.getId(), 0,
                     0, null, null);
-            appointmentTypes = appointmentService.getAppointmentTypes(user);
-            appointmentStatuses = appointmentService.getAppointmentStatuses();
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create appointment command, message = {}",
                     e.getMessage());
@@ -63,14 +59,8 @@ public class CreateAppointmentCommand implements Command {
             return new CommandResult(Page.APPOINTMENTS);
         }
 
-        setRequestAttributes(request, assignedPatients, appointmentTypes, appointmentStatuses, staff);
-        return new CommandResult(Page.ADD_APPOINTMENT);
-    }
-
-    private void setRequestAttributes(HttpServletRequest request, List<PatientTo> assignedPatients, List<String> appointmentTypes, List<String> appointmentStatuses, StaffTo staff) {
         request.setAttribute(STAFF_ID, staff.getId());
         request.setAttribute(ASSIGNED_PATIENTS, assignedPatients);
-        request.setAttribute(APPOINTMENT_TYPES, appointmentTypes);
-        request.setAttribute(APPOINTMENT_STATUSES, appointmentStatuses);
+        return new CommandResult(Page.ADD_APPOINTMENT);
     }
 }

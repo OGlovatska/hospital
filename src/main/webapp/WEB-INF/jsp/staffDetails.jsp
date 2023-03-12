@@ -26,35 +26,35 @@
                 <div class="card-body">
                     <div class="row gutters">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <h6 class="mb-2 text-primary">Personal Details</h6>
+                            <h6 class="mb-2 text-primary"><fmt:message key="common.personal.details"/></h6>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="firstName">First name</label>
+                                <label for="firstName"><fmt:message key="common.first.name"/></label>
                                 <input type="text" class="form-control" id="firstName" placeholder="${requestScope.currentStaff.firstName}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="lastName">Last name</label>
+                                <label for="lastName"><fmt:message key="common.last.name"/></label>
                                 <input type="text" class="form-control" id="lastName" placeholder="${requestScope.currentStaff.lastName}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="eMail">Email</label>
+                                <label for="eMail"><fmt:message key="common.email"/></label>
                                 <input type="email" class="form-control" id="eMail" placeholder="${requestScope.currentStaff.email}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="role">Role</label>
+                                <label for="role"><fmt:message key="common.role"/></label>
                                 <input type="text" class="form-control" id="role" placeholder="${requestScope.currentStaff.role}" readonly="readonly">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="specialisation">Specialisation</label>
+                                <label for="specialisation"><fmt:message key="staff.specialisation"/></label>
                                 <input type="url" class="form-control" id="specialisation" placeholder="${requestScope.currentStaff.specialisation}" readonly="readonly">
                             </div>
                         </div>
@@ -66,7 +66,8 @@
     <nav style="padding-top: 15px">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-patients-tab" data-bs-toggle="tab" data-bs-target="#nav-patients"
-                    type="button" role="tab" aria-controls="nav-patients" aria-selected="true">Assigned patients
+                    type="button" role="tab" aria-controls="nav-patients" aria-selected="true">
+                <fmt:message key="staff.assigned.patient"/>
             </button>
         </div>
     </nav>
@@ -88,25 +89,29 @@
                         </div>
                         <div class="col-auto">
                             <select name="orderBy" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
-                                <option value="" selected disabled>Order by</option>
+                                <option value="" selected disabled><fmt:message key="common.order.by"/></option>
+                                <option value="id"  ${requestScope.orderBy eq "id" ? "selected" : ""}>
+                                    <fmt:message key="common.default"/>
+                                </option>
                                 <option value="first_name" ${requestScope.orderBy eq "first_name" ? "selected" : ""}>
-                                    First name
+                                    <fmt:message key="common.first.name"/>
                                 </option>
                                 <option value="last_name" ${requestScope.orderBy eq "last_name" ? "selected" : ""}>
-                                    Last name
+                                    <fmt:message key="common.last.name"/>
                                 </option>
                                 <option value="date_of_birth" ${requestScope.orderBy eq "date_of_birth" ? "selected" : ""}>
-                                    Date of birth
+                                    <fmt:message key="patient.date.of.birth"/>
                                 </option>
                             </select>
                         </div>
                         <div class="col-auto">
                             <select name="dir" aria-controls="example" class="form-select form-select-sm"  onchange=submit()>
-                                <option value="" selected disabled>Direction</option>
-                                <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>Ascending
+                                <option value="" selected disabled><fmt:message key="common.direction"/></option>
+                                <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>
+                                    <fmt:message key="common.ascending"/>
                                 </option>
                                 <option value="DESC" ${requestScope.dir eq "DESC" ? "selected" : ""}>
-                                    Descending
+                                    <fmt:message key="common.descending"/>
                                 </option>
                             </select>
                         </div>
@@ -114,7 +119,7 @@
                     <div class="col-auto" style="padding-left: 15px">
                         <button type="submit" class="btn btn-outline-primary me-2 btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#patientModal">
-                            Assign patient
+                            <fmt:message key="staff.assign.patient"/>
                         </button>
                     </div>
                 </div>
@@ -122,11 +127,11 @@
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">First name</th>
-                        <th scope="col">Last name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Date of birth</th>
-                        <th scope="col">Gender</th>
+                        <th scope="col"><fmt:message key="common.first.name"/></th>
+                        <th scope="col"><fmt:message key="common.last.name"/></th>
+                        <th scope="col"><fmt:message key="common.email"/></th>
+                        <th scope="col"><fmt:message key="patient.date.of.birth"/></th>
+                        <th scope="col"><fmt:message key="patient.gender"/></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -145,11 +150,14 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-5">
                         <div class="dataTables_info" role="status" aria-live="polite">
-                            Showing
+                            <fmt:message key="pagination.showing"/>
                             <c:choose>
-                                <c:when test="${fn:length(requestScope.assignedPatients) eq 0}"> 0 entries</c:when>
+                                <c:when test="${fn:length(requestScope.assignedPatients) eq 0}">
+                                    0 <fmt:message key="pagination.entries"/>
+                                </c:when>
                                 <c:otherwise>
-                                    ${requestScope.offset + 1} to
+                                    <fmt:message key="pagination.from"/>${requestScope.offset + 1}
+                                    <fmt:message key="pagination.to"/>
                                     <c:choose>
                                         <c:when test="${fn:length(requestScope.assignedPatients) < requestScope.limit}">
                                             ${requestScope.totalCount}
@@ -158,7 +166,8 @@
                                             ${requestScope.offset + requestScope.limit}
                                         </c:otherwise>
                                     </c:choose>
-                                    of ${requestScope.totalCount} entries
+                                    <fmt:message key="pagination.of"/> ${requestScope.totalCount}
+                                    <fmt:message key="pagination.entries"/>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -172,13 +181,13 @@
                                             <li class="paginate_button page-item previous" id="example_previous">
                                                 <a href="api?command=staff&staffId=${requestScope.staffId}&page=${requestScope.page - 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                                    aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                                   class="page-link">Previous</a></li>
+                                                   class="page-link"><fmt:message key="pagination.previous"/></a></li>
                                         </c:when>
                                         <c:otherwise>
                                             <li class="paginate_button page-item previous disabled"
                                                 id="example_previous">
                                                 <a href="#" aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                                   class="page-link">Previous</a>
+                                                   class="page-link"><fmt:message key="pagination.previous"/></a>
                                             </li>
                                         </c:otherwise>
                                     </c:choose>
@@ -203,12 +212,12 @@
                                             <li class="paginate_button page-item next" id="example_next">
                                                 <a href="api?command=staff&staffId=${requestScope.staffId}&page=${requestScope.page + 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
                                                    aria-controls="example" data-dt-idx="next" tabindex="0"
-                                                   class="page-link">Next</a></li>
+                                                   class="page-link"><fmt:message key="pagination.next"/></a></li>
                                         </c:when>
                                         <c:otherwise>
                                             <li class="paginate_button page-item next disabled" id="example_previous">
                                                 <a href="#" aria-controls="example" data-dt-idx="next" tabindex="0"
-                                                   class="page-link">Next</a>
+                                                   class="page-link"><fmt:message key="pagination.next"/></a>
                                             </li>
                                         </c:otherwise>
                                     </c:choose>
@@ -226,7 +235,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5">Assign patient to staff</h1>
+                <h1 class="modal-title fs-5"><fmt:message key="staff.assign.patient.title"/></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="api" method="post" name="save-form">
@@ -234,10 +243,10 @@
                 <input type="hidden" name="staffId" value="${requestScope.staffId}">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Patient</label>
+                        <label class="form-label"><fmt:message key="patient.patient"/></label>
                         <select name="patientId" class="form-select form-select-md mb-3"
                                 aria-label=".form-select-md example">
-                            <option value="" disabled selected>Please choose</option>
+                            <option value="" disabled selected><fmt:message key="common.choose"/></option>
                             <c:forEach items="${requestScope.notAssignedPatients}" var="patient">
                                 <option name="patientId" value="${patient.id}">
                                         ${patient.firstName} ${patient.lastName}
@@ -247,8 +256,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-outline-primary me-2">Assign</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                        <fmt:message key="common.close"/>
+                    </button>
+                    <button type="submit" class="btn btn-outline-primary me-2">
+                        <fmt:message key="common.assign"/>
+                    </button>
                 </div>
             </form>
         </div>
