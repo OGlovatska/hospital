@@ -1,7 +1,7 @@
 package com.epam.hospital.util;
 
-import com.epam.hospital.encoding.PasswordEncoder;
-import com.epam.hospital.encoding.PasswordEncoderFactories;
+import com.epam.hospital.util.encoding.PasswordEncoder;
+import com.epam.hospital.util.encoding.PasswordEncoderFactories;
 
 import java.util.Random;
 

@@ -6,9 +6,7 @@ import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.Appointment;
 import com.epam.hospital.model.enums.AppointmentType;
-import com.epam.hospital.pagination.Pageable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.epam.hospital.util.pagination.Pageable;
 
 import java.sql.*;
 import java.util.ArrayList;

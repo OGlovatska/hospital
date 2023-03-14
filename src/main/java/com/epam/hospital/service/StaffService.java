@@ -2,7 +2,6 @@ package com.epam.hospital.service;
 
 import com.epam.hospital.dao.impl.StaffDaoImpl;
 import com.epam.hospital.dao.impl.StaffPatientDaoImpl;
-import com.epam.hospital.dao.impl.UserDaoImpl;
 import com.epam.hospital.exception.*;
 import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.User;
@@ -11,11 +10,9 @@ import com.epam.hospital.model.enums.Specialisation;
 import com.epam.hospital.repository.StaffRepository;
 import com.epam.hospital.to.StaffTo;
 import com.epam.hospital.to.UserTo;
-import com.epam.hospital.pagination.Pageable;
-import com.epam.hospital.pagination.Sort;
+import com.epam.hospital.util.pagination.Pageable;
+import com.epam.hospital.util.pagination.Sort;
 import com.epam.hospital.util.StaffUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.epam.hospital.pagination;
+package com.epam.hospital.util.pagination;
 
 public class Sort {
     private Direction direction = Direction.ASC;

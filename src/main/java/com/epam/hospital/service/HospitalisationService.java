@@ -11,10 +11,8 @@ import com.epam.hospital.model.enums.HospitalisationStatus;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.to.HospitalisationTo;
 import com.epam.hospital.to.UserTo;
-import com.epam.hospital.pagination.Pageable;
-import com.epam.hospital.pagination.Sort;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.epam.hospital.util.pagination.Pageable;
+import com.epam.hospital.util.pagination.Sort;
 
 import java.time.LocalDate;
 import java.util.*;

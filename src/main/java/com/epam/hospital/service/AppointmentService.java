@@ -12,14 +12,11 @@ import com.epam.hospital.model.Hospitalisation;
 import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.enums.AppointmentStatus;
-import com.epam.hospital.model.enums.AppointmentType;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.to.AppointmentTo;
 import com.epam.hospital.to.UserTo;
-import com.epam.hospital.pagination.Pageable;
-import com.epam.hospital.pagination.Sort;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.epam.hospital.util.pagination.Pageable;
+import com.epam.hospital.util.pagination.Sort;
 
 import java.util.*;
 import java.util.stream.Collectors;

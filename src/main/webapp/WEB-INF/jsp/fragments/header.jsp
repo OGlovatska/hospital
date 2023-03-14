@@ -62,7 +62,7 @@
                     <li><a class="dropdown-item"
                            href="${requestScope['javax.servlet.forward.request_uri']}?lang=en">EN</a></li>
                     <li><a class="dropdown-item"
-                           href="${requestScope['javax.servlet.forward.request_uri']}?lang=uk_UA">UA</a></li>
+                           href="${requestScope['javax.servlet.forward.request_uri']}?lang=uk-UA">UA</a></li>
                 </ul>
             </div>
         </form>

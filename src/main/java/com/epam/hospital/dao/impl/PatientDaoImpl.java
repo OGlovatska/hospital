@@ -7,9 +7,7 @@ import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.enums.Gender;
 import com.epam.hospital.model.enums.Role;
-import com.epam.hospital.pagination.Pageable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.epam.hospital.util.pagination.Pageable;
 
 import java.sql.*;
 import java.util.ArrayList;

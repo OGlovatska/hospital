@@ -1,4 +1,4 @@
-package com.epam.hospital.encoding;
+package com.epam.hospital.util.encoding;
 
 public interface PasswordEncoder {
     String encode(CharSequence rawPassword);

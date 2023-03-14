@@ -151,9 +151,12 @@ public class PatientDetailsCommand implements Command {
     private void setStaffTabRequestAttributes(HttpServletRequest request, List<StaffTo> assignedStaff, List<StaffTo> notAssignedStaff, int assignedStaffCount, Map<String, Object> paginationAttributes) {
         setRequestAttributes(request, new Attribute(STAFF_COUNT, assignedStaffCount),
                 new Attribute(STAFF_NUMBER_OF_PAGES, numberOfPages(assignedStaffCount, (int) paginationAttributes.get(LIMIT))),
-                new Attribute(CURRENT_STAFF_PAGE, paginationAttributes.get(CURRENT_PAGE)), new Attribute(STAFF_OFFSET, paginationAttributes.get(OFFSET)),
-                new Attribute(STAFF_LIMIT, paginationAttributes.get(LIMIT)), new Attribute(STAFF_ORDER_BY, paginationAttributes.get(ORDER_BY)),
-                new Attribute(STAFF_SORT_DIRECTION, paginationAttributes.get(DIRECTION)), new Attribute(ASSIGNED_STAFF, assignedStaff),
+                new Attribute(CURRENT_STAFF_PAGE, paginationAttributes.get(CURRENT_PAGE)),
+                new Attribute(STAFF_OFFSET, paginationAttributes.get(OFFSET)),
+                new Attribute(STAFF_LIMIT, paginationAttributes.get(LIMIT)),
+                new Attribute(STAFF_ORDER_BY, paginationAttributes.get(ORDER_BY)),
+                new Attribute(STAFF_SORT_DIRECTION, paginationAttributes.get(DIRECTION)),
+                new Attribute(ASSIGNED_STAFF, assignedStaff),
                 new Attribute(NOT_ASSIGNED_STAFF, notAssignedStaff));
     }
 }

@@ -40,7 +40,7 @@ public class RequestUtil {
         Map<String, Object> attributes = new HashMap<>();
         int validatedPage = validateCurrentPageValue(page);
         int validatedLimit = validateLimitValue(limit);
-        int offset = validatedPage * validatedPage - validatedPage;
+        int offset = validatedPage * validatedLimit - validatedLimit;
 
         attributes.put(CURRENT_PAGE, validatedPage);
         attributes.put(LIMIT, validatedLimit);

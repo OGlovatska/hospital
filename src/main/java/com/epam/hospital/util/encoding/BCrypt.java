@@ -1,4 +1,4 @@
-package com.epam.hospital.encoding;
+package com.epam.hospital.util.encoding;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

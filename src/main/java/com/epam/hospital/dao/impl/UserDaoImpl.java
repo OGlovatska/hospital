@@ -33,7 +33,6 @@ public class UserDaoImpl implements Dao<User> {
     private Optional<User> get(String query) throws DBException {
         try (Connection connection = dbManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            System.out.println(query);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return Optional.of(getUser(resultSet));

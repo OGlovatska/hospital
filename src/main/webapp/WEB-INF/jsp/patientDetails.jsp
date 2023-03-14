@@ -2,6 +2,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="tg" uri="/WEB-INF/pagination.tld" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -324,87 +325,22 @@
                         </c:forEach>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-5">
-                            <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
-                                <fmt:message key="pagination.showing"/>
-                                <c:choose>
-                                    <c:when test="${fn:length(requestScope.assignedStaff) eq 0}">
-                                        0 <fmt:message key="pagination.entries"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <fmt:message key="pagination.from"/> ${requestScope.offset + 1}
-                                        <fmt:message key="pagination.to"/>
-                                        <c:choose>
-                                            <c:when test="${fn:length(requestScope.assignedStaff) < requestScope.staffLimit}">
-                                                ${requestScope.staffCount}
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${requestScope.staffOffset + requestScope.staffLimit}
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <fmt:message key="pagination.of"/> ${requestScope.staffCount}
-                                        <fmt:message key="pagination.entries"/>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-7">
-                            <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
-                                <ul class="pagination">
-                                    <c:if test="${requestScope.staffCount > requestScope.staffLimit}">
-                                        <c:choose>
-                                            <c:when test="${requestScope.staffPage > 1}">
-                                                <li class="paginate_button page-item previous" id="example_previous">
-                                                    <a href="api?command=patient&patientId=${requestScope.patientId}&staffPage=${requestScope.staffPage - 1}&staffLimit=${requestScope.staffLimit}&staffOrderBy=${requestScope.staffOrderBy}&staffDir=${requestScope.staffDir}"
-                                                       aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                                       class="page-link"><fmt:message key="pagination.previous"/></a></li>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li class="paginate_button page-item previous disabled"
-                                                    id="example_previous">
-                                                    <a href="#" aria-controls="example" data-dt-idx="previous"
-                                                       tabindex="0"
-                                                       class="page-link"><fmt:message key="pagination.previous"/></a>
-                                                </li>
-                                            </c:otherwise>
-                                        </c:choose>
-
-                                        <c:forEach begin="1" end="${requestScope.staffNumberOfPages}" var="i">
-                                            <c:choose>
-                                                <c:when test="${requestScope.staffPage eq i}">
-                                                    <li class="page-item active">
-                                                        <a class="page-link">${i}</a>
-                                                    </li>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           href="api?command=patient&patientId=${requestScope.patientId}&staffPage=${i}&staffLimit=${requestScope.staffLimit}&staffOrderBy=${requestScope.staffOrderBy}&staffDir=${requestScope.staffDir}">${i}</a>
-                                                    </li>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
-                                        <c:choose>
-                                            <c:when test="${requestScope.staffPage < requestScope.staffNumberOfPages}">
-                                                <li class="paginate_button page-item next" id="example_next">
-                                                    <a href="api?command=patient&patientId=${requestScope.patientId}&staffPage=${requestScope.staffPage + 1}&staffLimit=${requestScope.staffLimit}&staffOrderBy=${requestScope.staffOrderBy}&staffDir=${requestScope.staffDir}"
-                                                       aria-controls="example" data-dt-idx="next" tabindex="0"
-                                                       class="page-link"><fmt:message key="pagination.next"/></a></li>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li class="paginate_button page-item next disabled"
-                                                    id="example_previous">
-                                                    <a href="#" aria-controls="example" data-dt-idx="next" tabindex="0"
-                                                       class="page-link"><fmt:message key="pagination.next"/></a>
-                                                </li>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:if>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    <tg:pagination
+                            offsetValue="${requestScope.staffOffset}"
+                            limitName="staffLimit"
+                            limitValue="${requestScope.staffLimit}"
+                            orderByName="staffOrderBy"
+                            orderByValue="${requestScope.staffOrderBy}"
+                            dirName="staffDir"
+                            dirValue="${requestScope.staffDir}"
+                            pageName="staffPage"
+                            pageValue="${requestScope.staffPage}"
+                            numberOfPagesValue="${requestScope.staffNumberOfPages}"
+                            totalCountValue="${requestScope.staffCount}"
+                            api="api?command=patient&patientId=${requestScope.patientId}"
+                            listSize="${requestScope.assignedStaff.size()}"
+                            locale="${sessionScope.lang}"
+                    />
                 </div>
             </div>
         </c:if>
@@ -491,88 +427,22 @@
                     </c:forEach>
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col-sm-12 col-md-5">
-                        <div class="dataTables_info" role="status" aria-live="polite">
-                            <fmt:message key="pagination.showing"/>
-                            <c:choose>
-                                <c:when test="${fn:length(requestScope.hospitalisations) eq 0}">
-                                    0 <fmt:message key="pagination.entries"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <fmt:message key="pagination.from"/>${requestScope.hospitalisationsOffset + 1}
-                                    <fmt:message key="pagination.to"/>
-                                    <c:choose>
-                                        <c:when test="${fn:length(requestScope.hospitalisations) < requestScope.hospitalisationsLimit}">
-                                            ${requestScope.hospitalisationsCount}
-                                        </c:when>
-                                        <c:otherwise>
-                                            ${requestScope.hospitalisationsOffset + requestScope.hospitalisationsLimit}
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <fmt:message key="pagination.of"/> ${requestScope.hospitalisationsCount}
-                                    <fmt:message key="pagination.entries"/>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-7">
-                        <div class="dataTables_paginate paging_simple_numbers">
-                            <ul class="pagination">
-                                <c:if test="${requestScope.hospitalisationsCount > requestScope.hospitalisationsLimit}">
-                                    <c:choose>
-                                        <c:when test="${requestScope.hospitalisationsPage > 1}">
-                                            <li class="paginate_button page-item previous" id="example_previous">
-                                                <a href="api?command=patient&patientId=${requestScope.patientId}&hospitalisationsPage=${requestScope.hospitalisationsPage - 1}&hospitalisationsLimit=${requestScope.hospitalisationsLimit}&hospitalisationsOrderBy=${requestScope.hospitalisationsOrderBy}&hospitalisationsDir=${requestScope.hospitalisationsDir}"
-                                                   aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                                   class="page-link"><fmt:message key="pagination.previous"/></a></li>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <li class="paginate_button page-item previous disabled"
-                                                id="example_previous">
-                                                <a href="#" aria-controls="example" data-dt-idx="previous"
-                                                   tabindex="0"
-                                                   class="page-link"><fmt:message key="pagination.previous"/></a>
-                                            </li>
-                                        </c:otherwise>
-                                    </c:choose>
-
-                                    <c:forEach begin="1" end="${requestScope.hospitalisationsNumberOfPages}"
-                                               var="i">
-                                        <c:choose>
-                                            <c:when test="${requestScope.hospitalisationsPage eq i}">
-                                                <li class="page-item active">
-                                                    <a class="page-link">${i}</a>
-                                                </li>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       href="api?command=patient&patientId=${requestScope.patientId}&hospitalisationsPage=${i}&hospitalisationsLimit=${requestScope.hospitalisationsLimit}&hospitalisationsOrderBy=${requestScope.hospitalisationsOrderBy}&hospitalisationsDir=${requestScope.hospitalisationsDir}">${i}</a>
-                                                </li>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                    <c:choose>
-                                        <c:when test="${requestScope.hospitalisationsPage < requestScope.hospitalisationsNumberOfPages}">
-                                            <li class="paginate_button page-item next" id="example_next">
-                                                <a href="api?command=patient&patientId=${requestScope.patientId}&hospitalisationsPage=${requestScope.hospitalisationsPage + 1}&hospitalisationsLimit=${requestScope.hospitalisationsLimit}&hospitalisationsOrderBy=${requestScope.hospitalisationsOrderBy}&hospitalisationsDir=${requestScope.hospitalisationsDir}"
-                                                   aria-controls="example" data-dt-idx="next" tabindex="0"
-                                                   class="page-link"><fmt:message key="pagination.next"/></a></li>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <li class="paginate_button page-item next disabled"
-                                                id="example_previous">
-                                                <a href="#" aria-controls="example" data-dt-idx="next" tabindex="0"
-                                                   class="page-link"><fmt:message key="pagination.next"/></a>
-                                            </li>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:if>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <tg:pagination
+                        offsetValue="${requestScope.hospitalisationsOffset}"
+                        limitName="hospitalisationsLimit"
+                        limitValue="${requestScope.hospitalisationsLimit}"
+                        orderByName="hospitalisationsOrderBy"
+                        orderByValue="${requestScope.hospitalisationsOrderBy}"
+                        dirName="hospitalisationsDir"
+                        dirValue="${requestScope.hospitalisationsDir}"
+                        pageName="hospitalisationsPage"
+                        pageValue="${requestScope.hospitalisationsPage}"
+                        numberOfPagesValue="${requestScope.hospitalisationsNumberOfPages}"
+                        totalCountValue="${requestScope.hospitalisationsCount}"
+                        api="api?command=patient&patientId=${requestScope.patientId}"
+                        listSize="${requestScope.hospitalisations.size()}"
+                        locale="${sessionScope.lang}"
+                />
             </div>
         </div>
     </div>

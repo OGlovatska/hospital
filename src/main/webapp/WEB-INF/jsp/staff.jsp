@@ -2,6 +2,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="tg" uri="/WEB-INF/pagination.tld" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -163,84 +164,18 @@
             </c:forEach>
             </tbody>
         </table>
-        <div class="row">
-            <div class="col-sm-12 col-md-5">
-                <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
-                    <fmt:message key="pagination.showing"/>
-                    <c:choose>
-                        <c:when test="${fn:length(requestScope.staff) eq 0}">
-                            0 <fmt:message key="pagination.entries"/>
-                        </c:when>
-                        <c:otherwise>
-                            <fmt:message key="pagination.from"/> ${requestScope.offset + 1}
-                            <fmt:message key="pagination.to"/>
-                            <c:choose>
-                                <c:when test="${fn:length(requestScope.staff) < requestScope.limit}">
-                                    ${requestScope.totalCount}
-                                </c:when>
-                                <c:otherwise>
-                                    ${requestScope.offset + requestScope.limit}
-                                </c:otherwise>
-                            </c:choose>
-                            <fmt:message key="pagination.of"/>${requestScope.totalCount}
-                            <fmt:message key="pagination.entries"/>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-7">
-                <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
-                    <ul class="pagination">
-                        <c:if test="${requestScope.totalCount > requestScope.limit}">
-                            <c:choose>
-                                <c:when test="${requestScope.page > 1}">
-                                    <li class="paginate_button page-item previous" id="example_previous">
-                                        <a href="api?command=staff-list&page=${requestScope.page - 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
-                                           aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                           class="page-link"><fmt:message key="pagination.previous"/></a></li>
-                                </c:when>
-                                <c:otherwise>
-                                    <li class="paginate_button page-item previous disabled" id="example_previous">
-                                        <a href="#" aria-controls="example" data-dt-idx="previous" tabindex="0"
-                                           class="page-link"><fmt:message key="pagination.previous"/></a>
-                                    </li>
-                                </c:otherwise>
-                            </c:choose>
-
-                            <c:forEach begin="1" end="${requestScope.numberOfPages}" var="i">
-                                <c:choose>
-                                    <c:when test="${requestScope.page eq i}">
-                                        <li class="page-item active">
-                                            <a class="page-link">${i}</a>
-                                        </li>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <li class="page-item">
-                                            <a class="page-link"
-                                               href="api?command=staff-list&page=${i}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}">${i}</a>
-                                        </li>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                            <c:choose>
-                                <c:when test="${requestScope.page < requestScope.numberOfPages}">
-                                    <li class="paginate_button page-item next" id="example_next">
-                                        <a href="api?command=staff-list&page=${requestScope.page + 1}&limit=${requestScope.limit}&orderBy=${requestScope.orderBy}&dir=${requestScope.dir}"
-                                           aria-controls="example" data-dt-idx="next" tabindex="0"
-                                           class="page-link"><fmt:message key="pagination.next"/></a></li>
-                                </c:when>
-                                <c:otherwise>
-                                    <li class="paginate_button page-item next disabled" id="example_previous">
-                                        <a href="#" aria-controls="example" data-dt-idx="next" tabindex="0"
-                                           class="page-link"><fmt:message key="pagination.next"/></a>
-                                    </li>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:if>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <tg:pagination
+                offsetValue="${requestScope.offset}"
+                limitValue="${requestScope.limit}"
+                orderByValue="${requestScope.orderBy}"
+                dirValue="${requestScope.dir}"
+                pageValue="${requestScope.page}"
+                numberOfPagesValue="${requestScope.numberOfPages}"
+                totalCountValue="${requestScope.totalCount}"
+                api="api?command=staff-list"
+                listSize="${requestScope.staff.size()}"
+                locale="${sessionScope.lang}"
+        />
     </div>
 </div>
 <jsp:include page="fragments/footer.jsp"/>

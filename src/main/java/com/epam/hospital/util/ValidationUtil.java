@@ -4,10 +4,10 @@ import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.dao.impl.UserDaoImpl;
 import com.epam.hospital.exception.*;
 import com.epam.hospital.model.User;
-import com.epam.hospital.pagination.Sort;
+import com.epam.hospital.util.pagination.Sort;
 import com.epam.hospital.to.UserTo;
-import com.epam.hospital.encoding.PasswordEncoder;
-import com.epam.hospital.encoding.PasswordEncoderFactories;
+import com.epam.hospital.util.encoding.PasswordEncoder;
+import com.epam.hospital.util.encoding.PasswordEncoderFactories;
 
 import java.util.Arrays;
 

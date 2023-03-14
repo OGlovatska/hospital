@@ -1,4 +1,4 @@
-package com.epam.hospital.pagination;
+package com.epam.hospital.util.pagination;
 
 public class Pageable {
     private final int offset;
