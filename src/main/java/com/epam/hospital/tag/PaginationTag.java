@@ -1,6 +1,7 @@
 package com.epam.hospital.tag;
 
 import jakarta.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.tagext.SimpleTagSupport;
 import jakarta.servlet.jsp.tagext.TagSupport;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.util.ResourceBundle;
 
 import static com.epam.hospital.tag.Constant.*;
 
-public class PaginationTag extends TagSupport {
+public class PaginationTag extends SimpleTagSupport {
     private int offsetValue;
     private String limitName = "limit";
     private int limitValue;
@@ -84,8 +85,8 @@ public class PaginationTag extends TagSupport {
     }
 
     @Override
-    public int doStartTag() {
-        JspWriter out = pageContext.getOut();
+    public void doTag() throws IOException {
+        JspWriter out = getJspContext().getOut();
         Map<String, String> bundleMessages = getPaginationBundleMessages();
 
         try {
@@ -195,7 +196,6 @@ public class PaginationTag extends TagSupport {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return SKIP_BODY;
     }
 
     private Map<String, String> getPaginationBundleMessages() {

@@ -6,7 +6,7 @@
 
     <tlib-version>1.0</tlib-version>
     <short-name>functions</short-name>
-    <uri>http://com.epam/functions</uri>
+    <uri>/WEB-INF/tld</uri>
 
     <function>
         <name>formatDateTime</name>

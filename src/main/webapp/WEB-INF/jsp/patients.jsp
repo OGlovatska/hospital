@@ -2,7 +2,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="tg" uri="/WEB-INF/pagination.tld" %>
+<%@ taglib prefix="pgn" uri="/WEB-INF/tld/pagination.tld" %>
+<%@ taglib prefix="filter" uri="/WEB-INF/tld/filter.tld" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -43,42 +44,16 @@
         <div class="d-flex">
             <form class="row g-3" action="api" method="get">
                 <input type="hidden" name="command" value="patients-list"/>
-                <div class="col-auto">
-                    <select name="limit" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
-                        <option value="10" ${requestScope.limit eq "10" ? "selected" : ""}>10</option>
-                        <option value="25" ${requestScope.limit eq "25" ? "selected" : ""}>25</option>
-                        <option value="50" ${requestScope.limit eq "50" ? "selected" : ""}>50</option>
-                        <option value="100"  ${requestScope.limit eq "100" ? "selected" : ""}>100</option>
-                    </select>
-                </div>
-                <div class="col-auto">
-                    <select name="orderBy" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
-                        <option value="" selected disabled><fmt:message key="common.order.by"/></option>
-                        <option value="id"  ${requestScope.orderBy eq "id" ? "selected" : ""}>
-                            <fmt:message key="common.default"/>
-                        </option>
-                        <option value="first_name" ${requestScope.orderBy eq "first_name" ? "selected" : ""}>
-                            <fmt:message key="common.first.name"/>
-                        </option>
-                        <option value="last_name" ${requestScope.orderBy eq "last_name" ? "selected" : ""}>
-                            <fmt:message key="common.last.name"/>
-                        </option>
-                        <option value="date_of_birth" ${requestScope.orderBy eq "date_of_birth" ? "selected" : ""}>
-                            <fmt:message key="patient.date.of.birth"/>
-                        </option>
-                    </select>
-                </div>
-                <div class="col-auto">
-                    <select name="dir" aria-controls="example" class="form-select form-select-sm" onchange=submit()>
-                        <option value="" selected disabled><fmt:message key="common.direction"/></option>
-                        <option value="ASC" ${requestScope.dir eq "ASC" ? "selected" : ""}>
-                            <fmt:message key="common.ascending"/>
-                        </option>
-                        <option value="DESC" ${requestScope.dir eq "DESC" ? "selected" : ""}>
-                            <fmt:message key="common.descending"/>
-                        </option>
-                    </select>
-                </div>
+                <filter:filter
+                        nameLimit="limit"
+                        selectedLimit="${requestScope.limit}"
+                        nameOrderBy="orderBy"
+                        selectedOrderBy="${requestScope.orderBy}"
+                        optionsOrderBy="id, first_name, last_name, date_of_birth"
+                        nameDirection="dir"
+                        selectedDirection="${requestScope.dir}"
+                        locale="${sessionScope.lang}"
+                />
             </form>
             <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                 <div class="col-auto" style="padding-left: 15px">
@@ -124,7 +99,7 @@
                                         <label class="form-label"><fmt:message key="common.role"/></label>
                                         <select name="role" class="form-select form-select-md mb-3"
                                                 aria-label=".form-select-md example">
-                                            <option value="" selected><fmt:message key="role.patient"/></option>
+                                            <option value="PATIENT" selected><fmt:message key="role.patient"/></option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
@@ -185,7 +160,7 @@
             </c:forEach>
             </tbody>
         </table>
-        <tg:pagination
+        <pgn:pagination
                 offsetValue="${requestScope.offset}"
                 limitValue="${requestScope.limit}"
                 orderByValue="${requestScope.orderBy}"

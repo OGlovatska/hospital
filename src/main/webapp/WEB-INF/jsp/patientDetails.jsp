@@ -2,7 +2,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="tg" uri="/WEB-INF/pagination.tld" %>
+<%@ taglib prefix="pgn" uri="/WEB-INF/tld/pagination.tld" %>
+<%@ taglib prefix="filter" uri="/WEB-INF/tld/filter.tld" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -256,43 +257,16 @@
                         <form class="row g-3" action="api" method="get">
                             <input type="hidden" name="command" value="patient"/>
                             <input type="hidden" name="patientId" value="${requestScope.patientId}"/>
-                            <div class="col-auto">
-                                <select name="staffLimit" aria-controls="example" class="form-select form-select-sm"
-                                        onchange=submit()>
-                                    <option value="10" ${requestScope.staffLimit eq "10" ? "selected" : ""}>10</option>
-                                    <option value="25" ${requestScope.staffLimit eq "25" ? "selected" : ""}>25</option>
-                                    <option value="50" ${requestScope.staffLimit eq "50" ? "selected" : ""}>50</option>
-                                    <option value="100"  ${requestScope.staffLimit eq "100" ? "selected" : ""}>100
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <select name="staffOrderBy" aria-controls="example" class="form-select form-select-sm"
-                                        onchange=submit()>
-                                    <option value="" selected disabled><fmt:message key="common.order.by"/></option>
-                                    <option value="id"  ${requestScope.staffOrderBy eq "id" ? "selected" : ""}>
-                                        <fmt:message key="common.default"/>
-                                    </option>
-                                    <option value="first_name" ${requestScope.staffOrderBy eq "first_name" ? "selected" : ""}>
-                                        <fmt:message key="common.first.name"/>
-                                    </option>
-                                    <option value="last_name" ${requestScope.staffOrderBy eq "last_name" ? "selected" : ""}>
-                                        <fmt:message key="common.last.name"/>
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <select name="staffDir" aria-controls="example" class="form-select form-select-sm"
-                                        onchange=submit()>
-                                    <option value="" selected disabled><fmt:message key="common.direction"/></option>
-                                    <option value="ASC" ${requestScope.staffDir eq "ASC" ? "selected" : ""}>
-                                        <fmt:message key="common.ascending"/>
-                                    </option>
-                                    <option value="DESC" ${requestScope.staffDir eq "DESC" ? "selected" : ""}>
-                                        <fmt:message key="common.descending"/>
-                                    </option>
-                                </select>
-                            </div>
+                            <filter:filter
+                                    nameLimit="staffLimit"
+                                    selectedLimit="${requestScope.staffLimit}"
+                                    nameOrderBy="staffOrderBy"
+                                    selectedOrderBy="${requestScope.staffOrderBy}"
+                                    optionsOrderBy="id, first_name, last_name, specialisation"
+                                    nameDirection="staffDir"
+                                    selectedDirection="${requestScope.staffDir}"
+                                    locale="${sessionScope.lang}"
+                            />
                         </form>
                         <div class="col-auto" style="padding-left: 15px">
                             <button type="submit" class="btn btn-outline-primary me-2 btn-sm" data-bs-toggle="modal"
@@ -325,7 +299,7 @@
                         </c:forEach>
                         </tbody>
                     </table>
-                    <tg:pagination
+                    <pgn:pagination
                             offsetValue="${requestScope.staffOffset}"
                             limitName="staffLimit"
                             limitValue="${requestScope.staffLimit}"
@@ -351,50 +325,16 @@
                     <form class="row g-3" action="api" method="get">
                         <input type="hidden" name="command" value="patient"/>
                         <input type="hidden" name="patientId" value="${requestScope.patientId}"/>
-                        <div class="col-auto">
-                            <select name="hospitalisationsLimit" aria-controls="example"
-                                    class="form-select form-select-sm" onchange=submit()>
-                                <option value="10" ${requestScope.hospitalisationsLimit eq "10" ? "selected" : ""}>
-                                    10
-                                </option>
-                                <option value="25" ${requestScope.hospitalisationsLimit eq "25" ? "selected" : ""}>
-                                    25
-                                </option>
-                                <option value="50" ${requestScope.hospitalisationsLimit eq "50" ? "selected" : ""}>
-                                    50
-                                </option>
-                                <option value="100"  ${requestScope.hospitalisationsLimit eq "100" ? "selected" : ""}>
-                                    100
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-auto">
-                            <select name="hospitalisationsOrderBy" aria-controls="example"
-                                    class="form-select form-select-sm" onchange=submit()>
-                                <option value="" selected disabled><fmt:message key="common.order.by"/></option>
-                                <option value="id"  ${requestScope.hospitalisationsOrderBy eq "id" ? "selected" : ""}>
-                                    <fmt:message key="common.default"/>
-                                </option>
-                                <option value="start_date" ${requestScope.hospitalisationsOrderBy eq "start_date" ? "selected" : ""}>
-                                    <fmt:message key="hospitalisation.date"/>
-                                </option>
-                                <option value="end_date" ${requestScope.hospitalisationsOrderBy eq "end_date" ? "selected" : ""}>
-                                    <fmt:message key="hospitalisation.discharging.date"/>
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-auto">
-                            <select name="hospitalisationsDir" aria-controls="example"
-                                    class="form-select form-select-sm" onchange=submit()>
-                                <option value="" selected disabled><fmt:message key="common.direction"/></option>
-                                <option value="ASC" ${requestScope.hospitalisationsDir eq "ASC" ? "selected" : ""}>
-                                    <fmt:message key="common.ascending"/>
-                                </option>
-                                <option value="DESC" ${requestScope.hospitalisationsDir eq "DESC" ? "selected" : ""}>
-                                    <fmt:message key="common.descending"/>
-                                </option>
-                            </select>
-                        </div>
+                        <filter:filter
+                                nameLimit="hospitalisationsLimit"
+                                selectedLimit="${requestScope.hospitalisationsLimit}"
+                                nameOrderBy="hospitalisationsOrderBy"
+                                selectedOrderBy="${requestScope.hospitalisationsOrderBy}"
+                                optionsOrderBy="id, start_date, end_date"
+                                nameDirection="hospitalisationsDir"
+                                selectedDirection="${requestScope.hospitalisationsDir}"
+                                locale="${sessionScope.lang}"
+                        />
                     </form>
                     <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                         <div class="col-auto" style="padding-left: 15px">
@@ -427,7 +367,7 @@
                     </c:forEach>
                     </tbody>
                 </table>
-                <tg:pagination
+                <pgn:pagination
                         offsetValue="${requestScope.hospitalisationsOffset}"
                         limitName="hospitalisationsLimit"
                         limitValue="${requestScope.hospitalisationsLimit}"
