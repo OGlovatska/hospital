@@ -86,6 +86,16 @@ public class StaffPatientDaoImpl implements Dao<StaffPatient> {
         return 0;
     }
 
+    public void delete(int patientId) throws DBException {
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_STAFF_PATIENT)) {
+            statement.setLong(1, patientId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage());
+        }
+    }
+
     private StaffPatient getStaffPatient(ResultSet resultSet) throws SQLException {
         StaffPatient assignment = new StaffPatient();
         assignment.setId(resultSet.getInt(ID));

@@ -2,6 +2,7 @@ package com.epam.hospital.service;
 
 import com.epam.hospital.dao.impl.HospitalisationDaoImpl;
 import com.epam.hospital.dao.impl.PatientDaoImpl;
+import com.epam.hospital.dao.impl.StaffPatientDaoImpl;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.exception.IllegalRequestDataException;
@@ -25,10 +26,12 @@ import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
 public class HospitalisationService {
     private final HospitalisationDaoImpl hospitalisationDao;
     private final PatientDaoImpl patientDao;
+    private final StaffPatientDaoImpl staffPatientDao;
 
-    public HospitalisationService(HospitalisationDaoImpl hospitalisationDao, PatientDaoImpl patientDao) {
+    public HospitalisationService(HospitalisationDaoImpl hospitalisationDao, PatientDaoImpl patientDao, StaffPatientDaoImpl staffPatientDao) {
         this.hospitalisationDao = hospitalisationDao;
         this.patientDao = patientDao;
+        this.staffPatientDao = staffPatientDao;
     }
 
     public int getAllHospitalisationsOfPatientCount(int patientId) {
@@ -103,6 +106,8 @@ public class HospitalisationService {
                         hospitalisation.setEndDate(endDate);
                         hospitalisation.setStatus(HospitalisationStatus.DISCHARGED);
                         hospitalisationDao.update(hospitalisation);
+
+                        staffPatientDao.delete(hospitalisation.getPatientId());
                     } else {
                         throw new IllegalRequestDataException(NO_DIAGNOSIS);
                     }

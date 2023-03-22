@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 
-import static com.epam.hospital.command.constant.Command.PATIENT_DETAILS;
+import static com.epam.hospital.command.constant.Command.PATIENTS_LIST;
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.util.CommandUtil.getPageToRedirect;
 
@@ -46,7 +46,6 @@ public class DischargePatientCommand implements Command {
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
 
-        return new CommandResult(getPageToRedirect(PATIENT_DETAILS,
-                getParameter(PATIENT_ID, String.valueOf(patientId))), true);
+        return new CommandResult(getPageToRedirect(PATIENTS_LIST), true);
     }
 }
