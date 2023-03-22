@@ -5,8 +5,10 @@ import com.epam.hospital.dao.impl.UserDaoImpl;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
+import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.User;
+import jakarta.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,9 +17,16 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class StaffRepository {
-    private final UserDaoImpl userDao = new UserDaoImpl();
-    private final StaffDaoImpl staffDao = new StaffDaoImpl();
-    private final DBManager dbManager = MySQLDBManager.getInstance();
+    private final UserDaoImpl userDao;
+    private final StaffDaoImpl staffDao;
+    private final DBManager dbManager;
+
+    public StaffRepository(UserDaoImpl userDao, StaffDaoImpl staffDao) {
+        ServletContext servletContext = DBContextListener.getServletContext();
+        this.dbManager = (DBManager) servletContext.getAttribute("dbManager");
+        this.userDao = userDao;
+        this.staffDao = staffDao;
+    }
 
     public Optional<Staff> save(User user, Staff staff) throws DBException {
         Connection connection = null;

@@ -4,9 +4,11 @@ import com.epam.hospital.dao.Dao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
+import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.Appointment;
 import com.epam.hospital.model.enums.AppointmentType;
 import com.epam.hospital.util.pagination.Pageable;
+import jakarta.servlet.ServletContext;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,7 +20,12 @@ import static com.epam.hospital.dao.constant.field.AppointmentFields.*;
 import static com.epam.hospital.dao.constant.field.CommonFields.*;
 
 public class AppointmentDaoImpl implements Dao<Appointment> {
-    private final DBManager dbManager = MySQLDBManager.getInstance();
+    private final DBManager dbManager;
+
+    public AppointmentDaoImpl() {
+        ServletContext servletContext = DBContextListener.getServletContext();
+        this.dbManager = (DBManager) servletContext.getAttribute("dbManager");
+    }
 
     @Override
     public Optional<Appointment> get(long id) throws DBException {

@@ -6,9 +6,11 @@ import com.epam.hospital.dao.impl.UserDaoImpl;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
+import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.User;
+import jakarta.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +21,11 @@ import java.util.Optional;
 public class PatientRepository {
     private final UserDaoImpl userDao;
     private final PatientDaoImpl patientDao;
-    private final DBManager dbManager = MySQLDBManager.getInstance();
+    private final DBManager dbManager;
 
     public PatientRepository(UserDaoImpl userDao, PatientDaoImpl patientDao) {
+        ServletContext servletContext = DBContextListener.getServletContext();
+        this.dbManager = (DBManager) servletContext.getAttribute("dbManager");
         this.userDao = userDao;
         this.patientDao = patientDao;
     }

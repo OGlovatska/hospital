@@ -14,7 +14,7 @@ public class ApplicationContext {
     private final UserDaoImpl userDao = new UserDaoImpl();
 
     private final PatientRepository patientRepository = new PatientRepository(userDao, patientDao);
-    private final StaffRepository staffRepository = new StaffRepository();
+    private final StaffRepository staffRepository = new StaffRepository(userDao, staffDao);
 
     private final AppointmentService appointmentService = new AppointmentService(appointmentDao, patientDao,
             staffDao, hospitalisationDao);

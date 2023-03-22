@@ -4,10 +4,12 @@ import com.epam.hospital.dao.Dao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
+import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.enums.Gender;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.util.pagination.Pageable;
+import jakarta.servlet.ServletContext;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,7 +22,12 @@ import static com.epam.hospital.dao.constant.field.UserFields.*;
 import static com.epam.hospital.dao.constant.query.PatientQuery.*;
 
 public class PatientDaoImpl implements Dao<Patient> {
-    private final DBManager dbManager = MySQLDBManager.getInstance();
+    private final DBManager dbManager;
+
+    public PatientDaoImpl() {
+        ServletContext servletContext = DBContextListener.getServletContext();
+        this.dbManager = (DBManager) servletContext.getAttribute("dbManager");
+    }
 
     @Override
     public Optional<Patient> get(long id) throws DBException {
@@ -80,7 +87,7 @@ public class PatientDaoImpl implements Dao<Patient> {
             PreparedStatement statement = connection.prepareStatement(ADD_PATIENT, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, patient.getUserId());
             statement.setDate(2, Date.valueOf(patient.getDateOfBirth()));
-            statement.setObject(3, patient.getGender());
+            statement.setObject(3, patient.getGender().getName());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {

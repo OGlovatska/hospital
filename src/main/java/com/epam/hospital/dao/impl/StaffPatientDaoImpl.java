@@ -4,7 +4,9 @@ import com.epam.hospital.dao.Dao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
+import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.StaffPatient;
+import jakarta.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +18,12 @@ import static com.epam.hospital.dao.constant.field.CommonFields.*;
 import static com.epam.hospital.dao.constant.query.StaffPatientQueries.*;
 
 public class StaffPatientDaoImpl implements Dao<StaffPatient> {
-    private final DBManager dbManager = MySQLDBManager.getInstance();
+    private final DBManager dbManager;
+
+    public StaffPatientDaoImpl() {
+        ServletContext servletContext = DBContextListener.getServletContext();
+        this.dbManager = (DBManager) servletContext.getAttribute("dbManager");
+    }
 
     @Override
     public Optional<StaffPatient> get(long id) throws DBException {
