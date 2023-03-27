@@ -1,5 +1,6 @@
 package com.epam.hospital;
 
+import com.epam.hospital.model.enums.AppointmentType;
 import com.epam.hospital.model.enums.Gender;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.model.enums.Specialisation;
@@ -45,7 +46,7 @@ public class TestData {
     public static final Role NURSE_ROLE = Role.NURSE;
 
     public static final LocalDateTime APPOINTMENT_DATE_TIME = LocalDateTime.of(2023, 1, 24, 8, 0);
-    public static final String APPOINTMENT_TYPE = "Analysis";
+    public static final AppointmentType APPOINTMENT_TYPE = AppointmentType.ANALYSIS;
     public static final String APPOINTMENT_DESCRIPTION = "General blood analysis";
     public static final String APPOINTMENT_STATUS = "ASSIGNED";
 

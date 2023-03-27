@@ -19,7 +19,7 @@ public class ApplicationContext {
     private final AppointmentService appointmentService = new AppointmentService(appointmentDao, patientDao,
             staffDao, hospitalisationDao);
     private final HospitalisationService hospitalisationService = new HospitalisationService(hospitalisationDao,
-            patientDao, staffPatientDao);
+            patientDao, staffPatientDao, appointmentDao, staffDao);
     private final PatientService patientService = new PatientService(patientDao, staffPatientDao, patientRepository,
             staffDao);
     private final StaffService staffService = new StaffService(staffDao, staffPatientDao, staffRepository);

@@ -14,6 +14,7 @@ public class HospitalisationTo {
     private LocalDate endDate;
     private HospitalisationStatus status;
     private String diagnosis;
+    private List<AppointmentTo> appointments;
 
     private HospitalisationTo(Builder builder) {
         this.id = builder.id;
@@ -24,6 +25,7 @@ public class HospitalisationTo {
         this.endDate = builder.endDate;
         this.status = builder.status;
         this.diagnosis = builder.diagnosis;
+        this.appointments = builder.appointments;
     }
 
     public int getId() {
@@ -90,6 +92,14 @@ public class HospitalisationTo {
         this.diagnosis = diagnosis;
     }
 
+    public List<AppointmentTo> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<AppointmentTo> appointments) {
+        this.appointments = appointments;
+    }
+
     public static class Builder {
         private int id;
         private int patientId;
@@ -99,6 +109,7 @@ public class HospitalisationTo {
         private LocalDate endDate;
         private HospitalisationStatus status;
         private String diagnosis;
+        private List<AppointmentTo> appointments;
 
         public Builder id(int id) {
             this.id = id;
@@ -137,6 +148,11 @@ public class HospitalisationTo {
 
         public Builder diagnosis(String diagnosis) {
             this.diagnosis = diagnosis;
+            return this;
+        }
+
+        public Builder appointments(List<AppointmentTo> appointments){
+            this.appointments = appointments;
             return this;
         }
 

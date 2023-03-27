@@ -23,6 +23,7 @@ public class Command {
     public static final String SAVE_HOSPITALISATION = "save-hospitalisation";
     public static final String DISCHARGE_PATIENT = "discharge-patient";
     public static final String DETERMINE_DIAGNOSIS = "determine-diagnosis";
+    public static final String EXPORT_HOSPITAL_CARD = "export-hospital-card";
     public static final String HOSPITALISATION_DETAILS = "hospitalisation";
     private Command() {
     }

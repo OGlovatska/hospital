@@ -35,7 +35,6 @@ public class DischargePatientCommand implements Command {
         HttpSession session = request.getSession();
         UserTo user = (UserTo) session.getAttribute(USER);
 
-        int patientId = Integer.parseInt(request.getParameter(PATIENT_ID));
         int hospitalisationId = Integer.parseInt(request.getParameter(HOSPITALISATION_ID));
         LocalDate endDate = LocalDate.parse(request.getParameter(HOSPITALISATION_END_DATE));
         try {

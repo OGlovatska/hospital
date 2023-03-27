@@ -72,10 +72,10 @@ public class StaffDetailsCommand implements Command {
                     e.getMessage());
             request.setAttribute(MESSAGE, e.getType().getErrorMessage());
         }
-        getRequestAttributes(request, assignedPatients, notAssignedPatients, assignedPatientsCount, paginationAttributes);
+        setRequestAttributes(request, assignedPatients, notAssignedPatients, assignedPatientsCount, paginationAttributes);
     }
 
-    private void getRequestAttributes(HttpServletRequest request, List<PatientTo> assignedPatients,
+    private void setRequestAttributes(HttpServletRequest request, List<PatientTo> assignedPatients,
                                       List<PatientTo> notAssignedPatients, int assignedPatientsCount,
                                       Map<String, Object> paginationAttributes) {
         request.setAttribute(ASSIGNED_PATIENTS, assignedPatients);

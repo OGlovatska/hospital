@@ -23,6 +23,7 @@ public class CommandFactory {
         COMMAND_MAP.put(SAVE_APPOINTMENT, new SaveAppointmentCommand());
         COMMAND_MAP.put(DETERMINE_DIAGNOSIS, new DetermineDiagnosisCommand());
         COMMAND_MAP.put(DISCHARGE_PATIENT, new DischargePatientCommand());
+        COMMAND_MAP.put(EXPORT_HOSPITAL_CARD, new ExportHospitalCard());
         COMMAND_MAP.put(HOSPITALISATION_DETAILS, new HospitalisationDetailsCommand());
         COMMAND_MAP.put(HOSPITALISATIONS, new HospitalisationsListCommand());
         COMMAND_MAP.put(SAVE_HOSPITALISATION, new SaveHospitalisationCommand());

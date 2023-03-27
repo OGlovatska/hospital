@@ -23,6 +23,15 @@ public class AppointmentUtil {
                 .build();
     }
 
+    public static AppointmentTo createAppointmentTo(Appointment appointment, Staff staff) {
+        return new AppointmentTo.Builder().id(appointment.getId()).hospitalisationId(appointment.getHospitalisationId())
+                .patientId(appointment.getPatientId()).staffId(appointment.getStaffId()).dateTime(appointment.getDateTime())
+                .type(appointment.getType()).description(appointment.getDescription()).conclusion(appointment.getConclusion())
+                .status(appointment.getStatus()).staffFirstName(staff.getFirstName()).staffLastName(staff.getLastName())
+                .specialisation(staff.getSpecialisation())
+                .build();
+    }
+
     public static Appointment createAppointment(HttpServletRequest request) {
         return new Appointment.Builder().patientId(Integer.parseInt(request.getParameter(PATIENT_ID)))
                 .staffId(Integer.parseInt(request.getParameter(STAFF_ID)))
