@@ -64,7 +64,8 @@ public class PatientDetailsCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing patient details command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
         }
         request.setAttribute(CURRENT_PATIENT, patient);
         request.setAttribute(HOSPITALISATION, hospitalisation);
@@ -106,7 +107,8 @@ public class PatientDetailsCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create patient details command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
         }
 
         setHospitalisationTabRequestAttributes(request, hospitalisations, hospitalisationStatuses,
@@ -142,7 +144,8 @@ public class PatientDetailsCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create patient details command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
         }
 
         setStaffTabRequestAttributes(request, assignedStaff, notAssignedStaff, assignedStaffCount, paginationAttributes);

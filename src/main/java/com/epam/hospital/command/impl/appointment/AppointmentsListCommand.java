@@ -50,7 +50,8 @@ public class AppointmentsListCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create appointment command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
             return new CommandResult(Page.APPOINTMENTS);
         }
         setRequestAttributes(request, appointments, totalCount, paginationAttributes);

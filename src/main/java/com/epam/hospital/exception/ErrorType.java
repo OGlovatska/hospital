@@ -15,11 +15,7 @@ public enum ErrorType {
     NOT_DISCHARGED("error.notDischarged", "Can't add new hospitalisation for undischarged patient"),
     DUPLICATE_EMAIL("error.duplicateEmail", "User with this email already exists"),
     WRONG_REQUEST("error.wrongRequest", "Bad request"),
-
-    APP_ERROR("error.appError", "Internal server error"),
-    DATA_NOT_FOUND("error.dataNotFound", "Unprocessable entity"),
-    DATA_ERROR("error.dataError", "Conflict"),
-    VALIDATION_ERROR("error.validationError", "Unprocessable entity");
+    APP_ERROR("error.appError", "Internal server error");
 
     private final String errorCode;
     private final String errorMessage;

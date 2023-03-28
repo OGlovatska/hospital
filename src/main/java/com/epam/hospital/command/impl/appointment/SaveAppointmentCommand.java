@@ -5,6 +5,7 @@ import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.model.Appointment;
+import com.epam.hospital.model.enums.MessageType;
 import com.epam.hospital.service.AppointmentService;
 import com.epam.hospital.to.UserTo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,9 +43,11 @@ public class SaveAppointmentCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing create appointment command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
-            return new CommandResult(getPageToRedirect(CREATE_APPOINTMENT));
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
+            return new CommandResult(getPageToRedirect(CREATE_APPOINTMENT), true);
         }
+        request.getSession().setAttribute(MESSAGE, MessageType.SUCCESS_SAVE_APPOINTMENT.getMessageCode());
         return new CommandResult(getPageToRedirect(APPOINTMENTS), true);
     }
 }

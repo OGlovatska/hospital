@@ -5,6 +5,7 @@
 <%@ taglib prefix="dateTime" uri="/WEB-INF/tld/dateTime.tld" %>
 <%@ taglib prefix="pgn" uri="/WEB-INF/tld/pagination.tld" %>
 <%@ taglib prefix="filter" uri="/WEB-INF/tld/filter.tld" %>
+<%@ taglib prefix="alert" tagdir="/WEB-INF/tags"%>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -15,6 +16,8 @@
 </head>
 <body>
 <div class="container">
+    <alert:message sessionScope="${sessionScope}"/>
+
     <div class="dataTables_wrapper dt-bootstrap5">
         <div class="d-flex">
             <form class="row g-3" action="api" method="get">

@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="pgn" uri="/WEB-INF/tld/pagination.tld" %>
 <%@ taglib prefix="filter" uri="/WEB-INF/tld/filter.tld" %>
+<%@ taglib prefix="alert" tagdir="/WEB-INF/tags"%>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -21,6 +22,8 @@
 </head>
 <body>
 <div class="container">
+    <alert:message sessionScope="${sessionScope}"/>
+
     <div class="row gutters">
         <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
             <div class="card h-100">

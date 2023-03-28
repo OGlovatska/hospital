@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="pgn" uri="/WEB-INF/tld/pagination.tld" %>
 <%@ taglib prefix="filter" uri="/WEB-INF/tld/filter.tld" %>
+<%@ taglib prefix="alert" tagdir="/WEB-INF/tags"%>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -13,7 +14,7 @@
     <jsp:include page="fragments/header.jsp"/>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#exampleModal').on('hidden.bs.modal', function () {
                 $('#exampleModal form')[0].reset();
             });
@@ -22,6 +23,8 @@
 </head>
 <body>
 <div class="container">
+    <alert:message sessionScope="${sessionScope}"/>
+
     <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap5">
         <div class="d-flex">
             <form class="row g-3" action="api" method="get">
@@ -44,14 +47,16 @@
                         <fmt:message key="staff.add"/>
                     </button>
                 </div>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">
                                     <fmt:message key="staff.new"/>
                                 </h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                             </div>
                             <form action="api" method="post" name="save-form">
                                 <input type="hidden" name="command" value="save-staff"/>
@@ -79,17 +84,21 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label"><fmt:message key="common.role"/></label>
-                                        <select name="role" class="form-select form-select-md mb-3" aria-label=".form-select-md example">
-                                            <option value="" disabled selected><fmt:message key="common.choose"/></option>
+                                        <select name="role" class="form-select form-select-md mb-3"
+                                                aria-label=".form-select-md example">
+                                            <option value="" disabled selected><fmt:message
+                                                    key="common.choose"/></option>
                                             <option value="DOCTOR"><fmt:message key="role.doctor"/></option>
                                             <option value="NURSE"><fmt:message key="role.nurse"/></option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label"><fmt:message key="staff.specialisation"/></label>
-                                        <select name="specialisation" class="form-select form-select-md mb-3" aria-label=".form-select-md example">
-                                            <option value="" disabled selected><fmt:message key="common.choose"/></option>
-                                            <c:forEach items="${specialisations}" var="specialisation">
+                                        <select name="specialisation" class="form-select form-select-md mb-3"
+                                                aria-label=".form-select-md example">
+                                            <option value="" disabled selected><fmt:message
+                                                    key="common.choose"/></option>
+                                            <c:forEach items="${requestScope.specialisations}" var="specialisation">
                                                 <option value="${specialisation}">${specialisation}</option>
                                             </c:forEach>
                                         </select>

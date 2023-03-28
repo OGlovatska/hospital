@@ -3,6 +3,7 @@ package com.epam.hospital.command.impl.hospitalisation;
 import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
+import com.epam.hospital.command.constant.Page;
 import com.epam.hospital.service.HospitalisationService;
 import com.epam.hospital.service.PatientService;
 import com.epam.hospital.to.HospitalisationTo;
@@ -45,6 +46,7 @@ public class ExportHospitalCard implements Command {
         UserTo user = (UserTo) session.getAttribute(USER);
         String locale = (String) request.getSession().getAttribute(LANGUAGE);
 
+        setResponseParameters(response);
         PatientTo patient = patientService.getPatient(user);
         List<HospitalisationTo> hospitalisations = hospitalisationService.getAllHospitalisationsWithAppointments(patient.getId());
         try(OutputStream out = response.getOutputStream()) {
@@ -53,11 +55,9 @@ public class ExportHospitalCard implements Command {
         } catch (IOException | URISyntaxException e) {
             LOG.error("Exception has occurred during executing export hospital card command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getMessage());
         }
-
-        setResponseParameters(response);
-        return new CommandResult(getPageToRedirect(HOSPITALISATIONS), true);
+        //return new CommandResult(getPageToRedirect(HOSPITALISATIONS), true);
+        return new CommandResult(Page.HOSPITALISATIONS);
     }
 
     private void setResponseParameters(HttpServletResponse response) {

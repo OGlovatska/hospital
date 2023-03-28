@@ -60,7 +60,8 @@ public class HospitalisationDetailsCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing hospitalisation details command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
         }
         setRequestAttributes(request, paginationAttributes, hospitalisation, totalCount, appointments);
         return new CommandResult(Page.HOSPITALISATION_DETAILS);

@@ -6,6 +6,7 @@ import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.User;
+import com.epam.hospital.model.enums.MessageType;
 import com.epam.hospital.service.StaffService;
 import com.epam.hospital.to.UserTo;
 import com.epam.hospital.util.PasswordUtil;
@@ -16,8 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.epam.hospital.command.constant.Command.STAFF_LIST;
-import static com.epam.hospital.command.constant.Parameter.MESSAGE;
-import static com.epam.hospital.command.constant.Parameter.USER;
+import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.util.CommandUtil.getPageToRedirect;
 import static com.epam.hospital.util.StaffUtil.createStaff;
 import static com.epam.hospital.util.UserUtil.createUser;
@@ -47,8 +47,11 @@ public class SaveStaffCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing save staff command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
+            return new CommandResult(getPageToRedirect(STAFF_LIST), true);
         }
+        request.getSession().setAttribute(MESSAGE, MessageType.SUCCESS_SAVE_STAFF.getMessageCode());
         return new CommandResult(getPageToRedirect(STAFF_LIST), true);
     }
 }

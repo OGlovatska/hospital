@@ -56,7 +56,8 @@ public class HospitalisationsListCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing hospitalisations list command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
         }
         setRequestAttributes(request, hospitalisations, totalCount, paginationAttributes);
         return new CommandResult(Page.HOSPITALISATIONS);

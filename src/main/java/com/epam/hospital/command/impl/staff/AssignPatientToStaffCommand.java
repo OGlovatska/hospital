@@ -4,6 +4,7 @@ import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.exception.ApplicationException;
+import com.epam.hospital.model.enums.MessageType;
 import com.epam.hospital.service.PatientService;
 import com.epam.hospital.to.UserTo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,8 +40,15 @@ public class AssignPatientToStaffCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing assign staff to patient command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
+
+            return new CommandResult(getPageToRedirect(STAFF_DETAILS,
+                    getParameter(STAFF_ID, String.valueOf(staffId)),
+                    getParameter(ACTIVE_TAB, PATIENTS_TAB)), true);
         }
+
+        request.getSession().setAttribute(MESSAGE, MessageType.SUCCESS_ASSIGNED_PATIENT_TO_STAFF.getMessageCode());
         return new CommandResult(getPageToRedirect(STAFF_DETAILS,
                 getParameter(STAFF_ID, String.valueOf(staffId)),
                 getParameter(ACTIVE_TAB, PATIENTS_TAB)), true);

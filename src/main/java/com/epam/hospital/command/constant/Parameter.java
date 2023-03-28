@@ -48,6 +48,7 @@ public class Parameter {
     public static final String CURRENT_STAFF = "currentStaff";
     public static final String CURRENT_PATIENT = "currentPatient";
     public static final String HOSPITALISATION = "hospitalisation";
+    public static final String IS_ERROR = "isError";
 
     public static final String CURRENT_STAFF_PAGE = "staffPage";
     public static final String STAFF_LIMIT = "staffLimit";

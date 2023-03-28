@@ -54,7 +54,8 @@ public class PatientsListCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing patients list command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
         }
         setRequestAttributes(request, patients, genders, totalCount, paginationAttributes);
         return new CommandResult(Page.PATIENTS);

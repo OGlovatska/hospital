@@ -5,6 +5,7 @@ import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.model.Hospitalisation;
+import com.epam.hospital.model.enums.MessageType;
 import com.epam.hospital.service.HospitalisationService;
 import com.epam.hospital.to.UserTo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,9 +44,15 @@ public class SaveHospitalisationCommand implements Command {
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing save hospitalisation command, message = {}",
                     e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
+
+            return new CommandResult(getPageToRedirect(PATIENT_DETAILS,
+                    getParameter(PATIENT_ID, String.valueOf(patientId)),
+                    getParameter(ACTIVE_TAB, HOSPITALISATIONS_TAB)), true);
         }
 
+        request.getSession().setAttribute(MESSAGE, MessageType.SUCCESS_SAVE_HOSPITALISATION.getMessageCode());
         return new CommandResult(getPageToRedirect(PATIENT_DETAILS,
                 getParameter(PATIENT_ID, String.valueOf(patientId)),
                 getParameter(ACTIVE_TAB, HOSPITALISATIONS_TAB)), true);

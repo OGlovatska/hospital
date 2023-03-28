@@ -36,10 +36,12 @@ public class LoginCommand implements Command {
             UserTo user = userService.getAuthorizedUser(request.getParameter(EMAIL), request.getParameter(PASSWORD));
             HttpSession session = request.getSession();
             session.setAttribute(USER, user);
+
             return new CommandResult(getPageToRedirect(MAIN), true);
         } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing login command, message = {}", e.getMessage());
-            request.setAttribute(MESSAGE, e.getType().getErrorMessage());
+            request.getSession().setAttribute(MESSAGE, e.getType().getErrorCode());
+            request.getSession().setAttribute(IS_ERROR, true);
             return new CommandResult(Page.LOGIN);
         }
     }
