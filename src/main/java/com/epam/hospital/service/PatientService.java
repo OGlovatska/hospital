@@ -158,7 +158,7 @@ public class PatientService {
         }
     }
 
-    public PatientTo getPatient(UserTo user) {
+    public PatientTo getPatient(UserTo user) throws ApplicationException{
         try {
             return createPatientTo(patientDao.getByUserId(user.getId()).orElseThrow());
         } catch (DBException e) {

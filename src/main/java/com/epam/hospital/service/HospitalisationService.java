@@ -72,7 +72,7 @@ public class HospitalisationService {
         }
     }
 
-    public List<HospitalisationTo> getAllHospitalisationsWithAppointments(int patientId) {
+    public List<HospitalisationTo> getAllHospitalisationsWithAppointments(int patientId) throws ApplicationException{
         List<HospitalisationTo> hospitalisations = getAllHospitalisationsOfPatient(patientId, 0, 0,
                 "id", Sort.Direction.ASC.name());
         if (hospitalisations != null && !hospitalisations.isEmpty()){

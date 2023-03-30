@@ -4,11 +4,13 @@ import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
+import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.service.HospitalisationService;
 import com.epam.hospital.service.PatientService;
 import com.epam.hospital.to.HospitalisationTo;
 import com.epam.hospital.to.PatientTo;
 import com.epam.hospital.to.UserTo;
+import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -20,22 +22,20 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static com.epam.hospital.command.constant.Command.HOSPITALISATIONS;
 import static com.epam.hospital.command.constant.Parameter.*;
-import static com.epam.hospital.util.CommandUtil.getPageToRedirect;
 import static com.epam.hospital.util.PdfUtil.getHospitalCardPdf;
 
-public class ExportHospitalCard implements Command {
-    private static final Logger LOG = LoggerFactory.getLogger(ExportHospitalCard.class);
+public class ExportHospitalCardCommand implements Command {
+    private static final Logger LOG = LoggerFactory.getLogger(ExportHospitalCardCommand.class);
     private final PatientService patientService;
     private final HospitalisationService hospitalisationService;
 
-    public ExportHospitalCard() {
+    public ExportHospitalCardCommand() {
         this.patientService = ApplicationContext.getInstance().getPatientService();
         this.hospitalisationService = ApplicationContext.getInstance().getHospitalisationService();
     }
 
-    public ExportHospitalCard(PatientService patientService, HospitalisationService hospitalisationService) {
+    public ExportHospitalCardCommand(PatientService patientService, HospitalisationService hospitalisationService) {
         this.patientService = patientService;
         this.hospitalisationService = hospitalisationService;
     }
@@ -47,16 +47,22 @@ public class ExportHospitalCard implements Command {
         String locale = (String) request.getSession().getAttribute(LANGUAGE);
 
         setResponseParameters(response);
-        PatientTo patient = patientService.getPatient(user);
-        List<HospitalisationTo> hospitalisations = hospitalisationService.getAllHospitalisationsWithAppointments(patient.getId());
-        try(OutputStream out = response.getOutputStream()) {
-            byte[] pdfDocument = getHospitalCardPdf(patient, hospitalisations, locale);
-            out.write(pdfDocument != null ? pdfDocument : new byte[0]);
-        } catch (IOException | URISyntaxException e) {
+        try {
+            PatientTo patient = patientService.getPatient(user);
+            List<HospitalisationTo> hospitalisations = hospitalisationService.getAllHospitalisationsWithAppointments(patient.getId());
+
+            try (OutputStream out = response.getOutputStream()) {
+                byte[] pdfDocument = getHospitalCardPdf(patient, hospitalisations, locale);
+                out.write(pdfDocument);
+            } catch (IOException | URISyntaxException | DocumentException e) {
+                LOG.error("Exception has occurred during executing export hospital card command, message = {}",
+                        e.getMessage());
+            }
+        } catch (ApplicationException e) {
             LOG.error("Exception has occurred during executing export hospital card command, message = {}",
                     e.getMessage());
         }
-        //return new CommandResult(getPageToRedirect(HOSPITALISATIONS), true);
+
         return new CommandResult(Page.HOSPITALISATIONS);
     }
 

@@ -17,8 +17,7 @@ import static com.epam.hospital.listener.DBContextListener.getServletContext;
 public class PdfUtil {
 
     public static byte[] getHospitalCardPdf(PatientTo patientTo, List<HospitalisationTo> hospitalisationTos,
-                                            String locale) throws IOException, URISyntaxException {
-        try {
+                                            String locale) throws IOException, URISyntaxException, DocumentException {
             Document document = new Document();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = PdfWriter.getInstance(document, baos);
@@ -31,10 +30,6 @@ public class PdfUtil {
             document.close();
 
             return baos.toByteArray();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     private static void writeHead(Document document, PdfWriter writer, ResourceBundle bundle) throws IOException, DocumentException {
