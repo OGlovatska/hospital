@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 
 import java.time.LocalDate;
 
-import static com.epam.hospital.command.constant.Command.PATIENT_DETAILS;
+import static com.epam.hospital.command.constant.Command.PATIENTS_LIST;
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.command.constant.Parameter.HOSPITALISATION_ID;
 import static com.epam.hospital.command.constant.Parameter.PATIENT_ID;
@@ -39,8 +39,7 @@ public class DischargePatientCommandTest {
         when(request.getParameter(HOSPITALISATION_END_DATE)).thenReturn(String.valueOf(DISCHARGING_DATE));
 
         CommandResult result = command.execute(request, response);
-        assertEquals(getPageToRedirect(PATIENT_DETAILS,
-                getParameter(PATIENT_ID, String.valueOf(TestData.PATIENT_ID))), result.getPage());
+        assertEquals(new CommandResult(getPageToRedirect(PATIENTS_LIST), true).getPage(), result.getPage());
         Mockito.verify(service, Mockito.times(1))
                 .dischargePatient(any(UserTo.class), any(int.class), any(LocalDate.class));
     }

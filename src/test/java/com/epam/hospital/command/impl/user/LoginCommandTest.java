@@ -1,6 +1,5 @@
 package com.epam.hospital.command.impl.user;
 
-import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
 import com.epam.hospital.exception.ErrorType;
@@ -12,8 +11,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
 
+import static com.epam.hospital.command.constant.Command.MAIN;
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.TestData.getAdminUserTo;
+import static com.epam.hospital.util.CommandUtil.getPageToRedirect;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -32,7 +33,7 @@ public class LoginCommandTest {
         when(service.getAuthorizedUser(TestData.EMAIL, TestData.PASSWORD)).thenReturn(getAdminUserTo());
         CommandResult result = command.execute(request, response);
 
-        assertEquals(new CommandResult(Page.MAIN).getPage(), result.getPage());
+        assertEquals(new CommandResult(getPageToRedirect(MAIN), true).getPage(), result.getPage());
     }
 
     @Test

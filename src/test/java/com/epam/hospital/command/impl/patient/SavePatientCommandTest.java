@@ -1,6 +1,5 @@
 package com.epam.hospital.command.impl.patient;
 
-import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.service.PatientService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,55 +37,4 @@ public class SavePatientCommandTest {
         CommandResult result = command.execute(request, response);
         assertEquals(getPageToRedirect(PATIENTS_LIST), result.getPage());
     }
-
-    //@Test
-    void savePatient(){
-        /*Mockito.when(request.getParameter(FIRST_NAME)).thenReturn(PatientTestData.FIRST_NAME);
-        Mockito.when(request.getParameter(LAST_NAME)).thenReturn(PatientTestData.LAST_NAME);
-        Mockito.when(request.getParameter(EMAIL)).thenReturn(PatientTestData.EMAIL);
-        Mockito.when(request.getParameter(ROLE)).thenReturn(PatientTestData.ROLE.name());
-        Mockito.when(request.getParameter(DATE_OF_BIRTH)).thenReturn(String.valueOf(PatientTestData.DATE_OF_BIRTH));
-        Mockito.when(request.getParameter(GENDER)).thenReturn(Gender.MALE.getName());*/
-
-        /*try (MockedStatic<PatientUtil> utilities = Mockito.mockStatic(PatientUtil.class)) {
-            utilities.when(() -> PatientUtil.createPatient(request))
-                    .thenReturn(PatientTestData.getNew());
-
-            System.out.println(PatientUtil.createPatient(request));
-            System.out.println("################");
-            System.out.println(PatientTestData.getNew());
-            //PATIENT_MATCHER.assertMatch(PatientUtil.createPatient(request), PatientTestData.getNew());
-
-            assertEquals(PatientUtil.createPatient(request), PatientTestData.getNew());
-        }*/
-
-    }
 }
-/*
-
-  @Test
-  public void testExecute() {
-    Mockito.when(req.getParameter("name")).thenReturn("tarifName");
-    Mockito.when(req.getParameter("price")).thenReturn("10");
-    Mockito.when(req.getParameter("description")).thenReturn("tariffDescr");
-    Mockito.when(req.getParameter("serviceId")).thenReturn("1");
-    String result = cut.execute(req,resp);
-    assertEquals(Path.COMMAND_REDIRECT, result);
-    Mockito.verify(service, Mockito.times(1)).save(any(Tariff.class));
-
-  }
-
-@Test
-void givenStaticMethodWithArgs_whenMocked_thenReturnsMockSuccessfully() {
-    assertThat(StaticUtils.range(2, 6)).containsExactly(2, 3, 4, 5);
-
-    try (MockedStatic<StaticUtils> utilities = Mockito.mockStatic(StaticUtils.class)) {
-        utilities.when(() -> StaticUtils.range(2, 6))
-          .thenReturn(Arrays.asList(10, 11, 12));
-
-        assertThat(StaticUtils.range(2, 6)).containsExactly(10, 11, 12);
-    }
-
-    assertThat(StaticUtils.range(2, 6)).containsExactly(2, 3, 4, 5);
-}
- */

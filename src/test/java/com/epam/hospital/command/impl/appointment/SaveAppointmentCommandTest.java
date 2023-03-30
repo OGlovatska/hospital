@@ -34,7 +34,7 @@ public class SaveAppointmentCommandTest {
         when(request.getParameter(STAFF_ID)).thenReturn(String.valueOf(NURSE_STAFF_ID));
         when(request.getParameter(PATIENT_ID)).thenReturn(String.valueOf(TestData.PATIENT_ID));
         when(request.getParameter(DATE_TIME)).thenReturn(DateTimeUtil.toString(APPOINTMENT_DATE_TIME));
-        when(request.getParameter(TYPE)).thenReturn(APPOINTMENT_TYPE);
+        when(request.getParameter(TYPE)).thenReturn(APPOINTMENT_TYPE.name());
         when(request.getParameter(DESCRIPTION)).thenReturn(APPOINTMENT_DESCRIPTION);
         when(request.getParameter(STATUS)).thenReturn(APPOINTMENT_STATUS);
 

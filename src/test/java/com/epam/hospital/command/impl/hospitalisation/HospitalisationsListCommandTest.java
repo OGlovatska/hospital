@@ -1,6 +1,5 @@
 package com.epam.hospital.command.impl.hospitalisation;
 
-import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
 import com.epam.hospital.service.HospitalisationService;

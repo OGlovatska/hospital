@@ -1,6 +1,5 @@
 package com.epam.hospital.command.impl.staff;
 
-import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
 import com.epam.hospital.service.StaffService;
