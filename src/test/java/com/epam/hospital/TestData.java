@@ -1,15 +1,14 @@
 package com.epam.hospital;
 
-import com.epam.hospital.model.enums.AppointmentType;
-import com.epam.hospital.model.enums.Gender;
-import com.epam.hospital.model.enums.Role;
-import com.epam.hospital.model.enums.Specialisation;
-import com.epam.hospital.to.PatientTo;
-import com.epam.hospital.to.StaffTo;
-import com.epam.hospital.to.UserTo;
+import com.epam.hospital.model.enums.*;
+import com.epam.hospital.to.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TestData {
     public static final String EMAIL = "admin@gmail.com";
@@ -45,6 +44,7 @@ public class TestData {
     public static final String NURSE_LAST_NAME = "Stone";
     public static final Role NURSE_ROLE = Role.NURSE;
 
+    public static final int APPOINTMENT_ID = 1;
     public static final LocalDateTime APPOINTMENT_DATE_TIME = LocalDateTime.of(2023, 1, 24, 8, 0);
     public static final AppointmentType APPOINTMENT_TYPE = AppointmentType.ANALYSIS;
     public static final String APPOINTMENT_DESCRIPTION = "General blood analysis";
@@ -54,6 +54,10 @@ public class TestData {
     public static final String DIAGNOSIS = "Severe allergic reaction";
     public static final LocalDate HOSPITALISATION_DATE = LocalDate.of(2023, 1, 23);
     public static final LocalDate DISCHARGING_DATE = LocalDate.of(2023, 1, 31);
+    public static final HospitalisationStatus HOSPITALISATION_STATUS = HospitalisationStatus.DISCHARGED;
+
+    public static final byte[] BYTES = new byte[]{1,2,3};
+    public static final String LOCALE = "en";
 
     public static UserTo getAdminUserTo() {
         return new UserTo.Builder<>().id(ADMIN_USER_ID).firstName(ADMIN_FIRST_NAME)
@@ -83,6 +87,21 @@ public class TestData {
     public static PatientTo getPatientTo() {
         return new PatientTo.Builder().id(PATIENT_ID).userId(PATIENT_USER_ID).firstName(PATIENT_FIRST_NAME)
                 .lastName(PATIENT_LAST_NAME).dateOfBirth(PATIENT_DATE_OF_BIRTH).gender(PATIENT_GENDER).build();
+    }
+
+    public static Map<PatientTo, List<HospitalisationTo>> getHospitalisationsWithAppointments(){
+        Map<PatientTo, List<HospitalisationTo>> map = new HashMap<>();
+        List<HospitalisationTo> hospitalisations = new ArrayList<>();
+        hospitalisations.add(new HospitalisationTo.Builder().id(HOSPITALISATION_ID).patientId(PATIENT_ID)
+                .patientFirstName(PATIENT_FIRST_NAME).patientLastName(PATIENT_LAST_NAME).startDate(HOSPITALISATION_DATE)
+                .endDate(DISCHARGING_DATE).status(HOSPITALISATION_STATUS).diagnosis(DIAGNOSIS)
+                .appointments(List.of(new AppointmentTo.Builder().id(APPOINTMENT_ID)
+                        .hospitalisationId(HOSPITALISATION_ID).patientId(PATIENT_ID).patientLastName(PATIENT_FIRST_NAME)
+                        .patientLastName(PATIENT_LAST_NAME).staffId(NURSE_STAFF_ID).dateTime(APPOINTMENT_DATE_TIME)
+                        .type(APPOINTMENT_TYPE).description(APPOINTMENT_DESCRIPTION).status(APPOINTMENT_STATUS).build()))
+                .build());
+        map.put(getPatientTo(), hospitalisations);
+        return map;
     }
 
     private TestData() {

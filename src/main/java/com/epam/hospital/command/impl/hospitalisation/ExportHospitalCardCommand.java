@@ -6,7 +6,6 @@ import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.service.HospitalisationService;
-import com.epam.hospital.service.PatientService;
 import com.epam.hospital.to.HospitalisationTo;
 import com.epam.hospital.to.PatientTo;
 import com.epam.hospital.to.UserTo;
@@ -19,24 +18,25 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.util.PdfUtil.getHospitalCardPdf;
 
 public class ExportHospitalCardCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(ExportHospitalCardCommand.class);
-    private final PatientService patientService;
     private final HospitalisationService hospitalisationService;
 
     public ExportHospitalCardCommand() {
-        this.patientService = ApplicationContext.getInstance().getPatientService();
         this.hospitalisationService = ApplicationContext.getInstance().getHospitalisationService();
     }
 
-    public ExportHospitalCardCommand(PatientService patientService, HospitalisationService hospitalisationService) {
-        this.patientService = patientService;
+    public ExportHospitalCardCommand(HospitalisationService hospitalisationService) {
         this.hospitalisationService = hospitalisationService;
     }
 
@@ -46,28 +46,33 @@ public class ExportHospitalCardCommand implements Command {
         UserTo user = (UserTo) session.getAttribute(USER);
         String locale = (String) request.getSession().getAttribute(LANGUAGE);
 
-        setResponseParameters(response);
         try {
-            PatientTo patient = patientService.getPatient(user);
-            List<HospitalisationTo> hospitalisations = hospitalisationService.getAllHospitalisationsWithAppointments(patient.getId());
+            setResponseParameters(response, locale);
+            Map<PatientTo, List<HospitalisationTo>> hospitalisations = hospitalisationService.getAllHospitalisationsWithAppointments(user);
 
             try (OutputStream out = response.getOutputStream()) {
-                byte[] pdfDocument = getHospitalCardPdf(patient, hospitalisations, locale);
+                List<HospitalisationTo> hospitalisationsList = hospitalisations.values().stream().findFirst().orElse(null);
+                PatientTo patient = hospitalisations.keySet().stream().findFirst().orElse(null);
+                byte[] pdfDocument = getHospitalCardPdf(patient, hospitalisationsList, locale);
                 out.write(pdfDocument);
             } catch (IOException | URISyntaxException | DocumentException e) {
                 LOG.error("Exception has occurred during executing export hospital card command, message = {}",
                         e.getMessage());
             }
-        } catch (ApplicationException e) {
+        } catch (ApplicationException | UnsupportedEncodingException e) {
             LOG.error("Exception has occurred during executing export hospital card command, message = {}",
                     e.getMessage());
         }
-
         return new CommandResult(Page.HOSPITALISATIONS);
     }
 
-    private void setResponseParameters(HttpServletResponse response) {
+    private void setResponseParameters(HttpServletResponse response, String locale) throws UnsupportedEncodingException {
+        String fileName = "Hospital_card";
+        if (locale.equals("uk-UA")){
+            fileName = "Лікарняна_карта";
+        }
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=example.pdf");
+        fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.displayName());
+        response.setHeader("Content-Disposition", String.format("attachment; filename=%s.pdf", fileName));
     }
 }

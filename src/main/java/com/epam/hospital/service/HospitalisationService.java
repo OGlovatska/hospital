@@ -7,13 +7,12 @@ import com.epam.hospital.exception.IllegalRequestDataException;
 import com.epam.hospital.model.Appointment;
 import com.epam.hospital.model.Hospitalisation;
 import com.epam.hospital.model.Patient;
-import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.enums.HospitalisationStatus;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.to.AppointmentTo;
 import com.epam.hospital.to.HospitalisationTo;
+import com.epam.hospital.to.PatientTo;
 import com.epam.hospital.to.UserTo;
-import com.epam.hospital.util.AppointmentUtil;
 import com.epam.hospital.util.pagination.Pageable;
 import com.epam.hospital.util.pagination.Sort;
 
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 import static com.epam.hospital.exception.ErrorType.*;
 import static com.epam.hospital.util.AppointmentUtil.createAppointmentTo;
 import static com.epam.hospital.util.HospitalisationUtil.createHospitalisationTo;
+import static com.epam.hospital.util.PatientUtil.createPatientTo;
 import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
 
 public class HospitalisationService {
@@ -72,28 +72,45 @@ public class HospitalisationService {
         }
     }
 
-    public List<HospitalisationTo> getAllHospitalisationsWithAppointments(int patientId) throws ApplicationException{
-        List<HospitalisationTo> hospitalisations = getAllHospitalisationsOfPatient(patientId, 0, 0,
-                "id", Sort.Direction.ASC.name());
-        if (hospitalisations != null && !hospitalisations.isEmpty()){
-            for (HospitalisationTo hospitalisation : hospitalisations){
-                try {
-                    List<Appointment> appointments = appointmentDao.getAllAppointmentsByHospitalisation(hospitalisation.getId(),
-                            new Pageable());
-                    List<AppointmentTo> appointmentTos = new ArrayList<>();
-                    if (appointments != null && !appointments.isEmpty()){
-                        for (Appointment appointment : appointments){
-                            staffDao.get(appointment.getStaffId())
-                                    .ifPresent(staff -> appointmentTos.add(createAppointmentTo(appointment, staff)));
+    public Map<PatientTo, List<HospitalisationTo>> getAllHospitalisationsWithAppointments(UserTo user) throws ApplicationException{
+        checkUserNotNull(user);
+        if (user.getRole().equals(Role.PATIENT)){
+            Map<PatientTo, List<HospitalisationTo>> map = new HashMap<>();
+            Patient patient = getPatient(user);
+            List<HospitalisationTo> hospitalisations = getAllHospitalisationsOfPatient(patient.getId(), 0, 0,
+                    "id", Sort.Direction.ASC.name());
+            if (hospitalisations != null && !hospitalisations.isEmpty()){
+                for (HospitalisationTo hospitalisation : hospitalisations){
+                    try {
+                        List<Appointment> appointments = appointmentDao.getAllAppointmentsByHospitalisation(hospitalisation.getId(),
+                                new Pageable());
+                        List<AppointmentTo> appointmentTos = new ArrayList<>();
+                        if (appointments != null && !appointments.isEmpty()){
+                            for (Appointment appointment : appointments){
+                                staffDao.get(appointment.getStaffId())
+                                        .ifPresent(staff -> appointmentTos.add(createAppointmentTo(appointment, patient, staff)));
+                            }
                         }
+                        hospitalisation.setAppointments(appointmentTos);
+                    } catch (DBException e) {
+                        throw new ApplicationException(e.getMessage(), APP_ERROR);
                     }
-                    hospitalisation.setAppointments(appointmentTos);
-                } catch (DBException e) {
-                    throw new ApplicationException(e.getMessage(), APP_ERROR);
                 }
             }
+            map.put(createPatientTo(patient), hospitalisations);
+            return map;
+        } else {
+            throw new IllegalRequestDataException(NOT_PATIENT);
         }
-        return hospitalisations;
+    }
+
+    private Patient getPatient(UserTo user) {
+        try {
+            return patientDao.getByUserId(user.getId())
+                    .orElseThrow(() -> new ApplicationException(PATIENT_NOT_FOUND));
+        } catch (DBException e) {
+            throw new ApplicationException(e.getMessage(), APP_ERROR);
+        }
     }
 
     public List<String> getHospitalisationStatuses() {

@@ -26,7 +26,7 @@ public class PdfUtil {
             document.open();
             writeHead(document, writer, bundle);
             writePatientInformation(document, patientTo, bundle);
-            writeHospitalisationsTable(document, patientTo, hospitalisationTos, bundle);
+            writeHospitalisationsTable(document, hospitalisationTos, bundle);
             document.close();
 
             return baos.toByteArray();
@@ -76,7 +76,7 @@ public class PdfUtil {
         addToDocument(document, element);
     }
 
-    private static void writeHospitalisationsTable(Document document, PatientTo patientTo, List<HospitalisationTo> hospitalisationTos, ResourceBundle bundle) {
+    private static void writeHospitalisationsTable(Document document, List<HospitalisationTo> hospitalisationTos, ResourceBundle bundle) {
         Paragraph title = new Paragraph(bundle.getString("hospitalisation.hospitalisations"), getFont(14));
         title.setAlignment(Element.ALIGN_CENTER);
         addToDocument(document, title);
