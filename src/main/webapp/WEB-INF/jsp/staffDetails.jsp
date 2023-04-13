@@ -12,11 +12,12 @@
 <head>
     <jsp:include page="fragments/head.jsp"/>
     <jsp:include page="fragments/header.jsp"/>
+    <script type="text/javascript" src="resources/js/common.js" defer></script>
+
     <script>
         $(document).ready(function() {
-            $('#patientModal').on('hidden.bs.modal', function () {
-                $('#patientModal form')[0].reset();
-            });
+            validateForm();
+            clearModal();
         });
     </script>
 </head>
@@ -149,14 +150,14 @@
                 <h1 class="modal-title fs-5"><fmt:message key="staff.assign.patient.title"/></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="api" method="post" name="save-form">
+            <form action="api" method="post" name="save-form" class="needs-validation" novalidate>
                 <input type="hidden" name="command" value="assign-patient-to-staff">
                 <input type="hidden" name="staffId" value="${requestScope.staffId}">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label"><fmt:message key="patient.patient"/></label>
                         <select name="patientId" class="form-select form-select-md mb-3"
-                                aria-label=".form-select-md example">
+                                aria-label=".form-select-md example" required>
                             <option value="" disabled selected><fmt:message key="common.choose"/></option>
                             <c:forEach items="${requestScope.notAssignedPatients}" var="patient">
                                 <option name="patientId" value="${patient.id}">

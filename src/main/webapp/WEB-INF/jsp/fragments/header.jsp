@@ -6,6 +6,14 @@
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 
 <html lang="${sessionScope.lang}">
+<head>
+    <script type="text/javascript" src="resources/js/common.js" defer></script>
+    <script>
+        $(document).ready(function() {
+            validateForm();
+        });
+    </script>
+</head>
 <body>
 <div class="container">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-end py-3 mb-4 border-bottom">
@@ -69,22 +77,6 @@
     </header>
 </div>
 </body>
-<script>
-    (function () {
-        'use strict'
-        var forms = document.querySelectorAll('.needs-validation')
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
-</script>
 </html>
 
 

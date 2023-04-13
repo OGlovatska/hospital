@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="pgn" uri="/WEB-INF/tld/pagination.tld" %>
 <%@ taglib prefix="filter" uri="/WEB-INF/tld/filter.tld" %>
-<%@ taglib prefix="alert" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="alert" tagdir="/WEB-INF/tags" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -12,12 +12,12 @@
 <head>
     <jsp:include page="fragments/head.jsp"/>
     <jsp:include page="fragments/header.jsp"/>
+    <script type="text/javascript" src="resources/js/common.js" defer></script>
 
     <script>
         $(document).ready(function () {
-            $('#exampleModal').on('hidden.bs.modal', function () {
-                $('#exampleModal form')[0].reset();
-            });
+            validateForm();
+            clearModal();
         });
     </script>
 </head>
@@ -58,34 +58,35 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
-                            <form action="api" method="post" name="save-form">
+                            <form action="api" method="post" name="save-form" class="needs-validation" novalidate>
                                 <input type="hidden" name="command" value="save-staff"/>
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="email" class="form-label">
                                             <fmt:message key="common.email"/>
                                         </label>
-                                        <input type="email" class="form-control" name="email" id="email" required
-                                               placeholder="<fmt:message key="common.email"/>">
+                                        <input type="email" class="form-control" name="email" id="email"
+                                               pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+                                               placeholder="<fmt:message key="common.email"/>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="first_name" class="form-label">
                                             <fmt:message key="common.first.name"/>
                                         </label>
                                         <input type="text" class="form-control" name="first_name" id="first_name"
-                                               placeholder="<fmt:message key="common.first.name"/>">
+                                               placeholder="<fmt:message key="common.first.name"/>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="last_name" class="form-label">
                                             <fmt:message key="common.last.name"/>
                                         </label>
                                         <input type="text" class="form-control" name="last_name" id="last_name"
-                                               placeholder="<fmt:message key="common.last.name"/>">
+                                               placeholder="<fmt:message key="common.last.name"/>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label"><fmt:message key="common.role"/></label>
                                         <select name="role" class="form-select form-select-md mb-3"
-                                                aria-label=".form-select-md example">
+                                                aria-label=".form-select-md example" required>
                                             <option value="" disabled selected><fmt:message
                                                     key="common.choose"/></option>
                                             <option value="DOCTOR"><fmt:message key="role.doctor"/></option>
@@ -95,7 +96,7 @@
                                     <div class="mb-3">
                                         <label class="form-label"><fmt:message key="staff.specialisation"/></label>
                                         <select name="specialisation" class="form-select form-select-md mb-3"
-                                                aria-label=".form-select-md example">
+                                                aria-label=".form-select-md example" required>
                                             <option value="" disabled selected><fmt:message
                                                     key="common.choose"/></option>
                                             <c:forEach items="${requestScope.specialisations}" var="specialisation">

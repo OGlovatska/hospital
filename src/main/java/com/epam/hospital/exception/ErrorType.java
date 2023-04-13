@@ -15,6 +15,7 @@ public enum ErrorType {
     NO_DIAGNOSIS("error.noDiagnosis", "Only patients with determined diagnosis can be discharged"),
     NOT_DISCHARGED("error.notDischarged", "Can't add new hospitalisation for undischarged patient"),
     DUPLICATE_EMAIL("error.duplicateEmail", "User with this email already exists"),
+    INVALID_EMAIL("error.invalidEmail", "Email in invalid format or null"),
     WRONG_REQUEST("error.wrongRequest", "Bad request"),
     APP_ERROR("error.appError", "Internal server error");
 

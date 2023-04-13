@@ -17,33 +17,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
           rel="stylesheet">
+    <script type="text/javascript" src="resources/js/common.js" defer></script>
 
     <script>
         $(document).ready(function () {
-            moment.locale("${sessionScope.lang}");
-            $('.date').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                language: "${sessionScope.lang}",
-            });
-
-            $('.close-button').unbind();
-
-            $('.close-button').click(function () {
-                if ($('.datepicker').is(":visible")) {
-                    $('.date').datepicker('hide');
-                } else {
-                    $('.date').datepicker('show');
-                }
-            });
-
-            $('#staffModal').on('hidden.bs.modal', function () {
-                $('#staffModal form')[0].reset();
-            });
-
-            $('#hospitalisationModal').on('hidden.bs.modal', function () {
-                $('#hospitalisationModal form')[0].reset();
-            });
+            customizeDatePicker();
+            validateForm();
+            clearModal();
         });
     </script>
 </head>
@@ -147,7 +127,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>
-                                    <form action="api" method="post">
+                                    <form action="api" method="post" class="needs-validation" novalidate>
                                         <input type="hidden" name="command" value="discharge-patient">
                                         <input type="hidden" name="patientId" value="${requestScope.patientId}">
                                         <input type="hidden" name="hospitalisationId"
@@ -160,7 +140,7 @@
                                                     </label>
                                                     <div class="input-group date insertInfo" data-provide="datepicker">
                                                         <input type="text" class="form-control" name="endDate"
-                                                               id="endDate">
+                                                               id="endDate" required>
                                                         <div class="input-group-addon close-button">
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
@@ -173,7 +153,8 @@
                                                     <input type="text" name="status" id="discharged"
                                                            value="<fmt:message key="hospitalisation.discharged"/>"
                                                            class="form-control" readonly="readonly"
-                                                           placeholder="<fmt:message key="hospitalisation.discharged"/>">
+                                                           placeholder="<fmt:message key="hospitalisation.discharged"/>"
+                                                     required>
                                                 </div>
                                             </div>
                                         </div>
@@ -202,7 +183,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>
-                                    <form action="api" method="post">
+                                    <form action="api" method="post" class="needs-validation" novalidate>
                                         <input type="hidden" name="command" value="determine-diagnosis">
                                         <input type="hidden" name="patientId" value="${requestScope.patientId}">
                                         <input type="hidden" name="hospitalisationId"
@@ -213,7 +194,7 @@
                                                     <label class="form-label">
                                                         <fmt:message key="hospitalisation.diagnosis"/>
                                                     </label>
-                                                    <textarea class="form-control" rows="3" name="diagnosis"></textarea>
+                                                    <textarea class="form-control" rows="3" name="diagnosis" required></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -397,14 +378,14 @@
                     <h1 class="modal-title fs-5" id="staffModalLabel"><fmt:message key="patient.assign.staff.title"/></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="api" method="post" name="save-form">
+                <form action="api" method="post" name="save-form" class="needs-validation" novalidate>
                     <input type="hidden" name="command" value="assign-staff-to-patient">
                     <input type="hidden" name="patientId" value="${requestScope.patientId}">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label"><fmt:message key="common.staff"/></label>
                             <select name="staffId" class="form-select form-select-md mb-3"
-                                    aria-label=".form-select-md example">
+                                    aria-label=".form-select-md example" required>
                                 <option value="" disabled selected><fmt:message key="common.choose"/></option>
                                 <c:forEach items="${requestScope.notAssignedStaff}" var="staff">
                                     <option name="staffId" value="${staff.id}">
@@ -437,7 +418,7 @@
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="api" method="post" name="save-form">
+                <form action="api" method="post" name="save-form" class="needs-validation" novalidate>
                     <input type="hidden" name="command" value="save-hospitalisation">
                     <input type="hidden" name="patientId" value="${requestScope.patientId}">
                     <div class="modal-body">
@@ -446,7 +427,7 @@
                                 <fmt:message key="hospitalisation.date"/>
                             </label>
                             <div class="input-group date insertInfo" data-provide="datepicker">
-                                <input type="text" class="form-control" name="startDate" id="startDate">
+                                <input type="text" class="form-control" name="startDate" id="startDate" required>
                                 <div class="input-group-addon close-button">
                                     <span class="glyphicon glyphicon-th"></span>
                                 </div>
@@ -457,7 +438,7 @@
                             <input type="text" name="status" id="status"
                                    value="<fmt:message key="hospitalisation.hospitalised"/>"
                                    class="form-control" readonly="readonly"
-                                   placeholder="<fmt:message key="hospitalisation.hospitalised"/>">
+                                   placeholder="<fmt:message key="hospitalisation.hospitalised"/>" required>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -11,10 +11,11 @@ import com.epam.hospital.util.encoding.PasswordEncoderFactories;
 
 import java.util.Arrays;
 
-import static com.epam.hospital.exception.ErrorType.APP_ERROR;
-import static com.epam.hospital.exception.ErrorType.DUPLICATE_EMAIL;
+import static com.epam.hospital.exception.ErrorType.*;
 
 public class ValidationUtil {
+    private final static String EMAIL_REGEX = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
+
     public static void checkUserNotNull(UserTo user) {
         if (user == null) {
             throw new NotFoundException(ErrorType.USER_NOT_FOUND);
@@ -75,14 +76,18 @@ public class ValidationUtil {
     }
 
     public static void validateUniqueEmail(String email) {
-        UserDaoImpl userDao = ApplicationContext.getInstance().getUserDao();
-        try {
-            User user = userDao.getByEmail(email).orElse(null);
-            if (user != null) {
-                throw new IllegalRequestDataException(DUPLICATE_EMAIL);
+        if (email != null && email.matches(EMAIL_REGEX)) {
+            UserDaoImpl userDao = ApplicationContext.getInstance().getUserDao();
+            try {
+                User user = userDao.getByEmail(email).orElse(null);
+                if (user != null) {
+                    throw new IllegalRequestDataException(DUPLICATE_EMAIL);
+                }
+            } catch (DBException e) {
+                throw new ApplicationException(e.getMessage(), APP_ERROR);
             }
-        } catch (DBException e) {
-            throw new ApplicationException(e.getMessage(), APP_ERROR);
+        } else {
+            throw new IllegalRequestDataException(INVALID_EMAIL);
         }
     }
 }

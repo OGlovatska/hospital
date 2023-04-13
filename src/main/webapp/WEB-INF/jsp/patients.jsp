@@ -15,27 +15,13 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <script type="text/javascript" src="resources/js/common.js" defer></script>
 
     <script>
         $(document).ready(function() {
-            $('.date').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true
-            });
-
-            $('.close-button').unbind();
-
-            $('.close-button').click(function() {
-                if ($('.datepicker').is(":visible")) {
-                    $('.date').datepicker('hide');
-                } else {
-                    $('.date').datepicker('show');
-                }
-            });
-
-            $('#exampleModal').on('hidden.bs.modal', function () {
-                $('#exampleModal form')[0].reset();
-            });
+            customizeDatePicker();
+            validateForm();
+            clearModal();
         });
     </script>
 </head>
@@ -74,7 +60,7 @@
                                 </h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form action="api" method="post" name="save-form">
+                            <form action="api" method="post" name="save-form" class="needs-validation" novalidate>
                                 <input type="hidden" name="command" value="save-patient"/>
                                 <div class="modal-body">
                                     <div class="mb-3">
@@ -82,6 +68,7 @@
                                             <fmt:message key="common.email"/>
                                         </label>
                                         <input type="email" class="form-control" placeholder="<fmt:message key="common.email"/>"
+                                               pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
                                                name="email" id="email" required>
                                     </div>
                                     <div class="mb-3">
@@ -89,26 +76,26 @@
                                             <fmt:message key="common.first.name"/>
                                         </label>
                                         <input type="text" class="form-control" name="first_name" id="first_name"
-                                               placeholder="<fmt:message key="common.first.name"/>">
+                                               placeholder="<fmt:message key="common.first.name"/>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="last_name" class="form-label">
                                             <fmt:message key="common.last.name"/>
                                         </label>
                                         <input type="text" class="form-control" name="last_name" id="last_name"
-                                               placeholder="<fmt:message key="common.last.name"/>">
+                                               placeholder="<fmt:message key="common.last.name"/>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label"><fmt:message key="common.role"/></label>
                                         <select name="role" class="form-select form-select-md mb-3"
-                                                aria-label=".form-select-md example">
+                                                aria-label=".form-select-md example" required>
                                             <option value="PATIENT" selected><fmt:message key="role.patient"/></option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label"><fmt:message key="common.gender"/></label>
                                         <select name="gender" class="form-select form-select-md mb-3"
-                                                aria-label=".form-select-md example">
+                                                aria-label=".form-select-md example" required>
                                             <option value="" disabled selected><fmt:message key="common.choose"/></option>
                                             <option value="MALE"><fmt:message key="common.gender.male"/></option>
                                             <option value="FEMALE"><fmt:message key="common.gender.female"/></option>
@@ -117,7 +104,7 @@
                                     <div class="mb-3">
                                         <label class="form-label"><fmt:message key="patient.date.of.birth"/></label>
                                         <div class="input-group date insertInfo" data-provide="datepicker">
-                                            <input type="text" class="form-control" name="date_of_birth" id="date">
+                                            <input type="text" class="form-control" name="date_of_birth" id="date" required>
                                             <div class="input-group-addon close-button">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>

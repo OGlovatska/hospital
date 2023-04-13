@@ -2,13 +2,10 @@ package com.epam.hospital.dao.impl;
 
 import com.epam.hospital.dao.Dao;
 import com.epam.hospital.db.manager.DBManager;
-import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.StaffPatient;
 import jakarta.servlet.ServletContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.List;
