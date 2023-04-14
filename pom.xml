@@ -11,10 +11,10 @@
     <packaging>war</packaging>
 
     <properties>
-        <java.version>15</java.version>
+        <java.version>17</java.version>
         <junit5.version>5.9.2</junit5.version>
 
-        <maven.compiler.source>${java.version}</maven.compiler.source>
+<!--        <maven.compiler.source>${java.version}</maven.compiler.source>-->
 <!--        <maven.compiler.target>${java.version}</maven.compiler.target>-->
 
     </properties>
@@ -111,10 +111,19 @@
     </dependencies>
     <build>
         <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-war-plugin</artifactId>-->
+<!--                <version>3.3.0</version>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.0</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
