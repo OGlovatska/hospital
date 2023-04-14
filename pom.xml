@@ -11,7 +11,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>15</java.version>
         <junit5.version>5.9.2</junit5.version>
 
 <!--        <maven.compiler.source>${java.version}</maven.compiler.source>-->
