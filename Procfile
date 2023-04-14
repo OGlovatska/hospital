@@ -1,0 +1,1 @@
+web: gunicorn hospital-task.wsgi
