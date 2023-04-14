@@ -6,6 +6,20 @@
 
 <html lang="${sessionScope.lang}">
 <jsp:include page="fragments/head.jsp"/>
+<head>
+    <style>
+        .float-end {
+            float: right;
+        }
+        @media (max-width: 568px) {
+            .float-end {
+                float: none;
+                display: block;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
 <body>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <jsp:include page="fragments/header.jsp"/>
@@ -30,10 +44,8 @@
     </div>
 </div>
 <div class="container">
+    <img src="resources/images/main.webp" alt="banner" class="float-end me-3" width="30%">
     <div class="lead py"><br>
-        <h5><fmt:message key="about.descriptionTitle"/></h5>
-        <fmt:message key="about.main"/>
-        <h5> <fmt:message key="about.variant.title"/></h5>
         <fmt:message key="about.variant.text"/><br>
         <ul>
             <li><fmt:message key="about.sorting.patient"/>:
