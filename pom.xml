@@ -12,9 +12,6 @@
 
     <properties>
         <java.version>17</java.version>
-        <java.runtime>17</java.runtime>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit5.version>5.9.2</junit5.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
