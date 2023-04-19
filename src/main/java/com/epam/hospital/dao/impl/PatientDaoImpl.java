@@ -2,14 +2,11 @@ package com.epam.hospital.dao.impl;
 
 import com.epam.hospital.dao.Dao;
 import com.epam.hospital.db.manager.DBManager;
-import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
-import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.enums.Gender;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.util.pagination.Pageable;
-import jakarta.servlet.ServletContext;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,9 +21,8 @@ import static com.epam.hospital.dao.constant.query.PatientQuery.*;
 public class PatientDaoImpl implements Dao<Patient> {
     private final DBManager dbManager;
 
-    public PatientDaoImpl() {
-        ServletContext servletContext = DBContextListener.getServletContext();
-        this.dbManager = (DBManager) servletContext.getAttribute("dbManager");
+    public PatientDaoImpl(DBManager dbManager) {
+        this.dbManager = dbManager;
     }
 
     @Override

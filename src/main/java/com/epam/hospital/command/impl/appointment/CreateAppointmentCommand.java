@@ -24,19 +24,15 @@ import static com.epam.hospital.command.constant.Parameter.*;
 public class CreateAppointmentCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(CreateAppointmentCommand.class);
     private final PatientService patientService;
-    private final AppointmentService appointmentService;
     private final StaffService staffService;
 
     public CreateAppointmentCommand() {
         this.patientService = ApplicationContext.getInstance().getPatientService();
-        this.appointmentService = ApplicationContext.getInstance().getAppointmentService();
         this.staffService = ApplicationContext.getInstance().getStaffService();
     }
 
-    public CreateAppointmentCommand(PatientService patientService, AppointmentService appointmentService,
-                                    StaffService staffService) {
+    public CreateAppointmentCommand(PatientService patientService, StaffService staffService) {
         this.patientService = patientService;
-        this.appointmentService = appointmentService;
         this.staffService = staffService;
     }
 

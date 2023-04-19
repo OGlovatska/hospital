@@ -1,18 +1,11 @@
 package com.epam.hospital.repository;
 
-import com.epam.hospital.appcontext.ApplicationContext;
 import com.epam.hospital.dao.impl.PatientDaoImpl;
 import com.epam.hospital.dao.impl.UserDaoImpl;
 import com.epam.hospital.db.manager.DBManager;
-import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
-import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.Patient;
-import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.User;
-import jakarta.servlet.ServletContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,11 +16,10 @@ public class PatientRepository {
     private final PatientDaoImpl patientDao;
     private final DBManager dbManager;
 
-    public PatientRepository(UserDaoImpl userDao, PatientDaoImpl patientDao) {
-        ServletContext servletContext = DBContextListener.getServletContext();
-        this.dbManager = (DBManager) servletContext.getAttribute("dbManager");
+    public PatientRepository(UserDaoImpl userDao, PatientDaoImpl patientDao, DBManager dbManager) {
         this.userDao = userDao;
         this.patientDao = patientDao;
+        this.dbManager = dbManager;
     }
 
     public Optional<Patient> save(User user, Patient patient) throws DBException {

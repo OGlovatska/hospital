@@ -2,13 +2,10 @@ package com.epam.hospital.dao.impl;
 
 import com.epam.hospital.dao.Dao;
 import com.epam.hospital.db.manager.DBManager;
-import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.exception.DBException;
-import com.epam.hospital.listener.DBContextListener;
 import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.util.pagination.Pageable;
-import jakarta.servlet.ServletContext;
 
 import java.sql.*;
 import java.util.*;
@@ -21,9 +18,8 @@ import static com.epam.hospital.dao.constant.query.StaffQueries.*;
 public class StaffDaoImpl implements Dao<Staff> {
     private final DBManager dbManager;
 
-    public StaffDaoImpl() {
-        ServletContext servletContext = DBContextListener.getServletContext();
-        this.dbManager = (DBManager) servletContext.getAttribute("dbManager");
+    public StaffDaoImpl(DBManager dbManager) {
+        this.dbManager = dbManager;
     }
 
     @Override

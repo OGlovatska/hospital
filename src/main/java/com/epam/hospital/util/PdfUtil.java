@@ -11,20 +11,19 @@ import com.epam.hospital.to.HospitalisationTo;
 import com.epam.hospital.to.PatientTo;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-
-import static com.epam.hospital.listener.DBContextListener.getServletContext;
+import jakarta.servlet.ServletContext;
 
 public class PdfUtil {
 
     public static byte[] getHospitalCardPdf(PatientTo patientTo, List<HospitalisationTo> hospitalisationTos,
-                                            String locale) throws IOException, URISyntaxException, DocumentException {
+                                            String locale, ServletContext context) throws IOException, URISyntaxException, DocumentException {
             Document document = new Document();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = PdfWriter.getInstance(document, baos);
             ResourceBundle bundle = ResourceBundle.getBundle("application", Locale.forLanguageTag(locale));
 
             document.open();
-            writeHead(document, writer, bundle);
+            writeHead(document, writer, bundle, context);
             writePatientInformation(document, patientTo, bundle);
             writeHospitalisationsTable(document, hospitalisationTos, bundle);
             document.close();
@@ -32,8 +31,8 @@ public class PdfUtil {
             return baos.toByteArray();
     }
 
-    private static void writeHead(Document document, PdfWriter writer, ResourceBundle bundle) throws IOException, DocumentException {
-        String path = getServletContext().getRealPath("/resources/images/logo.png");
+    private static void writeHead(Document document, PdfWriter writer, ResourceBundle bundle, ServletContext context) throws IOException, DocumentException {
+        String path = context.getRealPath("/resources/images/logo.png");
         Image image = Image.getInstance(path);
         image.setAbsolutePosition(36, document.top() - image.getHeight());
 

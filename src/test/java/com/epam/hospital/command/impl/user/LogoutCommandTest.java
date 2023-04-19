@@ -8,9 +8,10 @@ import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
+import static com.epam.hospital.TestData.LOCALE;
+import static com.epam.hospital.command.constant.Parameter.LANGUAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class LogoutCommandTest {
     private final HttpSession session = mock(HttpSession.class);
@@ -23,6 +24,7 @@ public class LogoutCommandTest {
     @Test
     void testExecute(){
         when(request.getSession()).thenReturn(session);
+        when(request.getSession(true)).thenReturn(session);
         CommandResult result = command.execute(request, response);
         assertEquals(new CommandResult(Page.LOGIN).getPage(), result.getPage());
     }

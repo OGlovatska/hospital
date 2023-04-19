@@ -48,12 +48,13 @@ public class ExportHospitalCardCommand implements Command {
 
         try {
             setResponseParameters(response, locale);
+
             Map<PatientTo, List<HospitalisationTo>> hospitalisations = hospitalisationService.getAllHospitalisationsWithAppointments(user);
 
             try (OutputStream out = response.getOutputStream()) {
                 List<HospitalisationTo> hospitalisationsList = hospitalisations.values().stream().findFirst().orElse(null);
                 PatientTo patient = hospitalisations.keySet().stream().findFirst().orElse(null);
-                byte[] pdfDocument = getHospitalCardPdf(patient, hospitalisationsList, locale);
+                byte[] pdfDocument = getHospitalCardPdf(patient, hospitalisationsList, locale, request.getServletContext());
                 out.write(pdfDocument);
             } catch (IOException | URISyntaxException | DocumentException e) {
                 LOG.error("Exception has occurred during executing export hospital card command, message = {}",

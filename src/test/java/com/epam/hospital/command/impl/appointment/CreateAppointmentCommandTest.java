@@ -2,7 +2,6 @@ package com.epam.hospital.command.impl.appointment;
 
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Page;
-import com.epam.hospital.service.AppointmentService;
 import com.epam.hospital.service.PatientService;
 import com.epam.hospital.service.StaffService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,9 +19,8 @@ public class CreateAppointmentCommandTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final HttpSession session = mock(HttpSession.class);
     private final PatientService patientService = mock(PatientService.class);
-    private final AppointmentService appointmentService = mock(AppointmentService.class);
     private final StaffService staffService = mock(StaffService.class);
-    private final CreateAppointmentCommand command = new CreateAppointmentCommand(patientService, appointmentService, staffService);
+    private final CreateAppointmentCommand command = new CreateAppointmentCommand(patientService, staffService);
 
     @Test
     public void testExecute() {

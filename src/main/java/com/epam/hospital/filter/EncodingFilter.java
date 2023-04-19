@@ -3,12 +3,15 @@ package com.epam.hospital.filter;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebInitParam;
+import jakarta.servlet.http.HttpFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
 @WebFilter(urlPatterns = "/*",
         initParams = @WebInitParam(name = "encoding", value = "UTF-8"))
-public class EncodingFilter implements Filter {
+public class EncodingFilter extends HttpFilter {
     private String encoding;
 
     @Override
@@ -17,7 +20,7 @@ public class EncodingFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         request.setCharacterEncoding(encoding);
         response.setCharacterEncoding(encoding);
