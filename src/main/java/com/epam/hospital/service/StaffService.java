@@ -1,7 +1,7 @@
 package com.epam.hospital.service;
 
-import com.epam.hospital.dao.impl.StaffDaoImpl;
-import com.epam.hospital.dao.impl.StaffPatientDaoImpl;
+import com.epam.hospital.dao.StaffDao;
+import com.epam.hospital.dao.StaffPatientDao;
 import com.epam.hospital.exception.*;
 import com.epam.hospital.model.Staff;
 import com.epam.hospital.model.User;
@@ -26,12 +26,11 @@ import static com.epam.hospital.util.StaffUtil.*;
 import static com.epam.hospital.util.ValidationUtil.*;
 
 public class StaffService {
-    private final StaffDaoImpl staffDao;
-    private final StaffPatientDaoImpl staffPatientDao;
+    private final StaffDao staffDao;
+    private final StaffPatientDao staffPatientDao;
     private final StaffRepository staffRepository;
 
-    public StaffService(StaffDaoImpl staffDao, StaffPatientDaoImpl staffPatientDao,
-                        StaffRepository staffRepository) {
+    public StaffService(StaffDao staffDao, StaffPatientDao staffPatientDao, StaffRepository staffRepository) {
         this.staffDao = staffDao;
         this.staffPatientDao = staffPatientDao;
         this.staffRepository = staffRepository;

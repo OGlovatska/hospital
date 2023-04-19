@@ -1,6 +1,6 @@
 package com.epam.hospital.dao.impl;
 
-import com.epam.hospital.dao.Dao;
+import com.epam.hospital.dao.StaffDao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.Staff;
@@ -15,7 +15,7 @@ import static com.epam.hospital.dao.constant.field.StaffFields.*;
 import static com.epam.hospital.dao.constant.field.UserFields.*;
 import static com.epam.hospital.dao.constant.query.StaffQueries.*;
 
-public class StaffDaoImpl implements Dao<Staff> {
+public class StaffDaoImpl implements StaffDao {
     private final DBManager dbManager;
 
     public StaffDaoImpl(DBManager dbManager) {
@@ -99,11 +99,11 @@ public class StaffDaoImpl implements Dao<Staff> {
         return getAll(String.format(GET_ALL_STAFF_OF_PATIENT, patientId, pageable.query()));
     }
 
-    public List<Staff> getAllStaffNotAssignedToPatient(int patientId) throws DBException{
-         return getAll(String.format(GET_ALL_STAFF_NOT_ASSIGNED_TO_PATIENT, patientId));
+    public List<Staff> getAllStaffNotAssignedToPatient(int patientId) throws DBException {
+        return getAll(String.format(GET_ALL_STAFF_NOT_ASSIGNED_TO_PATIENT, patientId));
     }
 
-    private List<Staff> getAll(String query) throws DBException{
+    private List<Staff> getAll(String query) throws DBException {
         List<Staff> staff = new ArrayList<>();
         try (Connection connection = dbManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {

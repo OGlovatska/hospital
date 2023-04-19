@@ -1,6 +1,6 @@
 package com.epam.hospital.service;
 
-import com.epam.hospital.dao.impl.UserDaoImpl;
+import com.epam.hospital.dao.UserDao;
 import com.epam.hospital.model.User;
 import com.epam.hospital.to.UserTo;
 import com.epam.hospital.util.UserUtil;
@@ -16,9 +16,9 @@ import static com.epam.hospital.util.ValidationUtil.*;
 
 public class UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-    private final UserDaoImpl userDao;
+    private final UserDao userDao;
 
-    public UserService(UserDaoImpl userDao) {
+    public UserService(UserDao userDao) {
         this.userDao = userDao;
     }
 

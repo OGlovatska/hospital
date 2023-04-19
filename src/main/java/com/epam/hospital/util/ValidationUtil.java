@@ -1,7 +1,7 @@
 package com.epam.hospital.util;
 
 import com.epam.hospital.appcontext.ApplicationContext;
-import com.epam.hospital.dao.impl.UserDaoImpl;
+import com.epam.hospital.dao.UserDao;
 import com.epam.hospital.exception.*;
 import com.epam.hospital.model.User;
 import com.epam.hospital.util.pagination.Sort;
@@ -77,7 +77,7 @@ public class ValidationUtil {
 
     public static void validateUniqueEmail(String email) {
         if (email != null && email.matches(EMAIL_REGEX)) {
-            UserDaoImpl userDao = ApplicationContext.getInstance().getUserDao();
+            UserDao userDao = ApplicationContext.getInstance().getUserDao();
             try {
                 User user = userDao.getByEmail(email).orElse(null);
                 if (user != null) {

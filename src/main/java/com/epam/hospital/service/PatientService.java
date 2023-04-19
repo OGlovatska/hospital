@@ -1,8 +1,8 @@
 package com.epam.hospital.service;
 
-import com.epam.hospital.dao.impl.PatientDaoImpl;
-import com.epam.hospital.dao.impl.StaffDaoImpl;
-import com.epam.hospital.dao.impl.StaffPatientDaoImpl;
+import com.epam.hospital.dao.PatientDao;
+import com.epam.hospital.dao.StaffDao;
+import com.epam.hospital.dao.StaffPatientDao;
 import com.epam.hospital.exception.*;
 import com.epam.hospital.model.Patient;
 import com.epam.hospital.model.Staff;
@@ -10,9 +10,10 @@ import com.epam.hospital.model.StaffPatient;
 import com.epam.hospital.model.User;
 import com.epam.hospital.model.enums.Gender;
 import com.epam.hospital.model.enums.Role;
+import com.epam.hospital.repository.PatientRepository;
 import com.epam.hospital.util.pagination.Pageable;
 import com.epam.hospital.util.pagination.Sort;
-import com.epam.hospital.repository.PatientRepository;
+import com.epam.hospital.repository.impl.PatientRepositoryImpl;
 import com.epam.hospital.to.PatientTo;
 import com.epam.hospital.to.UserTo;
 
@@ -28,13 +29,13 @@ import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
 import static com.epam.hospital.util.ValidationUtil.validateUniqueEmail;
 
 public class PatientService {
-    private final PatientDaoImpl patientDao;
-    private final StaffPatientDaoImpl staffPatientDao;
+    private final PatientDao patientDao;
+    private final StaffPatientDao staffPatientDao;
     private final PatientRepository patientRepository;
-    private final StaffDaoImpl staffDao;
+    private final StaffDao staffDao;
 
-    public PatientService(PatientDaoImpl patientDao, StaffPatientDaoImpl staffPatientDao,
-                          PatientRepository patientRepository, StaffDaoImpl staffDao) {
+    public PatientService(PatientDao patientDao, StaffPatientDao staffPatientDao,
+                          PatientRepository patientRepository, StaffDao staffDao) {
         this.patientDao = patientDao;
         this.staffPatientDao = staffPatientDao;
         this.patientRepository = patientRepository;

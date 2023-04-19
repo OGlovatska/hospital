@@ -1,9 +1,9 @@
 package com.epam.hospital.service;
 
-import com.epam.hospital.dao.impl.AppointmentDaoImpl;
-import com.epam.hospital.dao.impl.HospitalisationDaoImpl;
-import com.epam.hospital.dao.impl.PatientDaoImpl;
-import com.epam.hospital.dao.impl.StaffDaoImpl;
+import com.epam.hospital.dao.AppointmentDao;
+import com.epam.hospital.dao.HospitalisationDao;
+import com.epam.hospital.dao.PatientDao;
+import com.epam.hospital.dao.StaffDao;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.exception.IllegalRequestDataException;
@@ -26,12 +26,13 @@ import static com.epam.hospital.util.AppointmentUtil.createAppointmentTo;
 import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
 
 public class AppointmentService {
-    private final AppointmentDaoImpl appointmentDao;
-    private final PatientDaoImpl patientDao;
-    private final StaffDaoImpl staffDao;
-    private final HospitalisationDaoImpl hospitalisationDao;
+    private final AppointmentDao appointmentDao;
+    private final PatientDao patientDao;
+    private final StaffDao staffDao;
+    private final HospitalisationDao hospitalisationDao;
 
-    public AppointmentService(AppointmentDaoImpl appointmentDao, PatientDaoImpl patientDao, StaffDaoImpl staffDao, HospitalisationDaoImpl hospitalisationDao) {
+    public AppointmentService(AppointmentDao appointmentDao, PatientDao patientDao, StaffDao staffDao,
+                              HospitalisationDao hospitalisationDao) {
         this.appointmentDao = appointmentDao;
         this.patientDao = patientDao;
         this.staffDao = staffDao;
@@ -181,4 +182,3 @@ public class AppointmentService {
         }
     }
 }
-

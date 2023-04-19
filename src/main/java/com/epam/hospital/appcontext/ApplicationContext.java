@@ -1,13 +1,13 @@
 package com.epam.hospital.appcontext;
 
 import com.epam.hospital.dao.DaoFactory;
-import com.epam.hospital.dao.impl.*;
+import com.epam.hospital.dao.UserDao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.db.manager.MySQLDBManager;
 import com.epam.hospital.service.*;
 
 public class ApplicationContext {
-    private final UserDaoImpl userDao;
+    private final UserDao userDao;
     private final AppointmentService appointmentService;
     private final HospitalisationService hospitalisationService;
     private final PatientService patientService;
@@ -30,10 +30,11 @@ public class ApplicationContext {
     }
 
     public static synchronized ApplicationContext getInstance() {
-        if (applicationContext == null) {
-            applicationContext = new ApplicationContext();
-        }
         return applicationContext;
+    }
+
+    public static void createApplicationContext() {
+        applicationContext = new ApplicationContext();
     }
 
     public AppointmentService getAppointmentService() {
@@ -56,7 +57,7 @@ public class ApplicationContext {
         return userService;
     }
 
-    public UserDaoImpl getUserDao() {
+    public UserDao getUserDao() {
         return userDao;
     }
 }

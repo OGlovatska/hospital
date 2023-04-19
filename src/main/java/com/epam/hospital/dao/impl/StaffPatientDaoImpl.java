@@ -1,6 +1,6 @@
 package com.epam.hospital.dao.impl;
 
-import com.epam.hospital.dao.Dao;
+import com.epam.hospital.dao.StaffPatientDao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.StaffPatient;
@@ -12,7 +12,7 @@ import java.util.Optional;
 import static com.epam.hospital.dao.constant.field.CommonFields.*;
 import static com.epam.hospital.dao.constant.query.StaffPatientQueries.*;
 
-public class StaffPatientDaoImpl implements Dao<StaffPatient> {
+public class StaffPatientDaoImpl implements StaffPatientDao {
     private final DBManager dbManager;
 
     public StaffPatientDaoImpl(DBManager dbManager) {
@@ -66,7 +66,7 @@ public class StaffPatientDaoImpl implements Dao<StaffPatient> {
         return 0;
     }
 
-    public int staffOfPatientCount(int patientId) throws DBException{
+    public int staffOfPatientCount(int patientId) throws DBException {
         try (Connection connection = dbManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_COUNT_STAFF_OF_PATIENT)) {
             statement.setLong(1, patientId);

@@ -1,6 +1,6 @@
 package com.epam.hospital.dao.impl;
 
-import com.epam.hospital.dao.Dao;
+import com.epam.hospital.dao.HospitalisationDao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.Hospitalisation;
@@ -16,7 +16,7 @@ import static com.epam.hospital.dao.constant.query.HospitalisationQueries.*;
 import static com.epam.hospital.dao.constant.field.HospitalisationFields.*;
 import static com.epam.hospital.dao.constant.field.CommonFields.*;
 
-public class HospitalisationDaoImpl implements Dao<Hospitalisation> {
+public class HospitalisationDaoImpl implements HospitalisationDao {
     private final DBManager dbManager;
 
     public HospitalisationDaoImpl(DBManager dbManager) {

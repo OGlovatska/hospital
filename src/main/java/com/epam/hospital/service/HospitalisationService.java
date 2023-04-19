@@ -1,6 +1,6 @@
 package com.epam.hospital.service;
 
-import com.epam.hospital.dao.impl.*;
+import com.epam.hospital.dao.*;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.exception.IllegalRequestDataException;
@@ -27,14 +27,14 @@ import static com.epam.hospital.util.PatientUtil.createPatientTo;
 import static com.epam.hospital.util.ValidationUtil.checkUserNotNull;
 
 public class HospitalisationService {
-    private final HospitalisationDaoImpl hospitalisationDao;
-    private final PatientDaoImpl patientDao;
-    private final StaffPatientDaoImpl staffPatientDao;
-    private final AppointmentDaoImpl appointmentDao;
-    private final StaffDaoImpl staffDao;
+    private final HospitalisationDao hospitalisationDao;
+    private final PatientDao patientDao;
+    private final StaffPatientDao staffPatientDao;
+    private final AppointmentDao appointmentDao;
+    private final StaffDao staffDao;
 
-    public HospitalisationService(HospitalisationDaoImpl hospitalisationDao, PatientDaoImpl patientDao,
-                                  StaffPatientDaoImpl staffPatientDao, AppointmentDaoImpl appointmentDao, StaffDaoImpl staffDao) {
+    public HospitalisationService(HospitalisationDao hospitalisationDao, PatientDao patientDao,
+                                  StaffPatientDao staffPatientDao, AppointmentDao appointmentDao, StaffDao staffDao) {
         this.hospitalisationDao = hospitalisationDao;
         this.patientDao = patientDao;
         this.staffPatientDao = staffPatientDao;
@@ -72,21 +72,21 @@ public class HospitalisationService {
         }
     }
 
-    public Map<PatientTo, List<HospitalisationTo>> getAllHospitalisationsWithAppointments(UserTo user) throws ApplicationException{
+    public Map<PatientTo, List<HospitalisationTo>> getAllHospitalisationsWithAppointments(UserTo user) throws ApplicationException {
         checkUserNotNull(user);
-        if (user.getRole().equals(Role.PATIENT)){
+        if (user.getRole().equals(Role.PATIENT)) {
             Map<PatientTo, List<HospitalisationTo>> map = new HashMap<>();
             Patient patient = getPatient(user);
             List<HospitalisationTo> hospitalisations = getAllHospitalisationsOfPatient(patient.getId(), 0, 0,
                     "id", Sort.Direction.ASC.name());
-            if (hospitalisations != null && !hospitalisations.isEmpty()){
-                for (HospitalisationTo hospitalisation : hospitalisations){
+            if (hospitalisations != null && !hospitalisations.isEmpty()) {
+                for (HospitalisationTo hospitalisation : hospitalisations) {
                     try {
                         List<Appointment> appointments = appointmentDao.getAllAppointmentsByHospitalisation(hospitalisation.getId(),
                                 new Pageable());
                         List<AppointmentTo> appointmentTos = new ArrayList<>();
-                        if (appointments != null && !appointments.isEmpty()){
-                            for (Appointment appointment : appointments){
+                        if (appointments != null && !appointments.isEmpty()) {
+                            for (Appointment appointment : appointments) {
                                 staffDao.get(appointment.getStaffId())
                                         .ifPresent(staff -> appointmentTos.add(createAppointmentTo(appointment, patient, staff)));
                             }

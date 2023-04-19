@@ -4,14 +4,16 @@ import com.epam.hospital.dao.impl.*;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.repository.PatientRepository;
 import com.epam.hospital.repository.StaffRepository;
+import com.epam.hospital.repository.impl.PatientRepositoryImpl;
+import com.epam.hospital.repository.impl.StaffRepositoryImpl;
 
 public class DaoFactory {
-    private final AppointmentDaoImpl appointmentDao;
-    private final HospitalisationDaoImpl hospitalisationDao;
-    private final PatientDaoImpl patientDao;
-    private final StaffDaoImpl staffDao;
-    private final StaffPatientDaoImpl staffPatientDao;
-    private final UserDaoImpl userDao;
+    private final AppointmentDao appointmentDao;
+    private final HospitalisationDao hospitalisationDao;
+    private final PatientDao patientDao;
+    private final StaffDao staffDao;
+    private final StaffPatientDao staffPatientDao;
+    private final UserDao userDao;
     private final PatientRepository patientRepository;
     private final StaffRepository staffRepository;
     private static DaoFactory instance;
@@ -23,8 +25,8 @@ public class DaoFactory {
         staffDao = new StaffDaoImpl(dbManager);
         staffPatientDao = new StaffPatientDaoImpl(dbManager);
         userDao = new UserDaoImpl(dbManager);
-        patientRepository = new PatientRepository(userDao, patientDao, dbManager);
-        staffRepository = new StaffRepository(userDao, staffDao, dbManager);
+        patientRepository = new PatientRepositoryImpl(userDao, patientDao, dbManager);
+        staffRepository = new StaffRepositoryImpl(userDao, staffDao, dbManager);
     }
 
     public static synchronized DaoFactory getInstance(DBManager dbManager) {
@@ -34,27 +36,27 @@ public class DaoFactory {
         return instance;
     }
 
-    public AppointmentDaoImpl getAppointmentDao() {
+    public AppointmentDao getAppointmentDao() {
         return appointmentDao;
     }
 
-    public HospitalisationDaoImpl getHospitalisationDao() {
+    public HospitalisationDao getHospitalisationDao() {
         return hospitalisationDao;
     }
 
-    public PatientDaoImpl getPatientDao() {
+    public PatientDao getPatientDao() {
         return patientDao;
     }
 
-    public StaffDaoImpl getStaffDao() {
+    public StaffDao getStaffDao() {
         return staffDao;
     }
 
-    public StaffPatientDaoImpl getStaffPatientDao() {
+    public StaffPatientDao getStaffPatientDao() {
         return staffPatientDao;
     }
 
-    public UserDaoImpl getUserDao() {
+    public UserDao getUserDao() {
         return userDao;
     }
 

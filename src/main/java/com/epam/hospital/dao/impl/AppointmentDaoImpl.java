@@ -1,6 +1,6 @@
 package com.epam.hospital.dao.impl;
 
-import com.epam.hospital.dao.Dao;
+import com.epam.hospital.dao.AppointmentDao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.Appointment;
@@ -16,7 +16,7 @@ import static com.epam.hospital.dao.constant.query.AppointmentQueries.*;
 import static com.epam.hospital.dao.constant.field.AppointmentFields.*;
 import static com.epam.hospital.dao.constant.field.CommonFields.*;
 
-public class AppointmentDaoImpl implements Dao<Appointment> {
+public class AppointmentDaoImpl implements AppointmentDao {
     private final DBManager dbManager;
 
     public AppointmentDaoImpl(DBManager dbManager) {

@@ -1,6 +1,6 @@
 package com.epam.hospital.dao.impl;
 
-import com.epam.hospital.dao.Dao;
+import com.epam.hospital.dao.UserDao;
 import com.epam.hospital.db.manager.DBManager;
 import com.epam.hospital.exception.DBException;
 import com.epam.hospital.model.enums.Role;
@@ -15,7 +15,7 @@ import static com.epam.hospital.dao.constant.field.CommonFields.ID;
 import static com.epam.hospital.dao.constant.field.UserFields.*;
 import static com.epam.hospital.dao.constant.query.UserQueries.*;
 
-public class UserDaoImpl implements Dao<User> {
+public class UserDaoImpl implements UserDao {
     private final DBManager dbManager;
 
     public UserDaoImpl(DBManager dbManager) {
