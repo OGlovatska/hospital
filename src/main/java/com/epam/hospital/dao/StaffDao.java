@@ -7,15 +7,7 @@ import com.epam.hospital.util.pagination.Pageable;
 import java.sql.*;
 import java.util.*;
 
-public interface StaffDao {
-
-    Optional<Staff> get(long id) throws DBException;
-
-    List<Staff> getAll() throws DBException;
-
-    Optional<Staff> save(Staff t) throws DBException;
-
-    Optional<Staff> update(Staff t) throws DBException;
+public interface StaffDao extends Dao<Staff> {
 
     Optional<Staff> getByUserId(long userId) throws DBException;
 

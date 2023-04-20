@@ -7,15 +7,7 @@ import com.epam.hospital.util.pagination.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-public interface AppointmentDao {
-
-    Optional<Appointment> get(long id) throws DBException;
-
-    List<Appointment> getAll() throws DBException;
-
-    Optional<Appointment> save(Appointment t) throws DBException;
-
-    Optional<Appointment> update(Appointment t) throws DBException;
+public interface AppointmentDao extends Dao<Appointment> {
 
     List<Appointment> getAll(Pageable pageable) throws DBException;
 

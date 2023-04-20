@@ -7,15 +7,7 @@ import com.epam.hospital.util.pagination.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-public interface HospitalisationDao {
-
-    Optional<Hospitalisation> get(long id) throws DBException;
-
-    List<Hospitalisation> getAll() throws DBException;
-
-    Optional<Hospitalisation> save(Hospitalisation t) throws DBException;
-
-    Optional<Hospitalisation> update(Hospitalisation t) throws DBException;
+public interface HospitalisationDao extends Dao<Hospitalisation> {
 
     List<Hospitalisation> getAll(Pageable pageable) throws DBException;
 

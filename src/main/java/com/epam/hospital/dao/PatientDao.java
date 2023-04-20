@@ -8,15 +8,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-public interface PatientDao {
-
-    Optional<Patient> get(long id) throws DBException;
-
-    List<Patient> getAll() throws DBException;
-
-    Optional<Patient> save(Patient t) throws DBException;
-
-    Optional<Patient> update(Patient t) throws DBException;
+public interface PatientDao extends Dao<Patient> {
 
     Optional<Patient> getByUserId(long userId) throws DBException;
 
