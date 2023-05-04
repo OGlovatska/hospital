@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="alert" tagdir="/WEB-INF/tags"%>
 <fmt:setLocale value="${sessionScope.lang}" scope="session"/>
 <fmt:setBundle basename="application"/>
 
@@ -25,6 +26,7 @@
 <jsp:include page="fragments/header.jsp"/>
 <div class="jumbotron py-0">
     <div class="container">
+        <alert:message sessionScope="${sessionScope}"/>
         <c:if test="${sessionScope.user eq null}">
             <div class="pt-2">
                 <button type="submit" class="btn btn-outline-primary me-2" onclick="login('admin@gmail.com', 'password')">
