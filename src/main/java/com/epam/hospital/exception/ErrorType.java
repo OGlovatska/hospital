@@ -4,7 +4,7 @@ public enum ErrorType {
     INVALID_PASSWORD("error.invalidPassword", "Wrong password"),
     USER_NOT_FOUND("error.userNotFound", "User not found"),
     EMPTY_FIELDS("error.emptyFields", "Email or password is blank"),
-    NOT_AUTHORIZED_USER("error.userNotAuthorized", "User not found"),
+    USER_NOT_AUTHENTICATED("error.userNotAuthenticate", "User not authenticate"),
     PATIENT_NOT_HOSPITALISED("error.patientNotHospitalised", "Patient not hospitalised"),
     PATIENT_NOT_FOUND("error.patientNotFound", "Patient not found"),
     NOT_STAFF("error.userNotStaff", "User role must be DOCTOR or NURSE"),

@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.epam.hospital.command.constant.Command.MAIN;
-import static com.epam.hospital.command.constant.Command.PATIENTS_LIST;
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.util.CommandUtil.getPageToRedirect;
 

@@ -10,8 +10,8 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h1><fmt:message key="exception.title"/></h1>
-    <p><fmt:message key="exception.text"/></p>
+    <h1><fmt:message key="accessDenied.title"/></h1>
+    <p><fmt:message key="accessDenied.text"/></p>
     <div class="text-center mt-5">
         <a href="api" class="btn btn-primary"><fmt:message key="button.home"/></a>
     </div>

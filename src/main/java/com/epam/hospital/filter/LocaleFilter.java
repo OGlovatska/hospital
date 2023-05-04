@@ -7,8 +7,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,7 +16,6 @@ import static com.epam.hospital.command.constant.Parameter.LANGUAGE;
 @WebFilter(urlPatterns = "/*",
         initParams = @WebInitParam(name = "default", value = "en"))
 public class LocaleFilter extends HttpFilter {
-    private static final Logger LOG = LoggerFactory.getLogger(LocaleFilter.class);
     private static final String CURRENT_PAGE = "Referer";
     private String defaultLocale;
 
@@ -27,6 +24,7 @@ public class LocaleFilter extends HttpFilter {
         defaultLocale = config.getInitParameter("default");
     }
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         String locale = request.getParameter(LANGUAGE);

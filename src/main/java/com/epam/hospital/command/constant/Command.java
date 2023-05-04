@@ -7,7 +7,6 @@ public class Command {
     public static final String LOGIN = "login";
     public static final String LOGOUT = "logout";
     public static final String MAIN = "main";
-    public static final String ABOUT = "about";
     public static final String STAFF_LIST = "staff-list";
     public static final String SAVE_STAFF = "save-staff";
     public static final String STAFF_DETAILS = "staff";

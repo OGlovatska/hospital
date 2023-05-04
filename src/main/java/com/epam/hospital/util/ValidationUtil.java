@@ -18,7 +18,7 @@ public class ValidationUtil {
 
     public static void checkUserNotNull(UserTo user) {
         if (user == null) {
-            throw new NotFoundException(ErrorType.USER_NOT_FOUND);
+            throw new NotFoundException(ErrorType.USER_NOT_AUTHENTICATED);
         }
     }
 

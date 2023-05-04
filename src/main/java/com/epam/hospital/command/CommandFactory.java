@@ -35,7 +35,6 @@ public class CommandFactory {
         COMMAND_MAP.put(SAVE_STAFF, new SaveStaffCommand());
         COMMAND_MAP.put(STAFF_DETAILS, new StaffDetailsCommand());
         COMMAND_MAP.put(STAFF_LIST, new StaffListCommand());
-        COMMAND_MAP.put(ABOUT, new AboutCommand());
         COMMAND_MAP.put(EMPTY, new EmptyCommand());
         COMMAND_MAP.put(LOGIN, new LoginCommand());
         COMMAND_MAP.put(LOGOUT, new LogoutCommand());
