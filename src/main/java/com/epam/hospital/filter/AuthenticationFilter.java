@@ -15,14 +15,14 @@ import static com.epam.hospital.command.constant.Page.ACCESS_DENIED;
 import static com.epam.hospital.command.constant.Parameter.*;
 
 @WebFilter(urlPatterns = "/*",
-        initParams = {@WebInitParam(name = "excludedPath", value = LOGIN)})
+        initParams = {@WebInitParam(name = EXCLUDED_COMMAND, value = LOGIN)})
 public class AuthenticationFilter extends HttpFilter {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationFilter.class);
-    private String excludedPath;
+    private String excludedCommand;
 
     @Override
     public void init(FilterConfig config) {
-        excludedPath = config.getInitParameter("excludedPath");
+        excludedCommand = config.getInitParameter(EXCLUDED_COMMAND);
     }
 
     @Override
@@ -30,13 +30,9 @@ public class AuthenticationFilter extends HttpFilter {
             throws IOException, ServletException {
         HttpSession session = request.getSession();
 
-        if (isCommand(request)) {
-            if (session.getAttribute(USER) != null) {
-                chain.doFilter(request, response);
-            } else {
-                LOG.error("User in session is null");
-                request.getRequestDispatcher(ACCESS_DENIED).forward(request, response);
-            }
+        if (isCommand(request) && session.getAttribute(USER) == null) {
+            LOG.error("User in session is null, access denied");
+            request.getRequestDispatcher(ACCESS_DENIED).forward(request, response);
         } else {
             chain.doFilter(request, response);
         }
@@ -44,6 +40,6 @@ public class AuthenticationFilter extends HttpFilter {
 
     private boolean isCommand(HttpServletRequest request) {
         String commandName = request.getParameter(COMMAND);
-        return commandName != null && !commandName.isEmpty() && !commandName.equals(excludedPath);
+        return commandName != null && !commandName.isEmpty() && !commandName.equals(excludedCommand);
     }
 }

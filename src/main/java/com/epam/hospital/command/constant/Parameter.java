@@ -67,6 +67,8 @@ public class Parameter {
     public static final String HOSPITALISATIONS_COUNT = "hospitalisationsCount";
     public static final String HOSPITALISATIONS_NUMBER_OF_PAGES = "hospitalisationsNumberOfPages";
 
+    public static final String EXCLUDED_COMMAND = "excludedCommand";
+
     public static String getParameter(String name, String value){
         return name + "=" + value;
     }
