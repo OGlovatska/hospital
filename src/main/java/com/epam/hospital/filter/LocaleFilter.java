@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static com.epam.hospital.command.constant.Parameter.LANGUAGE;
 
@@ -42,8 +43,9 @@ public class LocaleFilter extends HttpFilter {
     }
 
     private String getLanguageFromCookies(HttpServletRequest request) {
-        return Arrays.stream(request.getCookies())
-                .filter(c -> LANGUAGE.equals(c.getName()))
+        return Stream.ofNullable(request.getCookies())
+                .flatMap(Arrays::stream)
+                .filter(cookie -> cookie.getName().equals(LANGUAGE))
                 .map(Cookie::getValue)
                 .findAny().orElse(defaultLocale);
     }

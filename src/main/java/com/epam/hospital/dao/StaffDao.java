@@ -15,9 +15,9 @@ public interface StaffDao extends Dao<Staff> {
 
     Map<Staff, Integer> getAllStaff(Pageable pageable) throws DBException;
 
-    List<Staff> getAllStaff(int patientId, Pageable pageable) throws DBException;
+    List<Staff> getAllStaff(long patientId, Pageable pageable) throws DBException;
 
-    List<Staff> getAllStaffNotAssignedToPatient(int patientId) throws DBException;
+    List<Staff> getAllStaffNotAssignedToPatient(long patientId) throws DBException;
 
     int staffCount() throws DBException;
 }

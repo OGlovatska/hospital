@@ -24,16 +24,23 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> get(long id) throws DBException {
-        return get(String.format(GET_USER_BY_ID, id));
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID)) {
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(getUser(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage());
+        }
+        return Optional.empty();
     }
 
     public Optional<User> getByEmail(String email) throws DBException {
-        return get(String.format(GET_USER_BY_EMAIL, email));
-    }
-
-    private Optional<User> get(String query) throws DBException {
         try (Connection connection = dbManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_EMAIL)) {
+            statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return Optional.of(getUser(resultSet));

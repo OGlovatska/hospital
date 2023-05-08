@@ -47,7 +47,7 @@ public class AppointmentDaoImpl implements AppointmentDao {
         return getAll(String.format(GET_ALL_APPOINTMENTS, pageable.query()));
     }
 
-    public List<Appointment> getAllAppointmentsOfStaff(int staffId, Pageable pageable) throws DBException {
+    public List<Appointment> getAllAppointmentsOfStaff(long staffId, Pageable pageable) throws DBException {
         return getAll(String.format(GET_ALL_APPOINTMENTS_FOR_STAFF, staffId, pageable.query()));
     }
 
@@ -55,7 +55,7 @@ public class AppointmentDaoImpl implements AppointmentDao {
         return getAll(String.format(GET_ALL_APPOINTMENTS_FOR_HOSPITALISATION, hospitalisationId, pageable.query()));
     }
 
-    public List<Appointment> getAllAppointmentsOfPatient(int patientId, Pageable pageable) throws DBException {
+    public List<Appointment> getAllAppointmentsOfPatient(long patientId, Pageable pageable) throws DBException {
         return getAll(String.format(GET_ALL_APPOINTMENTS_FOR_PATIENT, patientId, pageable.query()));
     }
 
@@ -71,10 +71,6 @@ public class AppointmentDaoImpl implements AppointmentDao {
             throw new DBException(e.getMessage());
         }
         return appointments;
-    }
-
-    public List<Appointment> getAllByDate(Pageable pageable, String orderBy) throws DBException{
-        return getAll(String.format(GET_ALL_APPOINTMENTS_BY_DATE, orderBy, pageable.query()));
     }
 
     @Override
@@ -123,20 +119,16 @@ public class AppointmentDaoImpl implements AppointmentDao {
         return getCount(GET_APPOINTMENTS_COUNT);
     }
 
-    public int appointmentsCountForStaff(int staffId) throws DBException {
+    public int appointmentsCountForStaff(long staffId) throws DBException {
         return getCount(String.format(GET_APPOINTMENTS_OF_STAFF_COUNT, staffId));
     }
 
-    public int appointmentsCountForPatient(int patientId) throws DBException {
+    public int appointmentsCountForPatient(long patientId) throws DBException {
         return getCount(String.format(GET_APPOINTMENTS_OF_PATIENT_COUNT, patientId));
     }
 
-    public int appointmentsCountForHospitalisation(int hospitalisationId) throws DBException {
+    public int appointmentsCountForHospitalisation(long hospitalisationId) throws DBException {
         return getCount(String.format(GET_APPOINTMENTS_OF_HOSPITALISATION_COUNT, hospitalisationId));
-    }
-
-    public int appointmentsForDateCount(String date) throws DBException{
-        return getCount(String.format(GET_APPOINTMENTS_FOR_DATE_COUNT, date));
     }
 
     private int getCount(String query) throws DBException {

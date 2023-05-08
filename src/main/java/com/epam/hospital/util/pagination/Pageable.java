@@ -35,17 +35,9 @@ public class Pageable {
 
     public String query() {
         if (sort != null){
-            if (limit == 0){
-                return sort.query();
-            } else {
-                return sort.query() + " LIMIT " + offset + ", " + limit;
-            }
+            return limit == 0 ? sort.query() : sort.query() + " LIMIT " + offset + ", " + limit;
         } else {
-            if (limit == 0){
-                return "";
-            } else {
-                return " LIMIT " + offset + ", " + limit;
-            }
+            return limit == 0 ? "" : " LIMIT " + offset + ", " + limit;
         }
     }
 }

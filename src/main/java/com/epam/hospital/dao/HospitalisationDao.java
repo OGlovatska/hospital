@@ -11,9 +11,9 @@ public interface HospitalisationDao extends Dao<Hospitalisation> {
 
     List<Hospitalisation> getAll(Pageable pageable) throws DBException;
 
-    List<Hospitalisation> getAllHospitalisationsOfPatient(int patientId, Pageable pageable) throws DBException;
+    List<Hospitalisation> getAllHospitalisationsOfPatient(long patientId, Pageable pageable) throws DBException;
 
-    int getAllHospitalisationsOfPatientCount(int patientId) throws DBException;
+    int getAllHospitalisationsOfPatientCount(long patientId) throws DBException;
 
     Optional<Hospitalisation> getPatientCurrentHospitalisation(long patientId) throws DBException;
 }

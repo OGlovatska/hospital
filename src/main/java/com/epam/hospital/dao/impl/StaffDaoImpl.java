@@ -95,11 +95,11 @@ public class StaffDaoImpl implements StaffDao {
         return staff;
     }
 
-    public List<Staff> getAllStaff(int patientId, Pageable pageable) throws DBException {
+    public List<Staff> getAllStaff(long patientId, Pageable pageable) throws DBException {
         return getAll(String.format(GET_ALL_STAFF_OF_PATIENT, patientId, pageable.query()));
     }
 
-    public List<Staff> getAllStaffNotAssignedToPatient(int patientId) throws DBException {
+    public List<Staff> getAllStaffNotAssignedToPatient(long patientId) throws DBException {
         return getAll(String.format(GET_ALL_STAFF_NOT_ASSIGNED_TO_PATIENT, patientId));
     }
 

@@ -106,22 +106,6 @@ public class AppointmentService {
         }
     }
 
-    public int getAllAppointmentsCount(int staffId) {
-        try {
-            return appointmentDao.appointmentsCountForStaff(staffId);
-        } catch (DBException e) {
-            throw new ApplicationException(e.getMessage(), APP_ERROR);
-        }
-    }
-
-    public int getAllAppointmentsForDateCount(String date) {
-        try {
-            return appointmentDao.appointmentsForDateCount(date);
-        } catch (DBException e) {
-            throw new ApplicationException(e.getMessage(), APP_ERROR);
-        }
-    }
-
     public List<AppointmentTo> getAllAppointmentsOfStaff(int staffId, int offset, int limit, String orderBy, String direction) {
         try {
             return getAppointmentTos(appointmentDao.getAllAppointmentsOfStaff(staffId,

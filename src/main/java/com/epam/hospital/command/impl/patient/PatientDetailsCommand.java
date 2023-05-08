@@ -5,7 +5,6 @@ import com.epam.hospital.command.Command;
 import com.epam.hospital.command.CommandResult;
 import com.epam.hospital.command.constant.Attribute;
 import com.epam.hospital.command.constant.Page;
-import com.epam.hospital.command.constant.Parameter;
 import com.epam.hospital.exception.ApplicationException;
 import com.epam.hospital.model.enums.Role;
 import com.epam.hospital.service.HospitalisationService;
@@ -28,7 +27,6 @@ import java.util.Map;
 import static com.epam.hospital.command.constant.Parameter.*;
 import static com.epam.hospital.command.constant.Parameter.HOSPITALISATIONS_LIMIT;
 import static com.epam.hospital.util.RequestUtil.*;
-import static com.epam.hospital.util.ValidationUtil.*;
 
 public class PatientDetailsCommand implements Command {
     private static final Logger LOG = LoggerFactory.getLogger(PatientDetailsCommand.class);

@@ -66,7 +66,7 @@ public class StaffPatientDaoImpl implements StaffPatientDao {
         return 0;
     }
 
-    public int staffOfPatientCount(int patientId) throws DBException {
+    public int staffOfPatientCount(long patientId) throws DBException {
         try (Connection connection = dbManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_COUNT_STAFF_OF_PATIENT)) {
             statement.setLong(1, patientId);
@@ -80,7 +80,7 @@ public class StaffPatientDaoImpl implements StaffPatientDao {
         return 0;
     }
 
-    public void delete(int patientId) throws DBException {
+    public void delete(long patientId) throws DBException {
         try (Connection connection = dbManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_STAFF_PATIENT)) {
             statement.setLong(1, patientId);

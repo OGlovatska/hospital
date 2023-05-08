@@ -47,7 +47,7 @@ public class HospitalisationDaoImpl implements HospitalisationDao {
         return get(String.format(GET_ALL_HOSPITALISATIONS, pageable.query()));
     }
 
-    public List<Hospitalisation> getAllHospitalisationsOfPatient(int patientId, Pageable pageable) throws DBException {
+    public List<Hospitalisation> getAllHospitalisationsOfPatient(long patientId, Pageable pageable) throws DBException {
         return get(String.format(GET_ALL_HOSPITALISATIONS_OF_PATIENT, patientId, pageable.query()));
     }
 
@@ -102,7 +102,7 @@ public class HospitalisationDaoImpl implements HospitalisationDao {
         }
     }
 
-    public int getAllHospitalisationsOfPatientCount(int patientId) throws DBException {
+    public int getAllHospitalisationsOfPatientCount(long patientId) throws DBException {
         return getCount(String.format(GET_HOSPITALISATIONS_OF_PATIENT_COUNT, patientId));
     }
 
