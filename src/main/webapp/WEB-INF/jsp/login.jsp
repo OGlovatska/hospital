@@ -46,7 +46,7 @@
     </div>
 </div>
 <div class="container">
-    <img src="resources/images/main.webp" alt="banner" class="float-end me-3" width="30%">
+    <img src="resources/images/main.png" alt="banner" class="float-end me-3" width="50%">
     <div class="lead py"><br>
         <fmt:message key="about.variant.text"/><br>
         <ul>
